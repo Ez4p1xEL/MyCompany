@@ -1,0 +1,91 @@
+configuration: 1
+
+# Debug mode
+debug: true
+
+storage:
+  # Ways to store data
+  # Available storages: YAML, MYSQL(recommended)
+  # You should restart the server after changing.
+  type: YAML
+  connection:
+    database: idk
+    table-prefix: myc_
+    address: localhost
+    port: 3306
+    username: root
+    password: ''
+
+# Available language: en (English), zh_CN (Simplified Chinese), zh_TW (Traditional Chinese)
+language: en
+
+company-settings:
+  # Max length of company name
+  max-length: 12
+  # What does the player need as the conditions to found a company.
+  founding-cost:
+    money: 200000.0
+  # Time format
+  # Default:
+  time-format: "yyyy/MM/dd - HH:mm:ss"
+  # how many seconds should the employer wait until the player accepts the contract/request.
+  hire-request-time: 30
+  # Should the plugin backup the company data,
+  # after closure of the company.
+  backup-folder-before-delete: false
+
+company-funds:
+  default-asset: 120000.0
+  cost-per-day:
+    # Tax collecting time
+    # Do not set it as same as your server restarting time.
+    # The plugin will not check if you missed the tax-collecting time.
+    # 00-23, do not write 24:XX!
+    tax-time: '00:00'
+    # The money that the company is being taxed every day
+    management-fee: 2500.0
+    # This is a tax that is based on the amount of cash a company has.
+    # Please adjust these phases before allowing the players to found their companies.
+    # You should change the values for you depending on the price level in your server.
+    property-tax:
+      default-tax-rate: 0.01
+      phases:
+        # If the company has cash more than $30000, it will be taxed 2% of its funds.
+        # Do not name the phase as default.
+        phase1:
+          cash: 30000.0
+          tax-rate: 0.02
+        phase2:
+          cash: 100000.0
+          tax-rate: 0.03
+        phase3:
+          cash: 500000.0
+          tax-rate: 0.04
+        phase4:
+          cash: 2000000.0
+          tax-rate: 0.05
+    # This is a tax that is based on the amount of income a company has per day.
+    # It is not taxing every time of receiving money.
+    # The plugin will start taxing every day!
+    # Please adjust these phases before allowing the employers to start earning money.
+    # You should change the values for you depending on the price level in your server.
+    income-tax:
+      default-tax-rate: 0.01
+      # If the company has income more than $30000 today, it will be taxed 2% of its funds.
+      # Do not name the phase as default.
+      phases:
+        phase1:
+          cash: 50000.0
+          tax-rate: 0.02
+        phase2:
+          cash: 100000.0
+          tax-rate: 0.03
+  # In MyCompany, the salaries for the employer and employee are decided
+  # by the employer. The plugin will play as the government of the server
+  # to sponsor some money for the salary.
+  # Only employer and all the other employees can be sponsored. (Because company can customize the positions)
+  salaries:
+    employer: 1350.0
+    employee: 750.0
+
+#构想: 每间公司的商店仅能出售被插件限定的物品

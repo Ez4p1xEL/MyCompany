@@ -1,0 +1,95 @@
+prefix: MyCompany
+
+# Commands
+commands:
+  top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
+  page: '&e/myc page %page% &aPage %page% - %max_page%'
+  space-1: '&f'
+  #help: '&e/myc help &7View help.'
+  found: '&e/myc found <company> &7Found a company.'
+  disband: '&e/myc disband &7Disband your company.'
+  employ: '&e/myc employ <player> &7Send an employment contract to the player.'
+  fire: '&e/myc fire <employee> &7Fire the employee.'
+  #apply: '&e/myc apply <employer> &7Send joining application to the employer.'
+  accept: '&e/myc accept <player> &7Accept the request.'
+  resign: '&e/myc resign &7Resign from the company.'
+  info: '&e/myc info [CompanyId] &7View information of the company.'
+  admin:
+    money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
+    money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
+    reload: '&e/myc reload &7Reload the configuration.'
+  space-2: '&f'
+  bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
+
+# Admin Commands
+reload-success: '&7[&6%prefix%&7] &aConfiguration is reloaded successfully!'
+
+# Homeless
+must-be-player: '&7[&6%prefix%&7] &cYou must be a player to do that!'
+no-perm: '&7[&6%prefix%&7] &cYou have no permission to do that!'
+out-of-length: '&7[&6%prefix%&7] &cThe name is out of length. It Should be the maximum of &e%length%&c.'
+not-enough-money: '&7[&6prefix%&7] &cYou do not have enough money. You need total &e%money%&c!'
+
+# Company
+found-success: '&7[&6%prefix%&7] &aYou successfully found a new company &e%company%&a!'
+company-exist: '&7[&6%prefix%&7] &cCompany &e%company% &cis already existed!'
+disband-success: '&7[&6%prefix%&7] &aYou disbanded your company &e%company%&a!'
+employer-only: '&7[&6%prefix%&7] &cOnly current employer can do that!'
+not-your-company: '&7[&6%prefix%&7] &cThis is not your company.'
+player-not-exist: '&7[&6%prefix%&7] &cPlayer &e%player% &cis not existed!'
+no-company: '&7[&6%prefix%&7] &cYou do not have company.'
+has-company: '&7[&6%prefix%&7] &cYou are already in a company.'
+target-has-no-company: '&7[&6%prefix%&7] &e%player% &cdoes not join any company!'
+target-has-company: '&7[&6%prefix%&7] &e%player% &cis the member of other company.'
+not-your-employee: '&7[&6%prefix%&7] &e%player% &cis not your employee.'
+already-your-employee: '&7[&6%prefix%&7] &e%player% &Cis your employee already.'
+fire-success: '&7[&6%prefix%&7] &aYou fired &e%player% &asuccessfully!'
+dismissed: '&7[&6%prefix%&7] &cYou are dismissed by &e%player%&c. You are no longer an employee of &e%company%&c.'
+resign-success: '&7[&6%prefix%&7] &aYou resigned from &e%company%&a!'
+resigned: '&7[&6%prefix%&7] &cYour employee &e%player% &chas resigned from your company!'
+disband-instead: '&7[&6%prefix%&7] &cYou can''t use this command. Please use /myc disband instead.'
+contract-send: '&7[&6%prefix%&7] &aYou sent a contract to &e%player%&a, they have &e%second% &aseconds to accept.'
+contract-received: '&7[&6%prefix%&7] &aYou received a contract in &e%company% &aby &e%player%&a. You have %second% seconds to execute command /myc accept &e%player% &ato accept the contract.'
+contract-accept-employer: '&7[&6%prefix%&7] &e%player% &ahas accepted your contract.'
+contract-accept-employee: '&7[&6%prefix%&7] &aYou joined &e%company% &aas an employee.'
+contract-expire-employer: '&7[&6%prefix%&7] &cThe contract request to &e%player% &cis expired!'
+contract-expire-employee: '&7[&6%prefix%&7] &cThe contract request from &e%player% &cin &e%company% &cis expired!'
+contract-already-sent: '&7[&6%prefix%&7] &cYou are already sending contract to a player!'
+player-not-online: '&7[&6%prefix%&7] &e%player% &cis not online!'
+no-contract: '&7[&6%prefix%&7] &cThere is no contract!'
+id-invalid: '&7[&6%prefix%&7] &cPlease enter the company id correctly!'
+id-not-exist: '&7[&6%prefix%&7] &cCompany Id &e%cid% &cis not existed!'
+
+# Money/Asset
+money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'
+money-give-success: '&7[&6%prefix%&7] &aYou give &e$%money% &ato &e%company%&a.'
+money-take-success: '&7[&6%prefix%&7] &aYou take &e$%money% &afrom &e%company%&a.'
+
+
+# Broadcast
+broadcast:
+  company-found: '&7[&6Announcement&7] &aA new company &e%company% &ahas been founded by &e%player%&a!'
+  company-disband: '&7[&6Announcement&7] &cCompany &e%company% &chas been disbanded by &e%player%&c...'
+
+# Information
+info:
+  default:
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+    - ''
+    - '&7Company Id: &e%cid%'
+    - '&7Registered name: &b%company%'
+    - '&7Founding date: &d%date%'
+    - '&7Total players: &b%amount%'
+    - ''
+    - '&7Current employer: &e%employer%'
+    - '%employee%'
+    - ''
+    - '&cThere should be more private details here,'
+    - '&cbut because of the confidentiality.'
+    - ''
+    - '&7Founded by &e%founder%&7.'
+    - ''
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+  employee:
+    - '&7%position%:'
+    - ' &e%employees%'

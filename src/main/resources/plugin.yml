@@ -1,0 +1,29 @@
+main: p1xel.minecraft.bukkit.MyCompany
+name: MyCompany
+api-version: 1.13
+version: 0.2
+depend: [Vault]
+commands:
+  mycompany:
+    aliases: [myc, mc, cp, company]
+permissions:
+  mycompany.commands.found:
+    default: true
+  mycompany.commands.disband:
+    default: true
+  mycompany.commands.employ:
+    default: true
+  mycompany.commands.fire:
+    default: true
+  #mycompany.commands.apply:
+  #  default: true
+  mycompany.commands.accept:
+    default: true
+  mycompany.commands.resign:
+    default: true
+  mycompany.commands.info:
+    default: true
+  mycompany.commands.info.other:
+    default: true
+  mycompany.commands.admin:
+    default: op
