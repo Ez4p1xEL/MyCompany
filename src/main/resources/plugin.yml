@@ -1,7 +1,7 @@
 main: p1xel.minecraft.bukkit.MyCompany
 name: MyCompany
 api-version: 1.13
-version: 0.2
+version: 0.2.1
 depend: [Vault]
 commands:
   mycompany:

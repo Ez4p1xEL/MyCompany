@@ -65,6 +65,9 @@ money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of n
 money-give-success: '&7[&6%prefix%&7] &aYou give &e$%money% &ato &e%company%&a.'
 money-take-success: '&7[&6%prefix%&7] &aYou take &e$%money% &afrom &e%company%&a.'
 
+# Salary
+salary-received: '&7[&b%company%&7] &aYou received the salary &e$%money%&a.'
+
 
 # Broadcast
 broadcast:

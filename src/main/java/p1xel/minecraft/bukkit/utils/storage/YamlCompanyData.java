@@ -26,6 +26,9 @@ public class YamlCompanyData extends CompanyData{
 
     @Override
     public void init() {
+        com_files.clear();
+        com_yamls.clear();
+        companyList.clear();
         File companies = new File(MyCompany.getInstance().getDataFolder(), "/companies");
         if (!companies.exists()) {
             companies.mkdirs();
@@ -55,16 +58,16 @@ public class YamlCompanyData extends CompanyData{
                     }
                     com_files.put(uniqueId, files_map);
                     com_yamls.put(uniqueId, yamls_map);
-                } else {
-                    for (String fileName : filesName) {
-                        File file = new File(MyCompany.getInstance().getDataFolder() + "/companies/" + uniqueId, fileName + ".yml");
-
-                        HashMap<String, File> files_map = com_files.get(uniqueId);
-                        HashMap<String, FileConfiguration> yamls_map = com_yamls.get(uniqueId);
-                        files_map.replace(fileName, file);
-                        yamls_map.replace(fileName, YamlConfiguration.loadConfiguration(file));
-
-                    }
+//                } else {
+//                    for (String fileName : filesName) {
+//                        File file = new File(MyCompany.getInstance().getDataFolder() + "/companies/" + uniqueId, fileName + ".yml");
+//
+//                        HashMap<String, File> files_map = com_files.get(uniqueId);
+//                        HashMap<String, FileConfiguration> yamls_map = com_yamls.get(uniqueId);
+//                        files_map.replace(fileName, file);
+//                        yamls_map.replace(fileName, YamlConfiguration.loadConfiguration(file));
+//
+//                    }
                 }
 
                 companyList.add(uniqueId);
@@ -209,6 +212,19 @@ public class YamlCompanyData extends CompanyData{
                 yaml.set(uuid + ".cash", Config.getDouble(("company-funds.default-asset")));
                 yaml.set(uuid + ".income.total", 0.0);
                 yaml.set(uuid + ".income.daily", 0.0);
+
+                try {
+                    yaml.save(file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+
+            if (fileName.equalsIgnoreCase("settings")) {
+
+                yaml.set(uuid + ".salary.employer", 1000.0);
+                yaml.set(uuid + ".salary.employee", 500.0);
 
                 try {
                     yaml.save(file);
@@ -424,7 +440,26 @@ public class YamlCompanyData extends CompanyData{
         setCash(uniqueId, cash-amount);
     }
 
+    @Override
+    public void resetDailyIncome(UUID uniqueId) {
+        set(uniqueId, "asset", "income.daily", 0);
+    }
+
     // asset.yml - END
+
+    // settings.yml - BEGIN
+
+    @Override
+    public double getSalary(UUID uniqueId, String position) {
+        return (double) get(uniqueId, "settings", "salary." + position);
+    }
+
+    @Override
+    public void setSalary(UUID uniqueId, String position, double amount) {
+        set(uniqueId, "settings", "salary." + position, amount);
+    }
+
+    // settings.yml - END
 
     // Others - BEGIN
 

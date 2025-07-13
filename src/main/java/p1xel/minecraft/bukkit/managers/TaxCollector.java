@@ -1,10 +1,15 @@
 package p1xel.minecraft.bukkit.managers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.events.SalaryPaymentEvent;
 import p1xel.minecraft.bukkit.events.TaxCollectEvent;
 import p1xel.minecraft.bukkit.utils.Config;
+import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -48,12 +53,14 @@ public class TaxCollector {
         // between, every 24hrs
         task = Bukkit.getScheduler().runTaskTimer(MyCompany.getInstance(), () -> {
 
+            CompanyManager manager = MyCompany.getCacheManager().getCompanyManager();
             List<UUID> companies = MyCompany.getCacheManager().getCompanyManager().getAllCompanies();
             TaxCollectEvent event = new TaxCollectEvent(companies);
             Bukkit.getPluginManager().callEvent(event);
 
             if (event.isCancelled()) {
                 task.cancel();
+                return;
             }
 
             for (UUID uniqueId : companies) {
@@ -61,15 +68,15 @@ public class TaxCollector {
                 // Priority: Income Tax > Property Tax > Management Fee
 
                 // Income Tax
-                CompanyManager manager = MyCompany.getCacheManager().getCompanyManager();
                 double balance = manager.getCash(uniqueId);
+                double dailyIncome = manager.getDailyIncome(uniqueId);
                 double incomeTaxRate = Config.getDouble("company-funds.cost-per-day.income-tax.default-tax-rate");
-                String incomePhase = getPhase("income-tax", balance);
+                String incomePhase = getPhase("income-tax", dailyIncome);
                 if (!incomePhase.equals("default")) {
                     incomeTaxRate = Config.getDouble("company-funds.cost-per-day.income-tax.phases." + incomePhase + ".tax-rate");
                 }
 
-                double incomeTax = balance * incomeTaxRate;
+                double incomeTax = dailyIncome * incomeTaxRate;
                 balance = balance - incomeTax;
                 //manager.setCash(uniqueId, balance);
 
@@ -90,6 +97,58 @@ public class TaxCollector {
                 balance = balance - mf;
 
                 manager.setCash(uniqueId, balance);
+                manager.resetDailyIncome(uniqueId);
+
+            }
+
+            // Salary Time~~~~~~~~~~
+            SalaryPaymentEvent salaryEvent = new SalaryPaymentEvent(companies);
+            Bukkit.getPluginManager().callEvent(salaryEvent);
+
+            for (UUID uniqueId : companies) {
+
+                if (salaryEvent.isCancelled()) {
+                    task.cancel();
+                    return;
+                }
+
+                String companyName = manager.getName(uniqueId);
+
+                // employer
+                UUID employerUniqueId = manager.getEmployer(uniqueId);
+                OfflinePlayer employer = Bukkit.getOfflinePlayer(employerUniqueId);
+                double employerSalary = manager.getSalary(uniqueId, "employer") + Config.getDouble("company-funds.salaries.employer");
+                MyCompany.getEconomy().depositPlayer(employer,  employerSalary);
+                if (employer.isOnline()) {
+                    Player player = (Player) employer;
+                    player.sendMessage(Locale.getMessage("salary-received").replaceAll("%company%", companyName).replaceAll("%money%", String.valueOf(employerSalary)));
+                    player.playSound(player, Sound.ENTITY_WITHER_HURT, 3f, 3f);
+                }
+
+                // employee
+                for (String position : manager.getPositions(uniqueId)) {
+
+                    double plus = 0.0;
+                    // Check if there is the sponsorship
+                    if (MyCompany.getInstance().getConfig().isSet("company-funds.salaries." + position)) {
+                        plus = Config.getDouble("company-funds.salaries." + position);
+                    }
+
+                    for (UUID employeeUniqueId : manager.getEmployeeList(uniqueId, position)) {
+
+                        OfflinePlayer employee = Bukkit.getOfflinePlayer(employeeUniqueId);
+                        double employeeSalary = manager.getSalary(uniqueId, position) + plus;
+                        MyCompany.getEconomy().depositPlayer(employee, employeeSalary);
+                        if (employee.isOnline()) {
+                            Player player = (Player) employee;
+                            player.sendMessage(Locale.getMessage("salary-received").replaceAll("%company%", companyName).replaceAll("%money%", String.valueOf(employeeSalary)));
+                            player.playSound(player, Sound.ENTITY_WITHER_HURT, 3f, 3f);
+                        }
+
+                    }
+
+                }
+
 
             }
 

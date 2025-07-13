@@ -65,4 +65,11 @@ public abstract class CompanyData {
     public abstract void giveMoney(UUID uniqueId, double amount);
 
     public abstract void takeMoney(UUID uniqueId, double amount);
+
+    // This does not include the sponsorship in config.yml.
+    public abstract double getSalary(UUID uniqueId, String position);
+
+    public abstract void setSalary(UUID uniqueId, String position, double amount);
+
+    public abstract void resetDailyIncome(UUID uniqueId);
 }

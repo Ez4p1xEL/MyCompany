@@ -112,4 +112,49 @@ public class MysqlCompanyData extends CompanyData{
     public List<UUID> getAllCompanies() {
         return null;
     }
+
+    @Override
+    public double getCash(UUID uniqueId) {
+        return 0;
+    }
+
+    @Override
+    public void setCash(UUID uniqueId, double amount) {
+
+    }
+
+    @Override
+    public double getDailyIncome(UUID uniqueId) {
+        return 0;
+    }
+
+    @Override
+    public double getTotalIncome(UUID uniqueId) {
+        return 0;
+    }
+
+    @Override
+    public void giveMoney(UUID uniqueId, double amount) {
+
+    }
+
+    @Override
+    public void takeMoney(UUID uniqueId, double amount) {
+
+    }
+
+    @Override
+    public double getSalary(UUID uniqueId, String position) {
+        return 0;
+    }
+
+    @Override
+    public void setSalary(UUID uniqueId, String position, double amount) {
+
+    }
+
+    @Override
+    public void resetDailyIncome(UUID uniqueId) {
+
+    }
 }

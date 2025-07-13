@@ -37,7 +37,7 @@ company-settings:
 company-funds:
   default-asset: 120000.0
   cost-per-day:
-    # Tax collecting time
+    # Tax collecting time & Salary payment time
     # Do not set it as same as your server restarting time.
     # The plugin will not check if you missed the tax-collecting time.
     # 00-23, do not write 24:XX!

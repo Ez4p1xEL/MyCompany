@@ -124,4 +124,16 @@ public class CompanyManager {
         this.data.takeMoney(uniqueId, amount);
     }
 
+    public double getSalary(UUID uniqueId, String position) {
+        return this.data.getSalary(uniqueId, position);
+    }
+
+    public void setSalary(UUID uniqueId, String position, double amount) {
+        this.data.setSalary(uniqueId, position, amount);
+    }
+
+    public void resetDailyIncome(UUID uniqueId) {
+        this.data.resetDailyIncome(uniqueId);
+    }
+
 }
