@@ -442,7 +442,7 @@ public class YamlCompanyData extends CompanyData{
 
     @Override
     public void resetDailyIncome(UUID uniqueId) {
-        set(uniqueId, "asset", "income.daily", 0);
+        set(uniqueId, "asset", "income.daily", 0.0);
     }
 
     // asset.yml - END
