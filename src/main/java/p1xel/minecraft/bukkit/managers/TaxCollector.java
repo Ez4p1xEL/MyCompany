@@ -104,6 +104,7 @@ public class TaxCollector {
             // Salary Time~~~~~~~~~~
             SalaryPaymentEvent salaryEvent = new SalaryPaymentEvent(companies);
             Bukkit.getPluginManager().callEvent(salaryEvent);
+            double outcome = 0.0;
 
             for (UUID uniqueId : companies) {
 
@@ -117,8 +118,10 @@ public class TaxCollector {
                 // employer
                 UUID employerUniqueId = manager.getEmployer(uniqueId);
                 OfflinePlayer employer = Bukkit.getOfflinePlayer(employerUniqueId);
-                double employerSalary = manager.getSalary(uniqueId, "employer") + Config.getDouble("company-funds.salaries.employer");
+                double rawEmployerSalary = manager.getSalary(uniqueId, "employer");
+                double employerSalary =  + Config.getDouble("company-funds.salaries.employer");
                 MyCompany.getEconomy().depositPlayer(employer,  employerSalary);
+                outcome += rawEmployerSalary;
                 if (employer.isOnline()) {
                     Player player = (Player) employer;
                     player.sendMessage(Locale.getMessage("salary-received").replaceAll("%company%", companyName).replaceAll("%money%", String.valueOf(employerSalary)));
@@ -137,8 +140,10 @@ public class TaxCollector {
                     for (UUID employeeUniqueId : manager.getEmployeeList(uniqueId, position)) {
 
                         OfflinePlayer employee = Bukkit.getOfflinePlayer(employeeUniqueId);
-                        double employeeSalary = manager.getSalary(uniqueId, position) + plus;
+                        double rawEmployeeSalary = manager.getSalary(uniqueId, position);
+                        double employeeSalary =  rawEmployeeSalary + plus;
                         MyCompany.getEconomy().depositPlayer(employee, employeeSalary);
+                        outcome += rawEmployeeSalary;
                         if (employee.isOnline()) {
                             Player player = (Player) employee;
                             player.sendMessage(Locale.getMessage("salary-received").replaceAll("%company%", companyName).replaceAll("%money%", String.valueOf(employeeSalary)));
@@ -148,8 +153,7 @@ public class TaxCollector {
                     }
 
                 }
-
-
+                manager.setCash(uniqueId, manager.getCash(uniqueId) - outcome);
             }
 
         }, initialDelay, period );

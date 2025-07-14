@@ -356,7 +356,7 @@ public class CommandListener implements CommandExecutor {
 
         }
 
-        if (args.length <= 2) {
+        if (args.length <= 2 && args.length > 0) {
 
             if (args[0].equalsIgnoreCase("info")) {
 
@@ -591,11 +591,11 @@ public class CommandListener implements CommandExecutor {
         int current_commands = 7; //
 
         sender.sendMessage(Locale.getMessage("commands.top-bar"));
-        sender.sendMessage(Locale.getMessage("commands.page").replaceAll("%page%", String.valueOf(helpPage).replaceAll("%max_page%", String.valueOf(current_commands))));
+        sender.sendMessage(Locale.getMessage("commands.page").replaceAll("%page%", String.valueOf(helpPage)));
         sender.sendMessage(Locale.getMessage("commands.space-1"));
         for (String arg : Locale.yaml.getConfigurationSection("commands.").getKeys(false)) {
 
-            if (arg.equals("top-bar") || arg.equals("space-1") || arg.equals("space-2") || arg.equals("bottom-bar")) {
+            if (arg.equals("top-bar") || arg.equals("space-1") || arg.equals("space-2") || arg.equals("bottom-bar") || arg.equals("page")) {
                // sender.sendMessage(Locale.getMessage("commands." + arg));
                 continue;
             }

@@ -7,6 +7,7 @@ import p1xel.minecraft.bukkit.commands.CommandListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
 import p1xel.minecraft.bukkit.utils.*;
+import p1xel.minecraft.bukkit.utils.extensions.Placeholders;
 import p1xel.minecraft.bukkit.utils.storage.*;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
 
@@ -64,6 +65,10 @@ public class MyCompany extends JavaPlugin {
 
         tax = new TaxCollector();
         tax.startTask();
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new Placeholders(cache).register();
+        }
 
         Logger.setEnabled(Config.getBool("debug"));
 

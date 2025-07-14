@@ -3,7 +3,7 @@ prefix: MyCompany
 # Commands
 commands:
   top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
-  page: '&e/myc page %page% &aPage %page% - %max_page%'
+  page: '&e/myc ? %page% &aPage %page%'
   space-1: '&f'
   #help: '&e/myc help &7View help.'
   found: '&e/myc found <company> &7Found a company.'
@@ -96,3 +96,9 @@ info:
   employee:
     - '&7%position%:'
     - ' &e%employees%'
+
+none: 'NONE'
+unemployment: 'UNEMPLOYMENT'
+yourself: 'YOURSELF'
+yes: 'YES'
+no: 'NO'
