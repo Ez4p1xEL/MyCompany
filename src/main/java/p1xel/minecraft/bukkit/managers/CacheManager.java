@@ -15,10 +15,12 @@ public class CacheManager {
 
     private CompanyManager companies;
     private UserManager users;
+    private ShopManager shops;
 
     public CacheManager(CompanyManager companies, UserManager users) {
         this.companies = companies;
         this.users = users;
+        this.shops = new ShopManager(companies.getData());
     }
 
     public CompanyManager getCompanyManager() {
@@ -28,6 +30,8 @@ public class CacheManager {
     public UserManager getUserManager() {
         return users;
     }
+
+    public ShopManager getShopManager() { return shops;}
 
     public void init() {
         this.companies.init();

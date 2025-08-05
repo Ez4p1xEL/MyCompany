@@ -4,6 +4,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import p1xel.minecraft.bukkit.commands.CommandListener;
+import p1xel.minecraft.bukkit.listeners.ShopListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
 import p1xel.minecraft.bukkit.utils.*;
@@ -57,6 +58,7 @@ public class MyCompany extends JavaPlugin {
 
         getServer().getPluginCommand("MyCompany").setExecutor(new CommandListener());
         getServer().getPluginManager().registerEvents(new UserCreation(), this);
+        getServer().getPluginManager().registerEvents(new ShopListener(), this);
 
         if (!setupEconomy()) {
             getLogger().warning("Vault is not found! Disabling MyCompany...");

@@ -88,4 +88,14 @@ company-funds:
     employer: 1350.0
     employee: 750.0
 
+# Chest Shop
+chest-shop:
+  # Placing sign at the chest
+  # with identifier written in the first line.
+  # The chest will be created as a company's chest shop.
+  # Sign:
+  # [COMPANYSHOP]
+  # price
+  sign-create:
+    identifier: '[COMPANYSHOP]'
 #构想: 每间公司的商店仅能出售被插件限定的物品

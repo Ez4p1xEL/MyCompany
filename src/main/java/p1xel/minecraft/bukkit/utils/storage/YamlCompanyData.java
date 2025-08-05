@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -460,6 +461,41 @@ public class YamlCompanyData extends CompanyData{
     }
 
     // settings.yml - END
+
+    // shop.yml - BEGIN
+
+    @Override
+    public UUID createShop(UUID uniqueId, Location location, double price, String creatorName) {
+        UUID shopUniqueId = UUID.randomUUID();
+        set(uniqueId, "shop", shopUniqueId + ".creator", creatorName);
+        set(uniqueId, "shop", shopUniqueId + ".location.x", location.getBlockX());
+        set(uniqueId, "shop", shopUniqueId + ".location.y", location.getBlockY());
+        set(uniqueId, "shop", shopUniqueId + ".location.z", location.getBlockZ());
+        set(uniqueId, "shop", shopUniqueId + ".price", price);
+        return shopUniqueId;
+    }
+
+    @Override
+    @Nullable
+    public List<Shop> getShops(UUID uniqueId) {
+        List<Shop> shops = new ArrayList<>();
+        for (String key : com_yamls.get(uniqueId).get("shop").getConfigurationSection(String.valueOf(uniqueId)).getKeys(false)) {
+            shops.add(new Shop(uniqueId, UUID.fromString(key)));
+        }
+        return shops;
+    }
+
+    @Override
+    @Nullable
+    public List<UUID> getShopsUUID(UUID uniqueId) {
+        List<UUID> shops = new ArrayList<>();
+        for (String key : com_yamls.get(uniqueId).get("shop").getConfigurationSection(String.valueOf(uniqueId)).getKeys(false)) {
+            shops.add(UUID.fromString(key));
+        }
+        return shops;
+    }
+
+    // shop.yml - END
 
     // Others - BEGIN
 

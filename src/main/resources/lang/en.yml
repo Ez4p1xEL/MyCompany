@@ -97,6 +97,27 @@ info:
     - '&7%position%:'
     - ' &e%employees%'
 
+# Chest shop sign
+shop:
+  sign:
+    line1: '&7[&b%company%&7]'
+    line2: '&0%item%'
+    line3: '%status%'
+    line4: '&0Price: $%price%'
+  status:
+    selling: '&a&lSELLING'
+    not-specific: '&4&lUNSPECIFIC'
+    out-of-stock: '&c&lOUT OF STOCK'
+    something-wrong: '&4&lSOMETHING WENT WRONG'
+  sell-info:
+    - '&b%company%''s shop'
+    - '&a%item%: &b$%price%'
+    - '&dStock: %amount%'
+    - '%status%'
+    - '&aPlease enter the amount of item you are going to purchase.'
+  already-created: '&7[&6%prefix%&7] &cThe shop is already created!'
+
+
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'
 yourself: 'YOURSELF'

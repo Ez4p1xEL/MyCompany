@@ -1,5 +1,7 @@
 package p1xel.minecraft.bukkit.managers;
 
+import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.utils.storage.CompanyData;
 
 import javax.annotation.Nullable;

@@ -1,5 +1,6 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
+import org.bukkit.Location;
 import p1xel.minecraft.bukkit.Company;
 
 import javax.annotation.Nullable;
@@ -72,4 +73,18 @@ public abstract class CompanyData {
     public abstract void setSalary(UUID uniqueId, String position, double amount);
 
     public abstract void resetDailyIncome(UUID uniqueId);
+
+    public abstract UUID createShop(UUID uniqueId, Location location, double price, String creatorName);
+
+    @Nullable
+    public abstract List<Shop> getShops(UUID uniqueId);
+
+    @Nullable
+    public abstract List<UUID> getShopsUUID(UUID uniqueId);
+
+    //public abstract Location getLocation(UUID uniqueId);
+
+    //public abstract UUID getCompanyUUID(UUID uniqueId);
+
+    //public abstract UUID getCreator(UUID uniqueId);
 }

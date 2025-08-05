@@ -1,5 +1,6 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
+import org.bukkit.Location;
 import p1xel.minecraft.bukkit.Company;
 
 import javax.annotation.Nullable;
@@ -156,5 +157,20 @@ public class MysqlCompanyData extends CompanyData{
     @Override
     public void resetDailyIncome(UUID uniqueId) {
 
+    }
+
+    @Override
+    public UUID createShop(UUID uniqueId, Location location, double price, String creatorName) {
+        return null;
+    }
+
+    @Override
+    public List<Shop> getShops(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public List<UUID> getShopsUUID(UUID uniqueId) {
+        return null;
     }
 }
