@@ -98,4 +98,6 @@ chest-shop:
   # price
   sign-create:
     identifier: '[COMPANYSHOP]'
+  # how many seconds that the player can enter the amount to buy item
+  buy-time: 10
 #构想: 每间公司的商店仅能出售被插件限定的物品

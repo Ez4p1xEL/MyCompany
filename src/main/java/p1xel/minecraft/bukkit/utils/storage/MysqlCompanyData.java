@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
 import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
 
 import javax.annotation.Nullable;
@@ -171,6 +172,11 @@ public class MysqlCompanyData extends CompanyData{
 
     @Override
     public List<UUID> getShopsUUID(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public ItemStack getItem(UUID companyUniqueId, UUID shopUniqueId) {
         return null;
     }
 }

@@ -28,7 +28,7 @@ reload-success: '&7[&6%prefix%&7] &aConfiguration is reloaded successfully!'
 must-be-player: '&7[&6%prefix%&7] &cYou must be a player to do that!'
 no-perm: '&7[&6%prefix%&7] &cYou have no permission to do that!'
 out-of-length: '&7[&6%prefix%&7] &cThe name is out of length. It Should be the maximum of &e%length%&c.'
-not-enough-money: '&7[&6prefix%&7] &cYou do not have enough money. You need total &e%money%&c!'
+not-enough-money: '&7[&6%prefix%&7] &cYou do not have enough money. You need total &e%money%&c!'
 
 # Company
 found-success: '&7[&6%prefix%&7] &aYou successfully found a new company &e%company%&a!'
@@ -59,6 +59,7 @@ player-not-online: '&7[&6%prefix%&7] &e%player% &cis not online!'
 no-contract: '&7[&6%prefix%&7] &cThere is no contract!'
 id-invalid: '&7[&6%prefix%&7] &cPlease enter the company id correctly!'
 id-not-exist: '&7[&6%prefix%&7] &cCompany Id &e%cid% &cis not existed!'
+remove-shop-before-disband: '&7[&6%prefix%&7] &cPlease remove all the chest shops before disbanding the company!'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'
@@ -116,6 +117,12 @@ shop:
     - '%status%'
     - '&aPlease enter the amount of item you are going to purchase.'
   already-created: '&7[&6%prefix%&7] &cThe shop is already created!'
+  #item-specified: '&7[&6%prefix%&7] &aItem is specified successfully!'
+  break-chest-instead: '&7[&6%prefix%&7] &cYou should break the sign instead to delete the shop!'
+  shop-deleted: '&7[&6%prefix%&7] &cShop has been deleted!'
+  invalid-buy-amount: '&7[&6%prefix%&7] &cInvalid amount.'
+  not-enough-stock: '&7[&6%prefix%&7] &cThe shop does not have enough stock!'
+  buy-success: '&7[&6%prefix%&7] &aYou bought products from &b%company%&a!'
 
 
 none: 'NONE'

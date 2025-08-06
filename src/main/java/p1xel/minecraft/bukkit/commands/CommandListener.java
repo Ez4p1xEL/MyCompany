@@ -58,8 +58,13 @@ public class CommandListener implements CommandExecutor {
                     sender.sendMessage(Locale.getMessage("employer-only"));
                     return true;
                 }
-
                 UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+
+                if (MyCompany.getCacheManager().getShopManager().getShopsUUID(companyUniqueId) != null) {
+                    sender.sendMessage(Locale.getMessage("remove-shop-before-disband"));
+                    return true;
+                }
+
                 String companyName = MyCompany.getCacheManager().getCompanyManager().getName(companyUniqueId);
                 //if (!MyCompany.getCacheManager().getCompanyManager())
                 MyCompany.getCacheManager().getCompanyManager().disbandCompany(companyUniqueId);

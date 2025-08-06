@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.utils.Config;
@@ -468,6 +469,7 @@ public class YamlCompanyData extends CompanyData{
     public UUID createShop(UUID uniqueId, Location location, double price, String creatorName) {
         UUID shopUniqueId = UUID.randomUUID();
         set(uniqueId, "shop", shopUniqueId + ".creator", creatorName);
+        set(uniqueId, "shop", shopUniqueId + ".location.world", location.getWorld().getName());
         set(uniqueId, "shop", shopUniqueId + ".location.x", location.getBlockX());
         set(uniqueId, "shop", shopUniqueId + ".location.y", location.getBlockY());
         set(uniqueId, "shop", shopUniqueId + ".location.z", location.getBlockZ());
@@ -493,6 +495,15 @@ public class YamlCompanyData extends CompanyData{
             shops.add(UUID.fromString(key));
         }
         return shops;
+    }
+
+    @Override
+    @Nullable
+    public ItemStack getItem(UUID companyUniqueId, UUID shopUniqueId) {
+        FileConfiguration yaml = com_yamls.get(companyUniqueId).get("shop");
+        ItemStack item = yaml.getItemStack(companyUniqueId + "." + shopUniqueId + ".item");
+        if (item ==null) { return null;}
+        return item.clone();
     }
 
     // shop.yml - END

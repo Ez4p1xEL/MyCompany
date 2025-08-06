@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
 import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
 
 import javax.annotation.Nullable;
@@ -81,6 +82,9 @@ public abstract class CompanyData {
 
     @Nullable
     public abstract List<UUID> getShopsUUID(UUID uniqueId);
+
+    @Nullable
+    public abstract ItemStack getItem(UUID companyUniqueId, UUID shopUniqueId);
 
     //public abstract Location getLocation(UUID uniqueId);
 
