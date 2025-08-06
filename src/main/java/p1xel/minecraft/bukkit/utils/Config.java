@@ -4,6 +4,8 @@ package p1xel.minecraft.bukkit.utils;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
+import java.util.List;
+
 public class Config {
 
     public static String getString(String path) {
@@ -41,5 +43,7 @@ public class Config {
     }
 
     public static double getDouble(String path) { return MyCompany.getInstance().getConfig().getDouble(path);}
+
+    public static List<String> getStringList(String path) { return MyCompany.getInstance().getConfig().getStringList(path);}
 
 }

@@ -104,13 +104,18 @@ public class TaxCollector {
             // Salary Time~~~~~~~~~~
             SalaryPaymentEvent salaryEvent = new SalaryPaymentEvent(companies);
             Bukkit.getPluginManager().callEvent(salaryEvent);
-            double outcome = 0.0;
 
             for (UUID uniqueId : companies) {
+
+                double outcome = 0.0;
 
                 if (salaryEvent.isCancelled()) {
                     task.cancel();
                     return;
+                }
+
+                if (manager.getCash(uniqueId) <= 0) {
+                    continue;
                 }
 
                 String companyName = manager.getName(uniqueId);
@@ -134,7 +139,7 @@ public class TaxCollector {
                     double plus = 0.0;
                     // Check if there is the sponsorship
                     if (MyCompany.getInstance().getConfig().isSet("company-funds.salaries." + position)) {
-                        plus = Config.getDouble("company-funds.salaries." + position);
+                        plus = Config.getDouble("company-funds.salaries.employee");
                     }
 
                     for (UUID employeeUniqueId : manager.getEmployeeList(uniqueId, position)) {

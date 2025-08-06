@@ -14,6 +14,12 @@ commands:
   accept: '&e/myc accept <player> &7Accept the request.'
   resign: '&e/myc resign &7Resign from the company.'
   info: '&e/myc info [CompanyId] &7View information of the company.'
+  position-set: '&e/myc position set <employee> <position> &7Set employee''s position.'
+  position-add: '&e/myc position add <position> [label] &7Add position.'
+  position-remove: '&e/myc position remove <position> &7Remove position.'
+  position-label-set: '&e/myc position setlabel <position> <label> &7Set label of the position.'
+  position-permission-add: '&e/myc position permission add <position> <permission> &7Add permission for the position.'
+  position-permission-remove: '&e/myc position permission remove <position> <permission> &7Remove permission of the position.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
@@ -60,6 +66,7 @@ no-contract: '&7[&6%prefix%&7] &cThere is no contract!'
 id-invalid: '&7[&6%prefix%&7] &cPlease enter the company id correctly!'
 id-not-exist: '&7[&6%prefix%&7] &cCompany Id &e%cid% &cis not existed!'
 remove-shop-before-disband: '&7[&6%prefix%&7] &cPlease remove all the chest shops before disbanding the company!'
+not-permitted: '&7[&6%prefix%&7] &cMissing permission %permission% by your company.'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'
@@ -68,7 +75,6 @@ money-take-success: '&7[&6%prefix%&7] &aYou take &e$%money% &afrom &e%company%&a
 
 # Salary
 salary-received: '&7[&b%company%&7] &aYou received the salary &e$%money%&a.'
-
 
 # Broadcast
 broadcast:
@@ -124,9 +130,13 @@ shop:
   not-enough-stock: '&7[&6%prefix%&7] &cThe shop does not have enough stock!'
   buy-success: '&7[&6%prefix%&7] &aYou bought products from &b%company%&a!'
 
-
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'
 yourself: 'YOURSELF'
 yes: 'YES'
 no: 'NO'
+
+check-update:
+  invalid: 'Unable to check for updates: '
+  latest: 'There is not a new update available.'
+  outdate: 'There is a new update available.'

@@ -7,6 +7,8 @@ import p1xel.minecraft.bukkit.commands.CommandListener;
 import p1xel.minecraft.bukkit.listeners.ShopListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
+import p1xel.minecraft.bukkit.tools.bstats.Metrics;
+import p1xel.minecraft.bukkit.tools.spigotmc.UpdateChecker;
 import p1xel.minecraft.bukkit.utils.*;
 import p1xel.minecraft.bukkit.utils.extensions.Placeholders;
 import p1xel.minecraft.bukkit.utils.storage.*;
@@ -86,6 +88,18 @@ public class MyCompany extends JavaPlugin {
         getLogger().info("       ░    ░ ░     ░ ░          ░ ░         ░                  ░  ░         ░ ░ ░     ");
         getLogger().info("            ░ ░     ░                                                          ░ ░     ");
         getLogger().info("Plugin is enabled!");
+
+        new Metrics(MyCompany.getInstance(), 26813);
+
+        if (Config.getBool("check-update")) {
+            new UpdateChecker(this, 127007).getVersion(version -> {
+                if (this.getDescription().getVersion().equals(version)) {
+                    getLogger().info(Locale.getMessage("check-update.latest"));
+                } else {
+                    getLogger().info(Locale.getMessage("check-update.outdate"));
+                }
+            });
+        }
     }
 
     private boolean setupEconomy() {

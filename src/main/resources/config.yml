@@ -3,6 +3,8 @@ configuration: 1
 # Debug mode
 debug: true
 
+check-update: true
+
 storage:
   # Ways to store data
   # Available storages: YAML, MYSQL(recommended)
@@ -33,6 +35,11 @@ company-settings:
   # Should the plugin backup the company data,
   # after closure of the company.
   backup-folder-before-delete: false
+  # Default permissions given to the employee
+  # Custom position will also follow this default setting.
+  employee-default-permission:
+    - 'CHESTSHOP_CREATE'
+    - 'CHESTSHOP_DELETE'
 
 company-funds:
   default-asset: 120000.0

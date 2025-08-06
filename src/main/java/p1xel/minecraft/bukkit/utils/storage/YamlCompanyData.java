@@ -225,8 +225,17 @@ public class YamlCompanyData extends CompanyData{
 
             if (fileName.equalsIgnoreCase("settings")) {
 
+                // Salary
                 yaml.set(uuid + ".salary.employer", 1000.0);
                 yaml.set(uuid + ".salary.employee", 500.0);
+
+                // Position
+                // Label
+                yaml.set(uuid + ".position.default.employer.label", "Employer");
+                yaml.set(uuid + ".position.default.employee.label", "Employee");
+                // Permission
+                yaml.set(uuid + ".position.default.employer.permission", Collections.singletonList("all"));
+                yaml.set(uuid + ".position.default.employee.permission", Config.getStringList("company-settings.employee-default-permission"));
 
                 try {
                     yaml.save(file);
@@ -393,12 +402,13 @@ public class YamlCompanyData extends CompanyData{
     @Override
     public List<String> getPositions(UUID uniqueId) {
         List<String> list = new ArrayList<>();
-        for (String position : com_yamls.get(uniqueId).get("info").getConfigurationSection(uniqueId + ".members").getKeys(false)) {
-            if (position.equalsIgnoreCase("employer")) {
-                continue;
-            }
-            list.add(position);
+        list.add("employer");
+        list.add("employee");
+        Set<String> keys = com_yamls.get(uniqueId).get("settings").getConfigurationSection(uniqueId + ".position.custom").getKeys(false);
+        if (keys.isEmpty()) {
+            return list;
         }
+        list.addAll(keys);
         return list;
     }
 

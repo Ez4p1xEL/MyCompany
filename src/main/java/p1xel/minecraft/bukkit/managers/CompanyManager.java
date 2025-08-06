@@ -1,13 +1,11 @@
 package p1xel.minecraft.bukkit.managers;
 
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
+import p1xel.minecraft.bukkit.utils.Config;
+import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.CompanyData;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CompanyManager {
 
@@ -136,6 +134,107 @@ public class CompanyManager {
 
     public void resetDailyIncome(UUID uniqueId) {
         this.data.resetDailyIncome(uniqueId);
+    }
+
+    public String getEmployerLabel(UUID uniqueId) {
+        return (String) this.data.get(uniqueId, "settings", "label.positions.default.employer");
+    }
+
+    public String getEmployeeLabel(UUID uniqueId) {
+        return (String) this.data.get(uniqueId, "settings", "label.positions.default.employee");
+    }
+
+    // Do not enter employer or employee
+    public String getPositionLabel(UUID uniqueId, String position) {
+        return (String) this.data.get(uniqueId, "settings", "label.positions.custom." + position);
+    }
+
+    public void setEmployerLabel(UUID uniqueId, String label) {
+        this.data.set(uniqueId, "settings", "position.default.employer.label", label);
+    }
+
+    public void setEmployeeLabel(UUID uniqueId, String label) {
+        this.data.set(uniqueId, "settings", "position.default.employee.label", label);
+    }
+
+    public void setPositionLabel(UUID uniqueId, String position, String label) {
+        this.data.set(uniqueId, "settings", "position.custom." + position + ".label", label);
+    }
+
+    public void addPosition(UUID uniqueId, String position) {
+        this.data.set(uniqueId, "info", "members." + position, Collections.emptyList());
+        this.data.set(uniqueId, "settings", "salary." + position, 500);
+        this.data.set(uniqueId, "settings", "position.custom." + position + ".label", position);
+        this.data.set(uniqueId, "settings","position.default." + position + ".permission", Config.getStringList("company-settings.employee-default-permission"));
+    }
+
+    // Member of the position will be moved to employee's list
+    public void removePosition(UUID uniqueId, String position) {
+        this.data.set(uniqueId, "settings", "position.custom." + position, null);
+        this.data.set(uniqueId, "settings", "salary." + position, null);
+        List<UUID> origin = getEmployeeList(uniqueId, "employee");
+        List<UUID> add = getEmployeeList(uniqueId, position);
+        origin.addAll(add);
+        this.data.set(uniqueId, "info", "members.employee", origin);
+        this.data.set(uniqueId, "info", "members." + position, null);
+    }
+
+    public List<Permission> getPositionPermission(UUID uniqueId, String position) {
+        List<String> stringList = new ArrayList<>();
+        switch (position) {
+            case "employer":
+            case "employee":
+                List<String> list1 = (List<String>) this.data.get(uniqueId, "settings", "position.default." + position + ".permission");
+                stringList = list1;
+                break;
+            default:
+                List<String> list2 = (List<String>) this.data.get(uniqueId, "settings", "position.custom." + position + ".permission");
+                stringList = list2;
+                break;
+        }
+        List<Permission> list = new ArrayList<>();
+        for (String perm : stringList) {
+            list.add(Permission.matchPermission(perm));
+        }
+        return list;
+    }
+
+    public void addPositionPermission(UUID uniqueId, String position, Permission permission) {
+        List<String> list = new ArrayList<>();
+        switch (position) {
+            case "employer":
+            case "employee":
+                List<String> list1 = (List<String>) this.data.get(uniqueId, "settings", "position.default." + position + ".permission");
+                list = list1;
+                list.add(permission.getName());
+                this.data.set(uniqueId, "settings", "position.default." + position + ".permission", list);
+                break;
+            default:
+                List<String> list2 = (List<String>) this.data.get(uniqueId, "settings", "position.custom." + position + ".permission");
+                list = list2;
+                list.add(permission.getName());
+                this.data.set(uniqueId, "settings", "position.custom." + position + ".permission", list);
+                break;
+        }
+    }
+
+    public void removePositionPermission(UUID uniqueId, String position, Permission permission) {
+        List<String> list = new ArrayList<>();
+        switch (position) {
+            case "employer":
+            case "employee":
+                List<String> list1 = (List<String>) this.data.get(uniqueId, "settings", "position.default." + position + ".permission");
+                list = list1;
+                list.remove(permission.getName());
+                this.data.set(uniqueId, "settings", "position.default." + position + ".permission", list);
+                break;
+            default:
+                List<String> list2 = (List<String>) this.data.get(uniqueId, "settings", "position.custom." + position + ".permission");
+                list = list2;
+                list.remove(permission.getName());
+                this.data.set(uniqueId, "settings", "position.custom." + position + ".permission", list);
+                break;
+        }
     }
 
 }

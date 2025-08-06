@@ -26,6 +26,7 @@ import p1xel.minecraft.bukkit.events.CompanyIncomeEvent;
 import p1xel.minecraft.bukkit.managers.*;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.Logger;
+import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 import p1xel.minecraft.bukkit.utils.storage.Shop;
 
@@ -93,6 +94,12 @@ public class ShopListener implements Listener {
         if (companyUniqueId == null) {
             player.sendMessage(Locale.getMessage("no-company"));
             event.setLine(1, Locale.getMessage("shop.status.something-wrong"));
+            return;
+        }
+
+        if (!companyManager.getPositionPermission(companyUniqueId, userManager.getPosition(playerUniqueId)).contains(Permission.CHESTSHOP_CREATE)) {
+            player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.CHESTSHOP_CREATE.getName()));
+            event.setCancelled(true);
             return;
         }
 
@@ -355,6 +362,12 @@ public class ShopListener implements Listener {
                 UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                 if (companyUniqueId == null) {
                     player.sendMessage(Locale.getMessage("no-perm"));
+                    event.setCancelled(true);
+                    return;
+                }
+
+                if (!companyManager.getPositionPermission(companyUniqueId, userManager.getPosition(playerUniqueId)).contains(Permission.CHESTSHOP_DELETE)) {
+                    player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.CHESTSHOP_DELETE.getName()));
                     event.setCancelled(true);
                     return;
                 }
