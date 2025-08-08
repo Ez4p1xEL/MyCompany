@@ -4,10 +4,11 @@ import java.util.HashMap;
 
 public enum Permission {
 
-    EMPLOY("employ"),
-    FIRE("fire"),
-    CHESTSHOP_CREATE("chestshop_create"),
-    CHESTSHOP_DELETE("chestshop_delete");
+    ALL("ALL"),
+    EMPLOY("EMPLOY"),
+    FIRE("FIRE"),
+    CHESTSHOP_CREATE("CHESTSHOP_CREATE"),
+    CHESTSHOP_DELETE("CHESTSHOP_DELETE");
 
     private String name;
     private final static HashMap<String, Permission> namemap = new HashMap<>();
@@ -20,7 +21,7 @@ public enum Permission {
     }
 
     public static Permission matchPermission(String name) {
-        return namemap.get(name);
+        return namemap.get(name.toUpperCase());
     }
 
     static {

@@ -3,6 +3,7 @@ package p1xel.minecraft.bukkit.utils.storage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -304,7 +305,7 @@ public class YamlCompanyData extends CompanyData{
         List<UUID> list = new ArrayList<>();
         Object origin = get(uniqueId, "info", "members." + position);
         if (!(origin instanceof List<?>)) {
-            return null;
+            return list;
         }
         for (String member : (List<String>) origin) {
             list.add(UUID.fromString(member));
@@ -326,6 +327,7 @@ public class YamlCompanyData extends CompanyData{
 
     @Override
     public void disbandCompany(UUID uniqueId) {
+        int cid = getId(uniqueId);
 
         // Remove employer
         UUID employerUniqueId = getEmployer(uniqueId);
@@ -358,6 +360,8 @@ public class YamlCompanyData extends CompanyData{
 
         com_files.remove(uniqueId);
         com_yamls.remove(uniqueId);
+        MyCompany.getCacheManager().getCompanyManager().getCIds().remove(cid);
+        companyList.remove(uniqueId);
     }
 
     @Override
@@ -404,11 +408,11 @@ public class YamlCompanyData extends CompanyData{
         List<String> list = new ArrayList<>();
         list.add("employer");
         list.add("employee");
-        Set<String> keys = com_yamls.get(uniqueId).get("settings").getConfigurationSection(uniqueId + ".position.custom").getKeys(false);
-        if (keys.isEmpty()) {
+        ConfigurationSection section = com_yamls.get(uniqueId).get("settings").getConfigurationSection(uniqueId + ".position.custom");
+        if (section == null) {
             return list;
         }
-        list.addAll(keys);
+        list.addAll(section.getKeys(false));
         return list;
     }
 

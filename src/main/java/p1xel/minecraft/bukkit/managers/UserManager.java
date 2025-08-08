@@ -1,8 +1,11 @@
 package p1xel.minecraft.bukkit.managers;
 
+import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.UserData;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 public class UserManager {
@@ -48,6 +51,11 @@ public class UserManager {
 
     public String getPosition(UUID uniqueId) {
         return this.data.getPosition(uniqueId);
+    }
+
+    public boolean hasPermission(UUID uniqueId, Permission permission) {
+        List<Permission> list = MyCompany.getCacheManager().getCompanyManager().getPositionPermission(getCompanyUUID(uniqueId), getPosition(uniqueId));
+        return list.contains(Permission.ALL) || list.contains(permission);
     }
 
 

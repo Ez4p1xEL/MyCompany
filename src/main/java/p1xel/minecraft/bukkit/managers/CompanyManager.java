@@ -1,11 +1,13 @@
 package p1xel.minecraft.bukkit.managers;
 
+import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.CompanyData;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CompanyManager {
 
@@ -137,16 +139,22 @@ public class CompanyManager {
     }
 
     public String getEmployerLabel(UUID uniqueId) {
-        return (String) this.data.get(uniqueId, "settings", "label.positions.default.employer");
+        return (String) this.data.get(uniqueId, "settings", "position.default.employer.label");
     }
 
     public String getEmployeeLabel(UUID uniqueId) {
-        return (String) this.data.get(uniqueId, "settings", "label.positions.default.employee");
+        return (String) this.data.get(uniqueId, "settings", "position.default.employee.label");
     }
 
     // Do not enter employer or employee
     public String getPositionLabel(UUID uniqueId, String position) {
-        return (String) this.data.get(uniqueId, "settings", "label.positions.custom." + position);
+        if (position.equalsIgnoreCase("employer")) {
+            return getEmployerLabel(uniqueId);
+        }
+        if (position.equalsIgnoreCase("employee")) {
+            return getEmployeeLabel(uniqueId);
+        }
+        return (String) this.data.get(uniqueId, "settings", "position.custom." + position + ".label");
     }
 
     public void setEmployerLabel(UUID uniqueId, String label) {
@@ -165,7 +173,7 @@ public class CompanyManager {
         this.data.set(uniqueId, "info", "members." + position, Collections.emptyList());
         this.data.set(uniqueId, "settings", "salary." + position, 500);
         this.data.set(uniqueId, "settings", "position.custom." + position + ".label", position);
-        this.data.set(uniqueId, "settings","position.default." + position + ".permission", Config.getStringList("company-settings.employee-default-permission"));
+        this.data.set(uniqueId, "settings","position.custom." + position + ".permission", Config.getStringList("company-settings.employee-default-permission"));
     }
 
     // Member of the position will be moved to employee's list
@@ -175,12 +183,15 @@ public class CompanyManager {
         List<UUID> origin = getEmployeeList(uniqueId, "employee");
         List<UUID> add = getEmployeeList(uniqueId, position);
         origin.addAll(add);
-        this.data.set(uniqueId, "info", "members.employee", origin);
+        List<String> stringList = origin.stream()
+                .map(UUID::toString)
+                .collect(Collectors.toList());
+        this.data.set(uniqueId, "info", "members.employee", stringList);
         this.data.set(uniqueId, "info", "members." + position, null);
     }
 
     public List<Permission> getPositionPermission(UUID uniqueId, String position) {
-        List<String> stringList = new ArrayList<>();
+        List<String> stringList;
         switch (position) {
             case "employer":
             case "employee":
@@ -235,6 +246,26 @@ public class CompanyManager {
                 this.data.set(uniqueId, "settings", "position.custom." + position + ".permission", list);
                 break;
         }
+    }
+
+    public void setEmployeePosition(UUID companyUniqueId, UUID employeeUniqueId, String position) {
+
+        UserManager userManager = MyCompany.getCacheManager().getUserManager();
+        String current = userManager.getPosition(employeeUniqueId);
+        List<UUID> origin = getEmployeeList(companyUniqueId, current);
+        List<String> origin_string = origin.stream()
+                .map(UUID::toString)
+                .collect(Collectors.toList());
+        origin_string.remove(employeeUniqueId.toString());
+        this.data.set(companyUniqueId, "info", "members." + current, origin_string);
+        List<UUID> latest = getEmployeeList(companyUniqueId, position);
+        List<String> latest_string = latest.stream()
+                .map(UUID::toString)
+                .collect(Collectors.toList());
+        latest_string.add(employeeUniqueId.toString());
+        this.data.set(companyUniqueId, "info", "members." + position, latest_string);
+        userManager.setPosition(employeeUniqueId, position);
+
     }
 
 }

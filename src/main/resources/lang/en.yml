@@ -6,7 +6,7 @@ commands:
   page: '&e/myc ? %page% &aPage %page%'
   space-1: '&f'
   #help: '&e/myc help &7View help.'
-  found: '&e/myc found <company> &7Found a company.'
+  found: '&e/myc found <company> &7Found a company. (Use _ instead of SPACE)'
   disband: '&e/myc disband &7Disband your company.'
   employ: '&e/myc employ <player> &7Send an employment contract to the player.'
   fire: '&e/myc fire <employee> &7Fire the employee.'
@@ -17,7 +17,7 @@ commands:
   position-set: '&e/myc position set <employee> <position> &7Set employee''s position.'
   position-add: '&e/myc position add <position> [label] &7Add position.'
   position-remove: '&e/myc position remove <position> &7Remove position.'
-  position-label-set: '&e/myc position setlabel <position> <label> &7Set label of the position.'
+  position-label-set: '&e/myc position setlabel <position> <label> &7Set label of the position. (Use _ instead of SPACE)'
   position-permission-add: '&e/myc position permission add <position> <permission> &7Add permission for the position.'
   position-permission-remove: '&e/myc position permission remove <position> <permission> &7Remove permission of the position.'
   admin:
@@ -66,7 +66,7 @@ no-contract: '&7[&6%prefix%&7] &cThere is no contract!'
 id-invalid: '&7[&6%prefix%&7] &cPlease enter the company id correctly!'
 id-not-exist: '&7[&6%prefix%&7] &cCompany Id &e%cid% &cis not existed!'
 remove-shop-before-disband: '&7[&6%prefix%&7] &cPlease remove all the chest shops before disbanding the company!'
-not-permitted: '&7[&6%prefix%&7] &cMissing permission %permission% by your company.'
+employer-self: '&7[&6%prefix%&7] &cYou are the employer, what do you mean?'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'
@@ -75,6 +75,24 @@ money-take-success: '&7[&6%prefix%&7] &aYou take &e$%money% &afrom &e%company%&a
 
 # Salary
 salary-received: '&7[&b%company%&7] &aYou received the salary &e$%money%&a.'
+
+# Position label and Permission
+position-already-existed: '&7[&6%prefix%&7] &cPosition id &e%position% &cis already existed!'
+position-not-existed: '&7[&6%prefix%&7] &cCouldn''t find &e%position%&c.'
+position-add: '&7[&6%prefix%&7] &aAdded position: &e%position%&a with labelled &e%label%&a.'
+position-remove: '&7[&6%prefix%&7] &aRemoved position: &e%position%&a.'
+position-set: '&7[&6%prefix%&7] &aSet &e%player%&a''s position to &e%label%&7(%position%)&a.'
+position-setlabel: '&7[&6%prefix%&7] &aSet position &e%position%&a''s label to &e%label%&a.'
+position-permission-add: '&7[&6%prefix%&7] &aAdded permission &e%permission% &ato &e%position%&a.'
+position-permission-remove: '&7[&6%prefix%&7] &aRemoved permission &e%permission% &afrom &e%position%&a.'
+player-position-conflict: '&7[&6%prefix%&7] &e%player% &c is already a &e%label%&c!'
+position-permission-not-existed: '&7[&6%prefix%&7] &cPermission &e%permission% &cdoes not exist!'
+position-has-no-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &cdoes not have permission &e%permission%&c.'
+position-has-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &calready has permission &e%permission%&c.'
+incorrect-position-id: '&7[&6%prefix%&7] &cIncorrect position identifier, please enter another one!'
+not-permitted: '&7[&6%prefix%&7] &cMissing permission %permission% by your company.'
+position-set-received: '&7[&b%company%&7] &aYour position has been changed to &e%label%&c.'
+cant-set-to-employer: '&7[&6%prefix%&7] &cYou cannot transfer your position by doing this!'
 
 # Broadcast
 broadcast:
@@ -91,7 +109,7 @@ info:
     - '&7Founding date: &d%date%'
     - '&7Total players: &b%amount%'
     - ''
-    - '&7Current employer: &e%employer%'
+    - '&b%employer_label%&8(employer)&b: &e%employer%'
     - '%employee%'
     - ''
     - '&cThere should be more private details here,'
@@ -101,7 +119,7 @@ info:
     - ''
     - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
   employee:
-    - '&7%position%:'
+    - '&7%label%&8(%position%)&7:'
     - ' &e%employees%'
 
 # Chest shop sign

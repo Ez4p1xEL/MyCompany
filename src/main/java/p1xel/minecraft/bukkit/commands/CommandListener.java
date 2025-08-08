@@ -10,7 +10,9 @@ import org.bukkit.entity.Player;
 import p1xel.minecraft.bukkit.events.CompanyIncomeEvent;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.UserManager;
 import p1xel.minecraft.bukkit.utils.Config;
+import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -19,6 +21,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class CommandListener implements CommandExecutor {
+
+    private final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
+    private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
 
     @Override
     @ParametersAreNonnullByDefault
@@ -60,7 +65,7 @@ public class CommandListener implements CommandExecutor {
                 }
                 UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
 
-                if (MyCompany.getCacheManager().getShopManager().getShopsUUID(companyUniqueId) != null) {
+                if (!MyCompany.getCacheManager().getShopManager().getShopsUUID(companyUniqueId).isEmpty()) {
                     sender.sendMessage(Locale.getMessage("remove-shop-before-disband"));
                     return true;
                 }
@@ -163,13 +168,15 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                MyCompany.getCacheManager().getCompanyManager().createCompany(args[1], ((Player) sender).getUniqueId());
+                String labelled = args[1].replaceAll("_", " ");
+
+                MyCompany.getCacheManager().getCompanyManager().createCompany(labelled, ((Player) sender).getUniqueId());
                 MyCompany.getEconomy().withdrawPlayer(p, money);
-                sender.sendMessage(Locale.getMessage("found-success").replaceAll("%company%", args[1]));
+                sender.sendMessage(Locale.getMessage("found-success").replaceAll("%company%", labelled));
 
                 // Broadcast
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(Locale.getMessage("broadcast.company-found").replaceAll("%company%", args[1]).replaceAll("%player%", sender.getName()));
+                    player.sendMessage(Locale.getMessage("broadcast.company-found").replaceAll("%company%", labelled).replaceAll("%player%", sender.getName()));
                     player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 3f, 3f);
                 }
 
@@ -198,9 +205,14 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                // Check if the sender is the employer
-                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
-                    sender.sendMessage(Locale.getMessage("employer-only"));
+//                // Check if the sender is the employer
+//                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+//                    sender.sendMessage(Locale.getMessage("employer-only"));
+//                    return true;
+//                }
+                // Check if the sender has the permission
+                if (!userManager.hasPermission(uniqueId, Permission.FIRE)) {
+                    player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.FIRE.getName()));
                     return true;
                 }
 
@@ -260,9 +272,14 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                // Check if the sender is the employer
-                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
-                    sender.sendMessage(Locale.getMessage("employer-only"));
+//                // Check if the sender is the employer
+//                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+//                    sender.sendMessage(Locale.getMessage("employer-only"));
+//                    return true;
+//                }
+                // Check if the sender has the permission
+                if (!userManager.hasPermission(uniqueId, Permission.EMPLOY)) {
+                    player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.EMPLOY.getName()));
                     return true;
                 }
 
@@ -444,20 +461,27 @@ public class CommandListener implements CommandExecutor {
 
                         CompanyManager company = MyCompany.getCacheManager().getCompanyManager();
                         for (String position : company.getPositions(companyUniqueId)) {
+                            if (position.equalsIgnoreCase("employer")) {
+                                continue;
+                            }
 
                             List<UUID> employee_unformatted = company.getEmployeeList(companyUniqueId, position);
-                            List<String> employeeList = new ArrayList<>();
-                            for (UUID employeeUniqueId : employee_unformatted) {
-                                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(employeeUniqueId);
-                                String employeeName = offlinePlayer.getName();
-                                employeeList.add(employeeName);
+                            String employee = "[]";
+                            if (!employee_unformatted.isEmpty()) {
+                                List<String> employeeList = new ArrayList<>();
+                                for (UUID employeeUniqueId : employee_unformatted) {
+                                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(employeeUniqueId);
+                                    String employeeName = offlinePlayer.getName();
+                                    employeeList.add(employeeName);
+                                }
+                                employee = String.join(", ", employeeList);
                             }
-                            String employee = String.join(", ", employeeList);
-                            position = position.substring(0, 1).toUpperCase() + position.substring(1);
+                            //position = position.substring(0, 1).toUpperCase() + position.substring(1);
 
                             for (String employeeMessage : Locale.yaml.getStringList("info.employee")) {
 
                                 employeeMessage = employeeMessage.replaceAll("%position%", position);
+                                employeeMessage = employeeMessage.replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, position));
                                 employeeMessage = employeeMessage.replaceAll("%employees%", employee);
                                 sender.sendMessage(Locale.translate(employeeMessage));
 
@@ -472,6 +496,7 @@ public class CommandListener implements CommandExecutor {
                     message = message.replaceAll("%cid%", String.valueOf(cid));
                     message = message.replaceAll("%date%", foundDate);
                     message = message.replaceAll("%amount%", String.valueOf(playerAmount));
+                    message = message.replaceAll("%employer_label%", companyManager.getEmployerLabel(companyUniqueId));
                     message = message.replaceAll("%employer%", employerName);
                     message = message.replaceAll("%founder%", founderName);
                     sender.sendMessage(Locale.translate(message));
@@ -576,6 +601,335 @@ public class CommandListener implements CommandExecutor {
 
             }
 
+
+        }
+
+        // Position
+        if (args.length >= 3 && args.length <= 5) {
+
+            if (args[0].equalsIgnoreCase("position")) {
+
+                if (args[1].equalsIgnoreCase("add")) {
+
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.position.add")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    UUID uniqueId = player.getUniqueId();
+                    UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                        sender.sendMessage(Locale.getMessage("employer-only"));
+                        return true;
+                    }
+
+                    if (companyManager.getPositions(companyUniqueId).contains(args[2])) {
+                        sender.sendMessage(Locale.getMessage("position-already-existed").replaceAll("%position%", args[2]));
+                        return true;
+                    }
+
+//                    if (args[2].equalsIgnoreCase("employer") || args[2].equalsIgnoreCase("employee")) {
+//                        sender.sendMessage(Locale.getMessage("incorrect-position-id"));
+//                        return true;
+//                    }
+
+                    String LABEL = args[2];
+                    if (args.length == 4) {
+                        LABEL = args[3];
+                    }
+
+                    companyManager.addPosition(companyUniqueId, args[2]);
+                    companyManager.setPositionLabel(companyUniqueId, args[2], LABEL);
+                    sender.sendMessage(Locale.getMessage("position-add").replaceAll("%position%", args[2]).replaceAll("%label%", LABEL));
+                    return true;
+
+                }
+
+                if (args[1].equalsIgnoreCase("remove")) {
+
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.position.remove")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    UUID uniqueId = player.getUniqueId();
+                    UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                        sender.sendMessage(Locale.getMessage("employer-only"));
+                        return true;
+                    }
+
+                    if (!companyManager.getPositions(companyUniqueId).contains(args[2])) {
+                        sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[2]));
+                        return true;
+                    }
+
+                    if (args[2].equalsIgnoreCase("employer") || args[2].equalsIgnoreCase("employee")) {
+                        sender.sendMessage(Locale.getMessage("incorrect-position-id"));
+                        return true;
+                    }
+
+                    companyManager.removePosition(companyUniqueId, args[2]);
+                    sender.sendMessage(Locale.getMessage("position-remove").replaceAll("%position%", args[2]));
+                    return true;
+
+                }
+
+                if (args.length == 4) {
+
+                    if (args[1].equalsIgnoreCase("setlabel")) {
+
+                        if (!(sender instanceof Player)) {
+                            sender.sendMessage(Locale.getMessage("must-be-player"));
+                            return true;
+                        }
+
+                        if (!sender.hasPermission("mycompany.commands.position.setlabel")) {
+                            sender.sendMessage(Locale.getMessage("no-perm"));
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+                        UUID uniqueId = player.getUniqueId();
+                        UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                        // Check if the sender has company
+                        if (companyUniqueId == null) {
+                            sender.sendMessage(Locale.getMessage("no-company"));
+                            return true;
+                        }
+
+                        if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                            sender.sendMessage(Locale.getMessage("employer-only"));
+                            return true;
+                        }
+
+                        if (!companyManager.getPositions(companyUniqueId).contains(args[2])) {
+                            sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[2]));
+                            return true;
+                        }
+
+                        String labelled = args[3].replaceAll("_", " ");
+
+
+                        if (args[2].equalsIgnoreCase("employer")) {
+                            companyManager.setEmployerLabel(companyUniqueId, labelled);
+                        } else if (args[2].equalsIgnoreCase("employee")) {
+                            companyManager.setEmployeeLabel(companyUniqueId, labelled);
+                        } else {
+                            companyManager.setPositionLabel(companyUniqueId, args[2], labelled);
+                        }
+
+                        sender.sendMessage(Locale.getMessage("position-setlabel").replaceAll("%position%", args[2]).replaceAll("%label%", labelled));
+                        return true;
+
+                    }
+
+                    if (args[1].equalsIgnoreCase("set")) {
+
+                        if (!(sender instanceof Player)) {
+                            sender.sendMessage(Locale.getMessage("must-be-player"));
+                            return true;
+                        }
+
+                        if (!sender.hasPermission("mycompany.commands.position.set")) {
+                            sender.sendMessage(Locale.getMessage("no-perm"));
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+                        UUID uniqueId = player.getUniqueId();
+                        UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                        // Check if the sender has company
+                        if (companyUniqueId == null) {
+                            sender.sendMessage(Locale.getMessage("no-company"));
+                            return true;
+                        }
+
+                        if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                            sender.sendMessage(Locale.getMessage("employer-only"));
+                            return true;
+                        }
+
+                        // args[2] = player name, args[3] = position id
+
+                        OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[2]);
+                        UUID targetUniqueId = off_target.getUniqueId();
+                        if (!off_target.hasPlayedBefore() || !MyCompany.getCacheManager().getUserManager().isUserExist(targetUniqueId)) {
+                            sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[2]));
+                            return true;
+                        }
+
+                        if (args[2].equalsIgnoreCase(sender.getName())) {
+                            sender.sendMessage(Locale.getMessage("employer-self"));
+                            return true;
+                        }
+
+                        if (!userManager.getCompanyUUID(targetUniqueId).equals(companyUniqueId)) {
+                            sender.sendMessage(Locale.getMessage("not-your-employee").replaceAll("%player%", args[2]));
+                            return true;
+                        }
+
+                        if (args[3].equalsIgnoreCase("employer")) {
+                            sender.sendMessage(Locale.getMessage("cant-set-to-employer"));
+                            return true;
+                        }
+
+                        if (!companyManager.getPositions(companyUniqueId).contains(args[3])) {
+                            sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[3]));
+                            return true;
+                        }
+
+                        if (companyManager.getEmployeeList(companyUniqueId, args[3]).contains(targetUniqueId)) {
+                            sender.sendMessage(Locale.getMessage("player-position-conflict").replaceAll("%player%", args[2]).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
+                            return true;
+                        }
+
+                        companyManager.setEmployeePosition(companyUniqueId, targetUniqueId, args[3]);
+                        sender.sendMessage(Locale.getMessage("position-set").replaceAll("%player%", args[2]).replaceAll("%position%", args[3]).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
+                        if (off_target.isOnline()) {
+                            Player target = (Player) off_target;
+                            target.sendMessage(Locale.getMessage("position-set-received").replaceAll("%company%", companyManager.getName(companyUniqueId)).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
+                            player.playSound(player, Sound.ENTITY_WITHER_HURT, 3f, 3f);
+                        }
+                        return true;
+
+                    }
+                }
+
+                if (args.length == 5) {
+
+                    if (args[1].equalsIgnoreCase("permission")) {
+
+                        if (args[2].equalsIgnoreCase("add")) {
+
+                            if (!(sender instanceof Player)) {
+                                sender.sendMessage(Locale.getMessage("must-be-player"));
+                                return true;
+                            }
+
+                            if (!sender.hasPermission("mycompany.commands.position.permission.add")) {
+                                sender.sendMessage(Locale.getMessage("no-perm"));
+                                return true;
+                            }
+
+                            Player player = (Player) sender;
+                            UUID uniqueId = player.getUniqueId();
+                            UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                            // Check if the sender has company
+                            if (companyUniqueId == null) {
+                                sender.sendMessage(Locale.getMessage("no-company"));
+                                return true;
+                            }
+
+                            if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                                sender.sendMessage(Locale.getMessage("employer-only"));
+                                return true;
+                            }
+
+                            // args[3] = position, args[4] = permission
+
+                            if (!companyManager.getPositions(companyUniqueId).contains(args[3])) {
+                                sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[3]));
+                                return true;
+                            }
+
+                            Permission perm = Permission.matchPermission(args[4]);
+                            if (perm == null) {
+                                sender.sendMessage(Locale.getMessage("position-permission-not-existed").replaceAll("%permission%", args[4]));
+                                return true;
+                            }
+
+                            if (companyManager.getPositionPermission(companyUniqueId, args[3]).contains(perm)) {
+                                sender.sendMessage(Locale.getMessage("position-has-permission").replaceAll("%permission%", args[4]).replaceAll("%position%", args[3]).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
+                                return true;
+                            }
+
+                            companyManager.addPositionPermission(companyUniqueId, args[3], perm);
+                            sender.sendMessage(Locale.getMessage("position-permission-add").replaceAll("%permission%", args[4]).replaceAll("%position%", args[3]));
+                            return true;
+
+                        }
+
+                        if (args[2].equalsIgnoreCase("remove")) {
+
+                            if (!(sender instanceof Player)) {
+                                sender.sendMessage(Locale.getMessage("must-be-player"));
+                                return true;
+                            }
+
+                            if (!sender.hasPermission("mycompany.commands.position.permission.remove")) {
+                                sender.sendMessage(Locale.getMessage("no-perm"));
+                                return true;
+                            }
+
+                            Player player = (Player) sender;
+                            UUID uniqueId = player.getUniqueId();
+                            UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                            // Check if the sender has company
+                            if (companyUniqueId == null) {
+                                sender.sendMessage(Locale.getMessage("no-company"));
+                                return true;
+                            }
+
+                            if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                                sender.sendMessage(Locale.getMessage("employer-only"));
+                                return true;
+                            }
+
+                            // args[3] = position, args[4] = permission
+
+                            if (!companyManager.getPositions(companyUniqueId).contains(args[3])) {
+                                sender.sendMessage(Locale.getMessage("position-already-existed").replaceAll("%position%", args[3]));
+                                return true;
+                            }
+
+                            Permission perm = Permission.matchPermission(args[4]);
+                            if (perm == null) {
+                                sender.sendMessage(Locale.getMessage("position-permission-not-existed").replaceAll("%permission%", args[4]));
+                                return true;
+                            }
+
+                            if (!companyManager.getPositionPermission(companyUniqueId, args[3]).contains(perm)) {
+                                sender.sendMessage(Locale.getMessage("position-has-no-permission").replaceAll("%permission%", args[4]).replaceAll("%position%", args[3]).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
+                                return true;
+                            }
+
+                            companyManager.removePositionPermission(companyUniqueId, args[3], perm);
+                            sender.sendMessage(Locale.getMessage("position-permission-remove").replaceAll("%permission%", args[4]).replaceAll("%position%", args[3]));
+                            return true;
+
+                        }
+
+
+                    }
+
+                }
+
+            }
 
         }
 

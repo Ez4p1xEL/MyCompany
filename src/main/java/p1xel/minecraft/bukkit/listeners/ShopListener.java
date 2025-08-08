@@ -97,9 +97,8 @@ public class ShopListener implements Listener {
             return;
         }
 
-        if (!companyManager.getPositionPermission(companyUniqueId, userManager.getPosition(playerUniqueId)).contains(Permission.CHESTSHOP_CREATE)) {
+        if (!userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_CREATE)) {
             player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.CHESTSHOP_CREATE.getName()));
-            event.setCancelled(true);
             return;
         }
 
@@ -319,6 +318,9 @@ public class ShopListener implements Listener {
             Player player = event.getPlayer();
             UUID playerUniqueId = player.getUniqueId();
             Shop shop = shopManager.getShop(chestBlock.getLocation());
+            if (shop.getItem() == null) {
+                return;
+            }
             joinMode(playerUniqueId, shop);
             UUID companyUniqueId = shop.getCompanyUUID();
             int amount = 0;
@@ -366,7 +368,7 @@ public class ShopListener implements Listener {
                     return;
                 }
 
-                if (!companyManager.getPositionPermission(companyUniqueId, userManager.getPosition(playerUniqueId)).contains(Permission.CHESTSHOP_DELETE)) {
+                if (!userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_DELETE)) {
                     player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.CHESTSHOP_DELETE.getName()));
                     event.setCancelled(true);
                     return;

@@ -1,6 +1,6 @@
 main: p1xel.minecraft.bukkit.MyCompany
 name: MyCompany
-api-version: 1.13
+api-version: 1.20
 version: 0.4
 depend: [Vault]
 softdepend: [PlaceholderAPI]
@@ -25,6 +25,18 @@ permissions:
   mycompany.commands.info:
     default: true
   mycompany.commands.info.other:
+    default: true
+  mycompany.commands.position.add:
+    default: true
+  mycompany.commands.position.remove:
+    default: true
+  mycompany.commands.position.set:
+    default: true
+  mycompany.commands.position.setlabel:
+    default: true
+  mycompany.commands.position.permission.add:
+    default: true
+  mycompany.commands.position.permission.remove:
     default: true
   mycompany.commands.admin:
     default: op
