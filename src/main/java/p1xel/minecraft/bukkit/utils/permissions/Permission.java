@@ -1,5 +1,6 @@
 package p1xel.minecraft.bukkit.utils.permissions;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public enum Permission {
@@ -22,6 +23,14 @@ public enum Permission {
 
     public static Permission matchPermission(String name) {
         return namemap.get(name.toUpperCase());
+    }
+
+    public static Collection<Permission> getAll() {
+        return namemap.values();
+    }
+
+    public static Collection<String> getAllInString() {
+        return namemap.keySet();
     }
 
     static {

@@ -14,16 +14,18 @@ commands:
   accept: '&e/myc accept <player> &7Accept the request.'
   resign: '&e/myc resign &7Resign from the company.'
   info: '&e/myc info [CompanyId] &7View information of the company.'
+  balance: '&e/myc balance [CompanyId] &7View asset of the company.'
   position-set: '&e/myc position set <employee> <position> &7Set employee''s position.'
   position-add: '&e/myc position add <position> [label] &7Add position.'
   position-remove: '&e/myc position remove <position> &7Remove position.'
   position-label-set: '&e/myc position setlabel <position> <label> &7Set label of the position. (Use _ instead of SPACE)'
   position-permission-add: '&e/myc position permission add <position> <permission> &7Add permission for the position.'
   position-permission-remove: '&e/myc position permission remove <position> <permission> &7Remove permission of the position.'
+  position-permission-list: '&e/myc position permission list [position] &7View permissions of the position.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
-    reload: '&e/myc reload &7Reload the configuration.'
+    reload: '&e/myc reload &7Reload the configuration and cache.'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
 
@@ -35,6 +37,7 @@ must-be-player: '&7[&6%prefix%&7] &cYou must be a player to do that!'
 no-perm: '&7[&6%prefix%&7] &cYou have no permission to do that!'
 out-of-length: '&7[&6%prefix%&7] &cThe name is out of length. It Should be the maximum of &e%length%&c.'
 not-enough-money: '&7[&6%prefix%&7] &cYou do not have enough money. You need total &e%money%&c!'
+wrong-argument: '&7[&6%prefix%&7] &cIncorrect arguments.'
 
 # Company
 found-success: '&7[&6%prefix%&7] &aYou successfully found a new company &e%company%&a!'
@@ -85,7 +88,7 @@ position-set: '&7[&6%prefix%&7] &aSet &e%player%&a''s position to &e%label%&7(%p
 position-setlabel: '&7[&6%prefix%&7] &aSet position &e%position%&a''s label to &e%label%&a.'
 position-permission-add: '&7[&6%prefix%&7] &aAdded permission &e%permission% &ato &e%position%&a.'
 position-permission-remove: '&7[&6%prefix%&7] &aRemoved permission &e%permission% &afrom &e%position%&a.'
-player-position-conflict: '&7[&6%prefix%&7] &e%player% &c is already a &e%label%&c!'
+player-position-conflict: '&7[&6%prefix%&7] &e%player% &cis already a &e%label%&c!'
 position-permission-not-existed: '&7[&6%prefix%&7] &cPermission &e%permission% &cdoes not exist!'
 position-has-no-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &cdoes not have permission &e%permission%&c.'
 position-has-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &calready has permission &e%permission%&c.'
@@ -93,6 +96,9 @@ incorrect-position-id: '&7[&6%prefix%&7] &cIncorrect position identifier, please
 not-permitted: '&7[&6%prefix%&7] &cMissing permission %permission% by your company.'
 position-set-received: '&7[&b%company%&7] &aYour position has been changed to &e%label%&c.'
 cant-set-to-employer: '&7[&6%prefix%&7] &cYou cannot transfer your position by doing this!'
+position-permission-list: '&7[&6%prefix%&7] &aPermissions list:'
+position-permission-list-position: '&7[&6%prefix%&7] &aPermissions of &e%position%&a:'
+perm-list-page: '&b%permission%&7: %label%'
 
 # Broadcast
 broadcast:
@@ -121,6 +127,17 @@ info:
   employee:
     - '&7%label%&8(%position%)&7:'
     - ' &e%employees%'
+  asset:
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+    - ''
+    - '&7Company Id: &e%cid%'
+    - '&7Name: &b%company%'
+    - ''
+    - '&7Cash: &b%cash%'
+    - '&7Total income: &b%total%'
+    - '&7Daily income: &b%daily%'
+    - ''
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
 
 # Chest shop sign
 shop:
@@ -147,6 +164,13 @@ shop:
   invalid-buy-amount: '&7[&6%prefix%&7] &cInvalid amount.'
   not-enough-stock: '&7[&6%prefix%&7] &cThe shop does not have enough stock!'
   buy-success: '&7[&6%prefix%&7] &aYou bought products from &b%company%&a!'
+
+position-permission:
+  ALL: 'All permissions'
+  EMPLOY: 'Employ'
+  FIRE: 'Fire'
+  CHESTSHOP_CREATE: 'Chestshop Creation'
+  CHESTSHOP_DELETE: 'Chestshop Deleting'
 
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'

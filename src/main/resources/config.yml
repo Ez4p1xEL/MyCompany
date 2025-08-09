@@ -1,7 +1,7 @@
 configuration: 1
 
 # Debug mode
-debug: true
+debug: false
 
 check-update: true
 
@@ -34,7 +34,7 @@ company-settings:
   hire-request-time: 30
   # Should the plugin backup the company data,
   # after closure of the company.
-  backup-folder-before-delete: false
+  backup-folder-before-delete: true
   # Default permissions given to the employee
   # Custom position will also follow this default setting.
   employee-default-permission:
@@ -107,4 +107,8 @@ chest-shop:
     identifier: '[COMPANYSHOP]'
   # how many seconds that the player can enter the amount to buy item
   buy-time: 10
+
+backup-creator:
+  # How many minutes should the plugin to start creating backup after starting the server.
+  timer-on-start: 300
 #构想: 每间公司的商店仅能出售被插件限定的物品

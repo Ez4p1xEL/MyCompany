@@ -495,8 +495,11 @@ public class YamlCompanyData extends CompanyData{
     @Nullable
     public List<Shop> getShops(UUID uniqueId) {
         List<Shop> shops = new ArrayList<>();
-        for (String key : com_yamls.get(uniqueId).get("shop").getConfigurationSection(String.valueOf(uniqueId)).getKeys(false)) {
-            shops.add(new Shop(uniqueId, UUID.fromString(key)));
+        ConfigurationSection section = com_yamls.get(uniqueId).get("shop").getConfigurationSection(String.valueOf(uniqueId));
+        if (section != null) {
+            for (String key : section.getKeys(false)) {
+                shops.add(new Shop(uniqueId, UUID.fromString(key)));
+            }
         }
         return shops;
     }
@@ -505,8 +508,11 @@ public class YamlCompanyData extends CompanyData{
     @Nullable
     public List<UUID> getShopsUUID(UUID uniqueId) {
         List<UUID> shops = new ArrayList<>();
-        for (String key : com_yamls.get(uniqueId).get("shop").getConfigurationSection(String.valueOf(uniqueId)).getKeys(false)) {
-            shops.add(UUID.fromString(key));
+        ConfigurationSection section = com_yamls.get(uniqueId).get("shop").getConfigurationSection(String.valueOf(uniqueId));
+        if (section != null) {
+            for (String key : section.getKeys(false)){
+                shops.add(UUID.fromString(key));
+            }
         }
         return shops;
     }

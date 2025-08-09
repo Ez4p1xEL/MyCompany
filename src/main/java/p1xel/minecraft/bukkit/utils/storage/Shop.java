@@ -109,5 +109,9 @@ public class Shop{
 //        });
 //    }
 
+    public String getCreator() {
+        return shopManager.getCreator(companyUniqueId, shopUniqueId);
+    }
+
 
 }

@@ -3,7 +3,9 @@ package p1xel.minecraft.bukkit;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import p1xel.minecraft.bukkit.commands.CommandListener;
+import p1xel.minecraft.bukkit.commands.TabList;
 import p1xel.minecraft.bukkit.listeners.ShopListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
@@ -12,7 +14,10 @@ import p1xel.minecraft.bukkit.tools.spigotmc.UpdateChecker;
 import p1xel.minecraft.bukkit.utils.*;
 import p1xel.minecraft.bukkit.utils.extensions.Placeholders;
 import p1xel.minecraft.bukkit.utils.storage.*;
+import p1xel.minecraft.bukkit.utils.storage.backups.BackupCreator;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
+
+import java.util.UUID;
 
 public class MyCompany extends JavaPlugin {
 
@@ -59,6 +64,7 @@ public class MyCompany extends JavaPlugin {
         cache.init();
 
         getServer().getPluginCommand("MyCompany").setExecutor(new CommandListener());
+        getServer().getPluginCommand("MyCompany").setTabCompleter(new TabList());
         getServer().getPluginManager().registerEvents(new UserCreation(), this);
         getServer().getPluginManager().registerEvents(new ShopListener(), this);
 
@@ -76,6 +82,15 @@ public class MyCompany extends JavaPlugin {
 
         Logger.setEnabled(Config.getBool("debug"));
 
+        // Backup creator
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (UUID companyUniqueId : cache.getCompanyManager().getAllCompanies()) {
+                    BackupCreator.createBackup(companyUniqueId);
+                }
+            }
+        }.runTaskTimer(this, 0L, 20L * 60L * Config.getInt("backup-creator.timer-on-start"));
         // Text from https://tools.miku.ac/taag/ (Font: Bloody)
         getLogger().info(" ███▄ ▄███▓▓██   ██▓ ▄████▄   ▒█████   ███▄ ▄███▓ ██▓███   ▄▄▄       ███▄    █▓██   ██▓");
         getLogger().info("▓██▒▀█▀ ██▒ ▒██  ██▒▒██▀ ▀█  ▒██▒  ██▒▓██▒▀█▀ ██▒▓██░  ██▒▒████▄     ██ ▀█   █ ▒██  ██▒");

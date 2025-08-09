@@ -171,7 +171,7 @@ public class CompanyManager {
 
     public void addPosition(UUID uniqueId, String position) {
         this.data.set(uniqueId, "info", "members." + position, Collections.emptyList());
-        this.data.set(uniqueId, "settings", "salary." + position, 500);
+        this.data.set(uniqueId, "settings", "salary." + position, 500.0);
         this.data.set(uniqueId, "settings", "position.custom." + position + ".label", position);
         this.data.set(uniqueId, "settings","position.custom." + position + ".permission", Config.getStringList("company-settings.employee-default-permission"));
     }

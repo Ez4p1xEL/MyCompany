@@ -14,9 +14,11 @@ import p1xel.minecraft.bukkit.managers.UserManager;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
+import p1xel.minecraft.bukkit.utils.storage.backups.BackupCreator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,7 +71,9 @@ public class CommandListener implements CommandExecutor {
                     sender.sendMessage(Locale.getMessage("remove-shop-before-disband"));
                     return true;
                 }
-
+                if (Config.getBool("company-settings.backup-folder-before-delete")) {
+                    BackupCreator.createBackup(companyUniqueId);
+                }
                 String companyName = MyCompany.getCacheManager().getCompanyManager().getName(companyUniqueId);
                 //if (!MyCompany.getCacheManager().getCompanyManager())
                 MyCompany.getCacheManager().getCompanyManager().disbandCompany(companyUniqueId);
@@ -162,7 +166,7 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                double money = Config.getDouble("company-settings.founding-cost");
+                double money = Config.getDouble("company-settings.founding-cost.money");
                 if (MyCompany.getEconomy().getBalance(p) < money) {
                     sender.sendMessage(Locale.getMessage("not-enough-money").replaceAll("%money%", String.valueOf(money)));
                     return true;
@@ -507,6 +511,88 @@ public class CommandListener implements CommandExecutor {
 
             }
 
+            if (args[0].equalsIgnoreCase("balance")) {
+
+                UUID companyUniqueId = null;
+                String companyName = "";
+                int cid = 0;
+                double balance = 0.0;
+                double total_income = 0.0;
+                double daily_income = 0.0;
+
+                if (args.length == 1) {
+
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.balance")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    UUID uniqueId = player.getUniqueId();
+                    companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    companyName = companyManager.getName(companyUniqueId);
+                    cid = companyManager.getId(companyUniqueId);
+                    balance = companyManager.getCash(companyUniqueId);
+                    total_income = companyManager.getTotalIncome(companyUniqueId);
+                    daily_income = companyManager.getDailyIncome(companyUniqueId);
+
+                }
+
+                if (args.length == 2) {
+
+                    if (!sender.hasPermission("mycompany.commands.balance.other")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    try {
+                        cid = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        cid = -1;
+                    }
+                    if (cid < 0) {
+                        sender.sendMessage(Locale.getMessage("id-invalid"));
+                        return true;
+                    }
+
+                    companyUniqueId = MyCompany.getCacheManager().getCompanyManager().getUUID(cid);
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("id-not-exist").replaceAll("%cid%", args[1]));
+                        return true;
+                    }
+
+                    companyName = companyManager.getName(companyUniqueId);
+                    cid = companyManager.getId(companyUniqueId);
+                    balance = companyManager.getCash(companyUniqueId);
+                    total_income = companyManager.getTotalIncome(companyUniqueId);
+                    daily_income = companyManager.getDailyIncome(companyUniqueId);
+
+                }
+
+                for (String message : Locale.yaml.getStringList("info.asset")) {
+                    message = message.replaceAll("%company%", companyName);
+                    message = message.replaceAll("%cid%", String.valueOf(cid));
+                    message = message.replaceAll("%cash%", String.valueOf(balance));
+                    message = message.replaceAll("%total%", String.valueOf(total_income));
+                    message = message.replaceAll("%daily%", String.valueOf(daily_income));
+                    message = Locale.translate(message);
+                    sender.sendMessage(message);
+                }
+                return true;
+
+            }
+
         }
 
         if (args.length == 4) {
@@ -608,6 +694,72 @@ public class CommandListener implements CommandExecutor {
         if (args.length >= 3 && args.length <= 5) {
 
             if (args[0].equalsIgnoreCase("position")) {
+
+                if (args.length <= 4) {
+
+                    if (args[1].equalsIgnoreCase("permission")) {
+
+                        if (args[2].equalsIgnoreCase("list")) {
+
+                            Collection<Permission> perms = Permission.getAll();
+                            if (args.length == 4) {
+                                if (!(sender instanceof Player)) {
+                                    sender.sendMessage(Locale.getMessage("must-be-player"));
+                                    return true;
+                                }
+
+                                if (!sender.hasPermission("mycompany.commands.position.permission.list")) {
+                                    sender.sendMessage(Locale.getMessage("no-perm"));
+                                    return true;
+                                }
+
+                                Player player = (Player) sender;
+                                UUID uniqueId = player.getUniqueId();
+                                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                                // Check if the sender has company
+                                if (companyUniqueId == null) {
+                                    sender.sendMessage(Locale.getMessage("no-company"));
+                                    return true;
+                                }
+
+                                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                                    sender.sendMessage(Locale.getMessage("employer-only"));
+                                    return true;
+                                }
+
+                                // args[3] = position, args[4] = permission
+
+                                if (!companyManager.getPositions(companyUniqueId).contains(args[3])) {
+                                    sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[3]));
+                                    return true;
+                                }
+
+                                sender.sendMessage(Locale.getMessage("position-permission-list-position").replaceAll("%position%", args[3]));
+                                perms = companyManager.getPositionPermission(companyUniqueId, args[3]);
+                                for (Permission perm : perms) {
+                                    String name = perm.getName();
+                                    String message = Locale.getMessage("perm-list-page");
+                                    message = message.replaceAll("%permission%", name);
+                                    message = message.replaceAll("%label%", Locale.getMessage("position-permission." + name.toUpperCase()));
+                                    sender.sendMessage(message);
+                                }
+                                return true;
+                            }
+
+                            sender.sendMessage(Locale.getMessage("position-permission-list"));
+                            for (Permission perm : perms) {
+                                String name = perm.getName();
+                                String message = Locale.getMessage("perm-list-page");
+                                message = message.replaceAll("%permission%", name);
+                                message = message.replaceAll("%label%", Locale.getMessage("position-permission." + name.toUpperCase()));
+                                sender.sendMessage(message);
+                            }
+                            return true;
+
+                        }
+
+                    }
+                }
 
                 if (args[1].equalsIgnoreCase("add")) {
 
@@ -903,7 +1055,7 @@ public class CommandListener implements CommandExecutor {
                             // args[3] = position, args[4] = permission
 
                             if (!companyManager.getPositions(companyUniqueId).contains(args[3])) {
-                                sender.sendMessage(Locale.getMessage("position-already-existed").replaceAll("%position%", args[3]));
+                                sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[3]));
                                 return true;
                             }
 
@@ -933,67 +1085,75 @@ public class CommandListener implements CommandExecutor {
 
         }
 
-        int helpPage = 1;
+        if (args.length <= 2) {
+            int helpPage = 1;
 
-        if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("?")) {
-                try {
-                    helpPage = Integer.parseInt(args[1]);
-                } catch (NumberFormatException ignored) {
+            if (args.length == 2) {
+                if (args[0].equalsIgnoreCase("?")) {
+                    try {
+                        helpPage = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException ignored) {
+                    }
+                } else {
+                    sender.sendMessage(Locale.getMessage("wrong-argument"));
+                    return true;
                 }
             }
-        }
 
-        // Only show 7
-        int max_arg = helpPage * 7;
-        int show = 1;
-        int current_commands = 7; //
+            // Only show 7
+            int max_arg = helpPage * 7;
+            int show = 1;
+            int current_commands = 7; //
 
-        sender.sendMessage(Locale.getMessage("commands.top-bar"));
-        sender.sendMessage(Locale.getMessage("commands.page").replaceAll("%page%", String.valueOf(helpPage)));
-        sender.sendMessage(Locale.getMessage("commands.space-1"));
-        for (String arg : Locale.yaml.getConfigurationSection("commands.").getKeys(false)) {
+            sender.sendMessage(Locale.getMessage("commands.top-bar"));
+            sender.sendMessage(Locale.getMessage("commands.page").replaceAll("%page%", String.valueOf(helpPage)));
+            sender.sendMessage(Locale.getMessage("commands.space-1"));
+            for (String arg : Locale.yaml.getConfigurationSection("commands.").getKeys(false)) {
 
-            if (arg.equals("top-bar") || arg.equals("space-1") || arg.equals("space-2") || arg.equals("bottom-bar") || arg.equals("page")) {
-               // sender.sendMessage(Locale.getMessage("commands." + arg));
-                continue;
-            }
-
-            if (show > max_arg) {
-                break;
-            }
-
-            if (show < max_arg - 7) {
-                show++;
-                continue;
-            }
-
-            if (!arg.equals("admin")) {
-                if (!sender.hasPermission("mycompany.commands." + arg)) {
+                if (arg.equals("top-bar") || arg.equals("space-1") || arg.equals("space-2") || arg.equals("bottom-bar") || arg.equals("page")) {
+                    // sender.sendMessage(Locale.getMessage("commands." + arg));
                     continue;
                 }
-                sender.sendMessage(Locale.getMessage("commands." + arg));
-                show++;
-                continue;
-            }
 
-            if (!isAdmin) {
-                continue;
-            }
-
-            for (String admin : Locale.yaml.getConfigurationSection("commands.admin").getKeys(false)) {
                 if (show > max_arg) {
                     break;
                 }
-                sender.sendMessage(Locale.getMessage("commands.admin." + admin));
-                show++;
+
+                if (show < max_arg - 7) {
+                    show++;
+                    continue;
+                }
+
+                if (!arg.equals("admin")) {
+                    if (!sender.hasPermission("mycompany.commands." + arg)) {
+                        continue;
+                    }
+                    sender.sendMessage(Locale.getMessage("commands." + arg));
+                    show++;
+                    continue;
+                }
+
+                if (!isAdmin) {
+                    continue;
+                }
+
+                for (String admin : Locale.yaml.getConfigurationSection("commands.admin").getKeys(false)) {
+                    if (show > max_arg) {
+                        break;
+                    }
+                    sender.sendMessage(Locale.getMessage("commands.admin." + admin));
+                    show++;
+                }
+
             }
 
+            sender.sendMessage(Locale.getMessage("commands.space-2"));
+            sender.sendMessage(Locale.getMessage("commands.bottom-bar"));
+
+            return true;
         }
 
-        sender.sendMessage(Locale.getMessage("commands.space-2"));
-        sender.sendMessage(Locale.getMessage("commands.bottom-bar"));
-
+        sender.sendMessage(Locale.getMessage("wrong-argument"));
         return true;
     }
 

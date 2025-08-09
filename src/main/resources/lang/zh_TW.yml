@@ -1,0 +1,181 @@
+prefix: MyCompany
+
+# Commands
+commands:
+  top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
+  page: '&e/myc ? %page% &a第 %page% 頁'
+  space-1: '&f'
+  found: '&e/myc found <名稱> &7成立一間公司 (請用_代替空格)'
+  disband: '&e/myc disband &7解散你的公司'
+  employ: '&e/myc employ <玩家> &7發送合約給玩家'
+  fire: '&e/myc fire <員工> &7解雇員工'
+  accept: '&e/myc accept <玩家> &7接受合約'
+  resign: '&e/myc resign &7辭職'
+  info: '&e/myc info [公司ID] &7查看公司資訊'
+  balance: '&e/myc balance [公司ID] &7查看公司財產'
+  position-set: '&e/myc position set <員工> <職位> &7設定員工職位'
+  position-add: '&e/myc position add <職位> [自訂名稱] &7新增職位'
+  position-remove: '&e/myc position remove <職位> &7移除職位'
+  position-label-set: '&e/myc position setlabel <職位> <自訂名稱> &7設定職位的自訂名稱 (請用_代替空格)'
+  position-permission-add: '&e/myc position permission add <職位> <權限> &7新增職位權限'
+  position-permission-remove: '&e/myc position permission remove <職位> <權限> &7移除職位權限'
+  position-permission-list: '&e/myc position permission list [職位] &7查看職位權限'
+  admin:
+    money-give: '&e/myc money give <公司ID> <金額> &7給予公司資金'
+    money-take: '&e/myc money take <公司ID> <金額> &7從公司提取資金'
+    reload: '&e/myc reload &7重新載入設定檔與快取'
+  space-2: '&f'
+  bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
+
+# Admin Commands
+reload-success: '&7[&6%prefix%&7] &a設定檔重新載入成功!'
+
+# Homeless
+must-be-player: '&7[&6%prefix%&7] &c你必須是玩家才能執行此操作!'
+no-perm: '&7[&6%prefix%&7] &c你沒有權限執行此操作!'
+out-of-length: '&7[&6%prefix%&7] &c名稱超過長度限制，最多只能為 &e%length% 個字元'
+not-enough-money: '&7[&6%prefix%&7] &c你的資金不足，還需要 &e%money%&c!'
+wrong-argument: '&7[&6%prefix%&7] &c參數錯誤'
+
+# Company
+found-success: '&7[&6%prefix%&7] &a你已成功成立公司 &e%company%&a!'
+company-exist: '&7[&6%prefix%&7] &c公司 &e%company% &c已存在!'
+disband-success: '&7[&6%prefix%&7] &a你已解散公司 &e%company%&a!'
+employer-only: '&7[&6%prefix%&7] &c只有雇主才能執行此操作!'
+not-your-company: '&7[&6%prefix%&7] &c這不是你的公司。'
+player-not-exist: '&7[&6%prefix%&7] &c玩家 &e%player% &c不存在!'
+no-company: '&7[&6%prefix%&7] &c你目前未隸屬於任何公司'
+has-company: '&7[&6%prefix%&7] &c你已經在一間公司裡了!'
+target-has-no-company: '&7[&6%prefix%&7] &e%player% &c未隸屬於任何公司!'
+target-has-company: '&7[&6%prefix%&7] &e%player% &c已是其他公司的成員!'
+not-your-employee: '&7[&6%prefix%&7] &e%player% &c不是你的員工!'
+already-your-employee: '&7[&6%prefix%&7] &e%player% &C已是你的員工!'
+fire-success: '&7[&6%prefix%&7] &a你已成功解雇員工 &e%player%&a!'
+dismissed: '&7[&6%prefix%&7] &c你被 &e%player%&c 解雇，已不再是 &e%company% &c的員工'
+resign-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a辭職'
+resigned: '&7[&6%prefix%&7] &c你的員工 &e%player% &c已辭職'
+disband-instead: '&7[&6%prefix%&7] &c請使用 /myc disband 指令來解散公司'
+contract-send: '&7[&6%prefix%&7] &a你已向 &e%player% &a發送合約，對方有 &e%second% &a秒可接受'
+contract-received: '&7[&6%prefix%&7] &a你收到來自 &e%player% 於 &e%company% &a的合約，請於 %second% 秒內輸入 /myc accept &e%player% &a以接受'
+contract-accept-employer: '&7[&6%prefix%&7] &e%player% &a已接受你的合約'
+contract-accept-employee: '&7[&6%prefix%&7] &a你已成為 &e%company% &a的員工'
+contract-expire-employer: '&7[&6%prefix%&7] &c發送給 &e%player% &c的合約已逾時!'
+contract-expire-employee: '&7[&6%prefix%&7] &c來自 &e%player% &c於 &e%company% &c的合約已逾時!'
+contract-already-sent: '&7[&6%prefix%&7] &c你已向某位玩家發送合約!'
+player-not-online: '&7[&6%prefix%&7] &e%player% &c目前不在線上!'
+no-contract: '&7[&6%prefix%&7] &c你尚未收到任何合約!'
+id-invalid: '&7[&6%prefix%&7] &c請輸入正確的公司ID!'
+id-not-exist: '&7[&6%prefix%&7] &c公司ID &e%cid% &c不存在!'
+remove-shop-before-disband: '&7[&6%prefix%&7] &c請先移除所有箱子商店後再解散公司!'
+employer-self: '&7[&6%prefix%&7] &c你已是雇主，還想做什麼？'
+
+# Money/Asset
+money-format-incorrect: '&7[&6%prefix%&7] &c請輸入正確格式的數字!'
+money-give-success: '&7[&6%prefix%&7] &a你已給予 &e%company% &a金額 &e$%money%'
+money-take-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a提取金額 &e$%money%'
+
+# Salary
+salary-received: '&7[&b%company%&7] &a你已收到薪資 &e$%money%&a。'
+
+# Position label and Permission
+position-already-existed: '&7[&6%prefix%&7] &c職位 &e%position% &c已存在!'
+position-not-existed: '&7[&6%prefix%&7] &c找不到職位 &e%position%&c。'
+position-add: '&7[&6%prefix%&7] &a新增職位: &e%position%&a，自訂名稱為 &e%label%'
+position-remove: '&7[&6%prefix%&7] &a已移除職位: &e%position%&a。'
+position-set: '&7[&6%prefix%&7] &a已設定 &e%player% &a的職位為 &e%label%&7(%position%)'
+position-setlabel: '&7[&6%prefix%&7] &a已設定職位 &e%position% &a的自訂名稱為 &e%label%'
+position-permission-add: '&7[&6%prefix%&7] &a已為職位 &e%position% &a新增權限 &e%permission%'
+position-permission-remove: '&7[&6%prefix%&7] &a已為職位 &e%position% &a移除權限 &e%permission%'
+player-position-conflict: '&7[&6%prefix%&7] &e%player% &c已是 &e%label% &c了!'
+position-permission-not-existed: '&7[&6%prefix%&7] &c權限 &e%permission% &c不存在!'
+position-has-no-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &c沒有權限 &e%permission%'
+position-has-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &c已擁有權限 &e%permission%'
+incorrect-position-id: '&7[&6%prefix%&7] &c職位名稱錯誤，請重新輸入!'
+not-permitted: '&7[&6%prefix%&7] &c缺少公司權限 %permission%'
+position-set-received: '&7[&b%company%&7] &a你的職位已變更為 &e%label%'
+cant-set-to-employer: '&7[&6%prefix%&7] &c你無法變更為雇主職位!'
+position-permission-list: '&7[&6%prefix%&7] &a權限列表:'
+position-permission-list-position: '&7[&6%prefix%&7] &e%position% &a的權限:'
+perm-list-page: '&b%permission%&7: %label%'
+
+# Broadcast
+broadcast:
+  company-found: '&7[&6職場快訊&7] &e%player% &a成立了新公司 &e%company%&a!'
+  company-disband: '&7[&6職場快訊&7] &c公司 &e%company% &c已由 &e%player% &c宣布解散!'
+
+# Information
+info:
+  default:
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+    - ''
+    - '&7公司ID: &e%cid%'
+    - '&7註冊名稱: &b%company%'
+    - '&7成立時間: &d%date%'
+    - '&7成員數量: &b%amount%'
+    - ''
+    - '&b%employer_label%&8(雇主)&b: &e%employer%'
+    - '%employee%'
+    - ''
+    - '&c這裡應該有更多資訊，'
+    - '&c但因公司隱私設定無法顯示'
+    - ''
+    - '&7創辦人: &e%founder%'
+    - ''
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+  employee:
+    - '&7%label%&8(%position%)&7:'
+    - ' &e%employees%'
+  asset:
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+    - ''
+    - '&7公司ID: &e%cid%'
+    - '&7名稱: &b%company%'
+    - ''
+    - '&7現金資產: &b%cash%'
+    - '&7總收入: &b%total%'
+    - '&7今日收入: &b%daily%'
+    - ''
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+
+# Chest shop sign
+shop:
+  sign:
+    line1: '&7[&b%company%&7]'
+    line2: '&0%item%'
+    line3: '%status%'
+    line4: '&0價格: $%price%'
+  status:
+    selling: '&a&l販售中'
+    not-specific: '&4&l商品未確認'
+    out-of-stock: '&c&l缺貨'
+    something-wrong: '&4&l錯誤'
+  sell-info:
+    - '&b%company%的商店'
+    - '&a%item%: &b$%price%'
+    - '&d庫存: %amount%'
+    - '%status%'
+    - '&a請輸入你要購買的數量以確認付款'
+  already-created: '&7[&6%prefix%&7] &c商店已建立!'
+  break-chest-instead: '&7[&6%prefix%&7] &c請直接破壞箱子方塊而非告示牌!'
+  shop-deleted: '&7[&6%prefix%&7] &c商店已刪除!'
+  invalid-buy-amount: '&7[&6%prefix%&7] &c購買數量錯誤'
+  not-enough-stock: '&7[&6%prefix%&7] &c商店目前缺貨!'
+  buy-success: '&7[&6%prefix%&7] &a你已購買 &b%company% &a的商品!'
+
+position-permission:
+  ALL: '所有權限'
+  EMPLOY: '聘用'
+  FIRE: '解雇'
+  CHESTSHOP_CREATE: '建立箱子商店'
+  CHESTSHOP_DELETE: '刪除箱子商店'
+
+none: '無'
+unemployment: '待業中'
+yourself: '你'
+yes: '是'
+no: '否'
+
+check-update:
+  invalid: '無法檢查更新: '
+  latest: '目前已是最新版本'
+  outdate: '有可用的新版本更新'

@@ -18,12 +18,12 @@ public class Logger {
     }
 
     public static void log(Level level, String message) {
-        MyCompany.getInstance().getServer().getLogger().log(level, message);
+        MyCompany.getInstance().getServer().getLogger().log(level, "[MyCompany] " + message);
     }
 
     public static void debug(Level level, String message) {
         if (enabled) {
-            MyCompany.getInstance().getServer().getLogger().log(level, message);
+            MyCompany.getInstance().getServer().getLogger().log(level, "[MyCompany_DEBUG] " + message);
         }
     }
 

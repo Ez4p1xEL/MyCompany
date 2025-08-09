@@ -97,6 +97,10 @@ public class ShopManager {
         return this.data.getShopsUUID(companyUniqueId);
     }
 
+    public String getCreator(UUID companyUniqueId, UUID shopUniqueId) {
+        return (String) this.data.get(companyUniqueId, "shop", shopUniqueId + ".creator");
+    }
+
 
 
 }
