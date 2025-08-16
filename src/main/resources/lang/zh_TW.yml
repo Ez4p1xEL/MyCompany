@@ -20,6 +20,8 @@ commands:
   position-permission-add: '&e/myc position permission add <職位> <權限> &7新增職位權限'
   position-permission-remove: '&e/myc position permission remove <職位> <權限> &7移除職位權限'
   position-permission-list: '&e/myc position permission list [職位] &7查看職位權限'
+  setloc: '&e/myc setloc &7設定公司的傳送點'
+  tp: '&e/myc tp [公司ID] &7傳送至公司的傳送點'
   admin:
     money-give: '&e/myc money give <公司ID> <金額> &7給予公司資金'
     money-take: '&e/myc money take <公司ID> <金額> &7從公司提取資金'
@@ -68,6 +70,10 @@ id-invalid: '&7[&6%prefix%&7] &c請輸入正確的公司ID!'
 id-not-exist: '&7[&6%prefix%&7] &c公司ID &e%cid% &c不存在!'
 remove-shop-before-disband: '&7[&6%prefix%&7] &c請先移除所有箱子商店後再解散公司!'
 employer-self: '&7[&6%prefix%&7] &c你已是雇主，還想做什麼？'
+not-in-building: '&7[&6%prefix%&7] &c你應該在你的公司範圍內這麼做！'
+not-your-protected-area: '&7[&6%prefix%&7] &c你應該站在一個被保護的區域中！'
+setloc-success: '&7[&6%prefix%&7] &a傳送點已設定'
+tp-success: '&7[&6%prefix%&7] &a正在傳送'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &c請輸入正確格式的數字!'

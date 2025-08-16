@@ -20,6 +20,8 @@ commands:
   position-permission-add: '&e/myc position permission add <职位> <权限> &7为职位新增权限'
   position-permission-remove: '&e/myc position permission remove <职位> <权限> &7为职位移除权限'
   position-permission-list: '&e/myc position permission list [职位] &7查看职位权限'
+  setloc: '&e/myc setloc &7设置公司的传送点'
+  tp: '&e/myc tp [公司ID] &7传送至公司的传送点'
   admin:
     money-give: '&e/myc money give <公司ID> <数量> &7给予金钱公司'
     money-take: '&e/myc money take <公司ID> <数量> &7从公司拿取金钱'
@@ -68,6 +70,10 @@ id-invalid: '&7[&6%prefix%&7] &c请输入正确的公司ID!'
 id-not-exist: '&7[&6%prefix%&7] &c公司ID &e%cid% &c不存在!'
 remove-shop-before-disband: '&7[&6%prefix%&7] &c请在解散公司前移除所有箱子商店!'
 employer-self: '&7[&6%prefix%&7] &c你已经是雇主了, 你想干什么?'
+not-in-building: '&7[&6%prefix%&7] &c你应该在你的公司范围这么做!'
+not-your-protected-area: '&7[&6%prefix%&7] &c你应该站在一个被保护的区域中!'
+setloc-success: '&7[&6%prefix%&7] &a传送点已设置'
+tp-success: '&7[&6%prefix%&7] &a传送中'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &c请输入正确格式的数字!'
