@@ -1,9 +1,9 @@
 main: p1xel.minecraft.bukkit.MyCompany
 name: MyCompany
 api-version: 1.20
-version: 0.4.1
+version: 0.5
 depend: [Vault]
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, Residence, Dominion]
 commands:
   mycompany:
     aliases: [myc, mc, cp, company]
@@ -43,6 +43,12 @@ permissions:
   mycompany.commands.balance:
     default: true
   mycompany.commands.balance.other:
+    default: true
+  mycompany.commands.setloc:
+    default: true
+  mycompany.commands.tp:
+    default: true
+  mycompany.commands.tp.other:
     default: true
   mycompany.commands.admin:
     default: op

@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -8,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import p1xel.minecraft.bukkit.events.CompanyIncomeEvent;
+import p1xel.minecraft.bukkit.managers.BuildingManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.UserManager;
@@ -26,6 +28,7 @@ public class CommandListener implements CommandExecutor {
 
     private final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
     private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
+    private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
 
     @Override
     @ParametersAreNonnullByDefault
@@ -61,11 +64,11 @@ public class CommandListener implements CommandExecutor {
 
                 Player player = (Player) sender;
                 UUID uniqueId = player.getUniqueId();
-                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("Employer")) {
+                if (!userManager.getPosition(uniqueId).equalsIgnoreCase("Employer")) {
                     sender.sendMessage(Locale.getMessage("employer-only"));
                     return true;
                 }
-                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
 
                 if (!MyCompany.getCacheManager().getShopManager().getShopsUUID(companyUniqueId).isEmpty()) {
                     sender.sendMessage(Locale.getMessage("remove-shop-before-disband"));
@@ -104,7 +107,7 @@ public class CommandListener implements CommandExecutor {
 
                 Player player = (Player) sender;
                 UUID uniqueId = player.getUniqueId();
-                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                 // Check if the sender has company
                 if (companyUniqueId == null) {
                     sender.sendMessage(Locale.getMessage("no-company"));
@@ -112,7 +115,7 @@ public class CommandListener implements CommandExecutor {
                 }
 
                 // Check if the sender is the employer
-                if (MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                if (userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                     sender.sendMessage(Locale.getMessage("disband-instead"));
                     return true;
                 }
@@ -127,6 +130,46 @@ public class CommandListener implements CommandExecutor {
                     employer.sendMessage(Locale.getMessage("resigned").replaceAll("%player%", sender.getName()));
                     employer.playSound(employer, Sound.ENTITY_VILLAGER_NO, 3f, 3f);
                 }
+                return true;
+
+            }
+
+            if (args[0].equalsIgnoreCase("setloc")) {
+
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Locale.getMessage("must-be-player"));
+                    return true;
+                }
+
+                if (!sender.hasPermission("mycompany.commands.setloc")) {
+                    sender.sendMessage(Locale.getMessage("no-perm"));
+                    return true;
+                }
+
+                Player player = (Player) sender;
+                UUID uniqueId = player.getUniqueId();
+                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                // Check if the sender has company
+                if (companyUniqueId == null) {
+                    sender.sendMessage(Locale.getMessage("no-company"));
+                    return true;
+                }
+
+                if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                    sender.sendMessage(Locale.getMessage("employer-only"));
+                    return true;
+                }
+
+                Location location = player.getLocation();
+                if (!buildingManager.isEmployerArea(uniqueId, location)) {
+                    sender.sendMessage(Locale.getMessage("not-your-protected-area"));
+                    return true;
+                }
+
+                String name = buildingManager.getName(location);
+                buildingManager.setName(companyUniqueId, name);
+                buildingManager.setLocation(companyUniqueId, location);
+                sender.sendMessage(Locale.getMessage("setloc-success"));
                 return true;
 
             }
@@ -148,7 +191,7 @@ public class CommandListener implements CommandExecutor {
 
                 Player p = (Player) sender;
                 UUID uniqueId = p.getUniqueId();
-                if (MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId) != null) {
+                if (userManager.getCompanyUUID(uniqueId) != null) {
                     sender.sendMessage(Locale.getMessage("has-company"));
                     return true;
                 }
@@ -202,7 +245,7 @@ public class CommandListener implements CommandExecutor {
 
                 Player player = (Player) sender;
                 UUID uniqueId = player.getUniqueId();
-                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                 // Check if the sender has company
                 if (companyUniqueId == null) {
                     sender.sendMessage(Locale.getMessage("no-company"));
@@ -210,7 +253,7 @@ public class CommandListener implements CommandExecutor {
                 }
 
 //                // Check if the sender is the employer
-//                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+//                if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
 //                    sender.sendMessage(Locale.getMessage("employer-only"));
 //                    return true;
 //                }
@@ -223,7 +266,7 @@ public class CommandListener implements CommandExecutor {
                 OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
                 UUID targetUniqueId = target.getUniqueId();
                 // Check if the target player is existed.
-                if (!target.hasPlayedBefore() || !MyCompany.getCacheManager().getUserManager().isUserExist(targetUniqueId)) {
+                if (!target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
                     sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[1]));
                     return true;
                 }
@@ -231,7 +274,7 @@ public class CommandListener implements CommandExecutor {
                 String targetName = target.getName(); assert targetName != null;
 
                 // Check if the target has company
-                UUID targetCompanyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                UUID targetCompanyUniqueId = userManager.getCompanyUUID(uniqueId);
                 if (targetCompanyUniqueId == null) {
                     sender.sendMessage(Locale.getMessage("target-has-no-company").replaceAll("%player%", targetName));
                     return true;
@@ -269,7 +312,7 @@ public class CommandListener implements CommandExecutor {
 
                 Player player = (Player) sender;
                 UUID uniqueId = player.getUniqueId();
-                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                 // Check if the sender has company
                 if (companyUniqueId == null) {
                     sender.sendMessage(Locale.getMessage("no-company"));
@@ -277,7 +320,7 @@ public class CommandListener implements CommandExecutor {
                 }
 
 //                // Check if the sender is the employer
-//                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+//                if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
 //                    sender.sendMessage(Locale.getMessage("employer-only"));
 //                    return true;
 //                }
@@ -290,7 +333,7 @@ public class CommandListener implements CommandExecutor {
                 OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[1]);
                 UUID targetUniqueId = off_target.getUniqueId();
                 // Check if the target player is existed.
-                if (!off_target.hasPlayedBefore() || !MyCompany.getCacheManager().getUserManager().isUserExist(targetUniqueId)) {
+                if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
                     sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[1]));
                     return true;
                 }
@@ -302,7 +345,7 @@ public class CommandListener implements CommandExecutor {
                 }
 
                 // Check if the target has company
-                UUID targetCompanyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(targetUniqueId);
+                UUID targetCompanyUniqueId = userManager.getCompanyUUID(targetUniqueId);
                 if (targetCompanyUniqueId != null) {
                     sender.sendMessage(Locale.getMessage("target-has-company").replaceAll("%player%", targetName));
                     return true;
@@ -342,7 +385,7 @@ public class CommandListener implements CommandExecutor {
                 Player player = (Player) sender;
                 UUID uniqueId = player.getUniqueId();
                 // Check if the sender has company
-                if (MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId) != null) {
+                if (userManager.getCompanyUUID(uniqueId) != null) {
                     sender.sendMessage(Locale.getMessage("has-company"));
                     return true;
                 }
@@ -350,7 +393,7 @@ public class CommandListener implements CommandExecutor {
                 OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[1]);
                 UUID targetUniqueId = off_target.getUniqueId();
                 // Check if the target player is existed.
-                if (!off_target.hasPlayedBefore() || !MyCompany.getCacheManager().getUserManager().isUserExist(targetUniqueId)) {
+                if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
                     sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[1]));
                     return true;
                 }
@@ -361,7 +404,7 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(targetUniqueId);
+                UUID companyUniqueId = userManager.getCompanyUUID(targetUniqueId);
                 String companyName = MyCompany.getCacheManager().getCompanyManager().getName(companyUniqueId);
 
                 MyCompany.getHireRequestManager().acceptRequest(uniqueId, companyUniqueId);
@@ -395,20 +438,22 @@ public class CommandListener implements CommandExecutor {
                 String employerName = "";
                 String founderName = "";
 
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Locale.getMessage("must-be-player"));
+                    return true;
+                }
+
+                Player player = (Player) sender;
+
                 if (args.length == 1) {
-                    if (!(sender instanceof Player)) {
-                        sender.sendMessage(Locale.getMessage("must-be-player"));
-                        return true;
-                    }
 
                     if (!sender.hasPermission("mycompany.commands.info")) {
                         sender.sendMessage(Locale.getMessage("no-perm"));
                         return true;
                     }
 
-                    Player player = (Player) sender;
                     UUID uniqueId = player.getUniqueId();
-                    companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                    companyUniqueId = userManager.getCompanyUUID(uniqueId);
                     // Check if the sender has company
                     if (companyUniqueId == null) {
                         sender.sendMessage(Locale.getMessage("no-company"));
@@ -593,6 +638,70 @@ public class CommandListener implements CommandExecutor {
 
             }
 
+            if (args[0].equalsIgnoreCase("tp")) {
+
+                UUID companyUniqueId = null;
+                int cid = 0;
+                Location location = null;
+
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Locale.getMessage("must-be-player"));
+                    return true;
+                }
+                Player player = (Player) sender;
+
+                if (args.length == 1) {
+
+                    if (!sender.hasPermission("mycompany.commands.tp")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    UUID uniqueId = player.getUniqueId();
+                    companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    location = buildingManager.getLocation(companyUniqueId);
+
+                }
+
+                if (args.length == 2) {
+
+                    if (!sender.hasPermission("mycompany.commands.tp.other")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    try {
+                        cid = Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        cid = -1;
+                    }
+                    if (cid < 0) {
+                        sender.sendMessage(Locale.getMessage("id-invalid"));
+                        return true;
+                    }
+
+                    companyUniqueId = MyCompany.getCacheManager().getCompanyManager().getUUID(cid);
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("id-not-exist").replaceAll("%cid%", args[1]));
+                        return true;
+                    }
+
+                    location = buildingManager.getLocation(companyUniqueId);
+
+                }
+
+                player.teleport(location);
+                sender.sendMessage(Locale.getMessage("tp-success"));
+                return true;
+
+            }
+
         }
 
         if (args.length == 4) {
@@ -715,14 +824,14 @@ public class CommandListener implements CommandExecutor {
 
                                 Player player = (Player) sender;
                                 UUID uniqueId = player.getUniqueId();
-                                UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                                 // Check if the sender has company
                                 if (companyUniqueId == null) {
                                     sender.sendMessage(Locale.getMessage("no-company"));
                                     return true;
                                 }
 
-                                if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                                if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                                     sender.sendMessage(Locale.getMessage("employer-only"));
                                     return true;
                                 }
@@ -775,14 +884,14 @@ public class CommandListener implements CommandExecutor {
 
                     Player player = (Player) sender;
                     UUID uniqueId = player.getUniqueId();
-                    UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                    UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                     // Check if the sender has company
                     if (companyUniqueId == null) {
                         sender.sendMessage(Locale.getMessage("no-company"));
                         return true;
                     }
 
-                    if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                    if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                         sender.sendMessage(Locale.getMessage("employer-only"));
                         return true;
                     }
@@ -823,14 +932,14 @@ public class CommandListener implements CommandExecutor {
 
                     Player player = (Player) sender;
                     UUID uniqueId = player.getUniqueId();
-                    UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                    UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                     // Check if the sender has company
                     if (companyUniqueId == null) {
                         sender.sendMessage(Locale.getMessage("no-company"));
                         return true;
                     }
 
-                    if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                    if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                         sender.sendMessage(Locale.getMessage("employer-only"));
                         return true;
                     }
@@ -867,14 +976,14 @@ public class CommandListener implements CommandExecutor {
 
                         Player player = (Player) sender;
                         UUID uniqueId = player.getUniqueId();
-                        UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                        UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                         // Check if the sender has company
                         if (companyUniqueId == null) {
                             sender.sendMessage(Locale.getMessage("no-company"));
                             return true;
                         }
 
-                        if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                        if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                             sender.sendMessage(Locale.getMessage("employer-only"));
                             return true;
                         }
@@ -914,14 +1023,14 @@ public class CommandListener implements CommandExecutor {
 
                         Player player = (Player) sender;
                         UUID uniqueId = player.getUniqueId();
-                        UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                        UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                         // Check if the sender has company
                         if (companyUniqueId == null) {
                             sender.sendMessage(Locale.getMessage("no-company"));
                             return true;
                         }
 
-                        if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                        if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                             sender.sendMessage(Locale.getMessage("employer-only"));
                             return true;
                         }
@@ -930,7 +1039,7 @@ public class CommandListener implements CommandExecutor {
 
                         OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[2]);
                         UUID targetUniqueId = off_target.getUniqueId();
-                        if (!off_target.hasPlayedBefore() || !MyCompany.getCacheManager().getUserManager().isUserExist(targetUniqueId)) {
+                        if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
                             sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[2]));
                             return true;
                         }
@@ -990,14 +1099,14 @@ public class CommandListener implements CommandExecutor {
 
                             Player player = (Player) sender;
                             UUID uniqueId = player.getUniqueId();
-                            UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                            UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                             // Check if the sender has company
                             if (companyUniqueId == null) {
                                 sender.sendMessage(Locale.getMessage("no-company"));
                                 return true;
                             }
 
-                            if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                            if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                                 sender.sendMessage(Locale.getMessage("employer-only"));
                                 return true;
                             }
@@ -1040,14 +1149,14 @@ public class CommandListener implements CommandExecutor {
 
                             Player player = (Player) sender;
                             UUID uniqueId = player.getUniqueId();
-                            UUID companyUniqueId = MyCompany.getCacheManager().getUserManager().getCompanyUUID(uniqueId);
+                            UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
                             // Check if the sender has company
                             if (companyUniqueId == null) {
                                 sender.sendMessage(Locale.getMessage("no-company"));
                                 return true;
                             }
 
-                            if (!MyCompany.getCacheManager().getUserManager().getPosition(uniqueId).equalsIgnoreCase("employer")) {
+                            if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
                                 sender.sendMessage(Locale.getMessage("employer-only"));
                                 return true;
                             }

@@ -9,6 +9,7 @@ storage:
   # Ways to store data
   # Available storages: YAML, MYSQL(recommended)
   # You should restart the server after changing.
+  # MYSQL function is not done yet, please choose YAML instead.
   type: YAML
   connection:
     database: idk
@@ -40,6 +41,20 @@ company-settings:
   employee-default-permission:
     - 'CHESTSHOP_CREATE'
     - 'CHESTSHOP_DELETE'
+  # Should "/myc setloc" select the player's location's protected-area
+  # to the waypoint and the area of the company building.
+  # This should be used with chestshop-create-in-building below.
+  dedicated-company-building:
+    enable: true
+    # If there are multiple supporting plugins enabled,
+    # MyCompany would select the first one.
+    supported-plugins:
+      Residence: true
+      Dominion: true
+  # Should the chestshop be created in company's building?
+  # Set to false if you allow the employee to create
+  # chestshops anywhere.
+  chestshop-create-in-building: true
 
 company-funds:
   default-asset: 120000.0
@@ -111,4 +126,3 @@ chest-shop:
 backup-creator:
   # How many minutes should the plugin to start creating backup after starting the server.
   timer-on-start: 300
-#构想: 每间公司的商店仅能出售被插件限定的物品

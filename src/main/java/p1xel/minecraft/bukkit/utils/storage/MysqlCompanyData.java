@@ -179,4 +179,14 @@ public class MysqlCompanyData extends CompanyData{
     public ItemStack getItem(UUID companyUniqueId, UUID shopUniqueId) {
         return null;
     }
+
+    @Override
+    public @org.jetbrains.annotations.Nullable Location getLocation(UUID uniqueId) {
+        return null;
+    }
+
+    @Override
+    public void setLocation(UUID uniqueId, Location location) {
+
+    }
 }

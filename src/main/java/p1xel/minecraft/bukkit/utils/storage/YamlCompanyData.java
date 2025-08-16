@@ -416,6 +416,38 @@ public class YamlCompanyData extends CompanyData{
         return list;
     }
 
+    @Override
+    public Location getLocation(UUID uniqueId) {
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("info");
+        if (yaml.getString(uniqueId + ".location.location.world") == null) {
+            return null;
+        }
+        String world = yaml.getString(uniqueId + ".location.location.world");
+        double x = yaml.getDouble(uniqueId + ".location.location.x");
+        double y = yaml.getDouble(uniqueId + ".location.location.y");
+        double z = yaml.getDouble(uniqueId + ".location.location.z");
+        float yaw = (float) yaml.getDouble(uniqueId + ".location.location.yaw");
+        float pitch = (float) yaml.getDouble(uniqueId + ".location.location.pitch");
+        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+    }
+
+    @Override
+    public void setLocation(UUID uniqueId, Location location) {
+        File file = com_files.get(uniqueId).get("info");
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("info");
+        yaml.set(uniqueId + ".location.location.world", location.getWorld().getName());
+        yaml.set(uniqueId + ".location.location.x", location.getX());
+        yaml.set(uniqueId + ".location.location.y", location.getY());
+        yaml.set(uniqueId + ".location.location.z", location.getZ());
+        yaml.set(uniqueId + ".location.location.yaw", location.getYaw());
+        yaml.set(uniqueId + ".location.location.pitch", location.getPitch());
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // info.yml - END
 
     // asset.yml - BEGIN

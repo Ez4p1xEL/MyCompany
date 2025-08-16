@@ -6,7 +6,7 @@
 
     <groupId>p1xel.minecraft.bukkit</groupId>
     <artifactId>MyCompany</artifactId>
-    <version>0.4.1</version>
+    <version>0.5</version>
 
     <properties>
         <java.version>21</java.version>
@@ -20,6 +20,10 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -27,7 +31,6 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
-
     </repositories>
 
     <dependencies>
@@ -37,17 +40,37 @@
             <version>1.20.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Vault -->
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
+        <!-- PlaceholderAPI -->
         <!-- https://mvnrepository.com/artifact/com.github.placeholderapi/placeholderapi -->
         <dependency>
             <groupId>com.github.placeholderapi</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Residence -->
+        <dependency>
+            <groupId>com.bekvon</groupId>
+            <artifactId>residence-api</artifactId>
+            <version>5.1.6.4</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/Residence5.1.6.4.jar</systemPath>
+        </dependency>
+
+        <!-- Dominion -->
+        <dependency>
+            <groupId>cn.lunadeer</groupId>
+            <artifactId>DominionAPI</artifactId>
+            <version>4.5.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

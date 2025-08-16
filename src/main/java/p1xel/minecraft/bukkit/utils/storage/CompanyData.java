@@ -86,6 +86,11 @@ public abstract class CompanyData {
     @Nullable
     public abstract ItemStack getItem(UUID companyUniqueId, UUID shopUniqueId);
 
+    @Nullable
+    public abstract Location getLocation(UUID uniqueId);
+
+    public abstract void setLocation(UUID uniqueId, Location location);
+
     //public abstract Location getLocation(UUID uniqueId);
 
     //public abstract UUID getCompanyUUID(UUID uniqueId);

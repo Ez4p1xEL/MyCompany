@@ -42,6 +42,7 @@ public class ShopListener implements Listener {
     private final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
     private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
     private final ShopManager shopManager = MyCompany.getCacheManager().getShopManager();
+    private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
     private HashMap<UUID, ShopItemBuyMode> purchase = new HashMap<>();
 
     @EventHandler
@@ -99,6 +100,12 @@ public class ShopListener implements Listener {
 
         if (!userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_CREATE)) {
             player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.CHESTSHOP_CREATE.getName()));
+            return;
+        }
+
+        UUID employerUniqueId = companyManager.getEmployer(companyUniqueId);
+        if (!buildingManager.isInBuilding(employerUniqueId, chestBlock, buildingManager.getName(companyUniqueId))) {
+            player.sendMessage(Locale.getMessage("not-in-building"));
             return;
         }
 

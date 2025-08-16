@@ -21,7 +21,9 @@ commands:
   position-label-set: '&e/myc position setlabel <position> <label> &7Set label of the position. (Use _ instead of SPACE)'
   position-permission-add: '&e/myc position permission add <position> <permission> &7Add permission for the position.'
   position-permission-remove: '&e/myc position permission remove <position> <permission> &7Remove permission of the position.'
-  position-permission-list: '&e/myc position permission list [position] &7View permissions of the position.'
+  position-permission-list: '&e/myc position permission list [position] &7View permission of the position.'
+  setloc: '&e/myc setloc &7Set teleport location of the company.'
+  tp: '&e/myc tp [CompanyId] &7Teleport to the location of the company.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
@@ -70,6 +72,10 @@ id-invalid: '&7[&6%prefix%&7] &cPlease enter the company id correctly!'
 id-not-exist: '&7[&6%prefix%&7] &cCompany Id &e%cid% &cis not existed!'
 remove-shop-before-disband: '&7[&6%prefix%&7] &cPlease remove all the chest shops before disbanding the company!'
 employer-self: '&7[&6%prefix%&7] &cYou are the employer, what do you mean?'
+not-in-building: '&7[&6%prefix%&7] &cYou should do it in your company building!'
+not-your-protected-area: '&7[&6%prefix%&7] &cYou should stand in your protected area!'
+setloc-success: '&7[&6%prefix%&7] &aLocation set.'
+tp-success: '&7[&6%prefix%&7] &aTeleported to the company.'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'

@@ -9,6 +9,9 @@ import p1xel.minecraft.bukkit.commands.TabList;
 import p1xel.minecraft.bukkit.listeners.ShopListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
+import p1xel.minecraft.bukkit.managers.buildings.DefaultBuildingArea;
+import p1xel.minecraft.bukkit.managers.buildings.DominionBuildingArea;
+import p1xel.minecraft.bukkit.managers.buildings.ResidenceBuildingArea;
 import p1xel.minecraft.bukkit.tools.bstats.Metrics;
 import p1xel.minecraft.bukkit.tools.spigotmc.UpdateChecker;
 import p1xel.minecraft.bukkit.utils.*;
@@ -78,6 +81,28 @@ public class MyCompany extends JavaPlugin {
 
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new Placeholders(cache).register();
+        }
+
+        if (getConfig().getBoolean("company-settings.dedicated-company-building.enable")) {
+            for (String plugin : getConfig().getConfigurationSection("company-settings.dedicated-company-building.supported-plugins").getKeys(false)) {
+
+                if (plugin.equalsIgnoreCase("Residence")) {
+                    if (getServer().getPluginManager().getPlugin("Residence") != null) {
+                        cache.getBuildingManager().setModule(new ResidenceBuildingArea());
+                        break;
+                    }
+                }
+
+                if (plugin.equalsIgnoreCase("Dominion")) {
+                    if (getServer().getPluginManager().getPlugin("Dominion") != null) {
+                        cache.getBuildingManager().setModule(new DominionBuildingArea());
+                        break;
+                    }
+                }
+
+            }
+        } else {
+            cache.getBuildingManager().setModule(new DefaultBuildingArea());
         }
 
         Logger.setEnabled(Config.getBool("debug"));
