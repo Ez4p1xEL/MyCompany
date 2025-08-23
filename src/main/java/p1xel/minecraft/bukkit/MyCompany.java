@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import p1xel.minecraft.bukkit.commands.CommandListener;
 import p1xel.minecraft.bukkit.commands.TabList;
+import p1xel.minecraft.bukkit.listeners.GUIListener;
 import p1xel.minecraft.bukkit.listeners.ShopListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
@@ -70,6 +71,7 @@ public class MyCompany extends JavaPlugin {
         getServer().getPluginCommand("MyCompany").setTabCompleter(new TabList());
         getServer().getPluginManager().registerEvents(new UserCreation(), this);
         getServer().getPluginManager().registerEvents(new ShopListener(), this);
+        getServer().getPluginManager().registerEvents(new GUIListener(), this);
 
         if (!setupEconomy()) {
             getLogger().warning("Vault is not found! Disabling MyCompany...");

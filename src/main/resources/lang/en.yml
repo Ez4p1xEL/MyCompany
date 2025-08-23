@@ -171,6 +171,170 @@ shop:
   not-enough-stock: '&7[&6%prefix%&7] &cThe shop does not have enough stock!'
   buy-success: '&7[&6%prefix%&7] &aYou bought products from &b%company%&a!'
 
+menu:
+  main:
+    title: '&aMenu of &b%company%'
+    items:
+      user_info:
+        material: player_head;%player%
+        display_name: '&aCurrently in &b%company%'
+        lore:
+          - ''
+          - '&7You are a &e%label% &8(%position%) &7of this company.'
+          - '&7Your daily income is at least &e$%salary%&7.'
+          - ''
+      company_info:
+        material: diamond
+        display_name: '&aCompany &b%company%'
+        lore:
+          - ''
+          - '&7Click to see the detail of the company,'
+          - '&7or use /myc info %cid% instead.'
+          - ''
+      balance:
+        material: gold_ingot
+        display_name: '&aBalance'
+        lore:
+          - ''
+          - '&7The company has &e$%cash% &7currently.'
+          - '&7The daily income is &e$%daily%&7/%total%.'
+          - ''
+          - '&7Taxes:'
+          - ' &7Management fee: &c$%tax_management%'
+          - ' &7Property tax: &c%tax_property%'
+          - ' &7Income tax: &c%tax_income%'
+          - ''
+          - '&7/myc balance %cid%'
+          - ''
+      employ:
+        material: leather_chestplate
+        display_name: '&dEmploy'
+        lore:
+          - ''
+          - '&7Employ other players to be employee'
+          - '&7of the company.'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_employ%'
+          - ''
+          - '&7Click to employ'
+      fire:
+        material: iron_door
+        display_name: '&dFire'
+        lore:
+          - ''
+          - '&7Fire the employee'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_fire%'
+          - ''
+          - '&7Click to fire'
+      chestshop_create:
+        material: chest
+        display_name: '&dChestshop creation'
+        lore:
+          - ''
+          - '&7To create chestshop for your company,'
+          - '&7You need to place a sign in front of the chest.'
+          - '&7The content of the sign should be:'
+          - '&f%chestshop_identifier%'
+          - '&fPrice'
+          - '&7After that, the sign should be updated automatically.'
+          - '&7Place a hopper, where the destination of it should be the chest.'
+          - '&7Put the product to the hopper and let it moves to the chest.'
+          - '&7Then the item of the chestshop should be specified successfully!'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_chestshop_create%'
+          - ''
+      chestshop_delete:
+        material: trapped_chest
+        display_name: '&dChestshop deleting'
+        lore:
+          - ''
+          - '&7To delete the chestshop,'
+          - '&7you just need to break the chest.'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_chestshop_delete%'
+          - ''
+  employee-list:
+    title: '&aEmployee list of &b%company%'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&aEmployee list of &b%company%'
+        lore:
+          - ''
+          - '&7Click the head to select the employee'
+          - ''
+      employee:
+        material: player_head;%player%
+        display_name: '&e%player%'
+        lore:
+          - ''
+          - '&7Click to select'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  player-list:
+    title: '&aOnline players'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&aList of online and unemployed players'
+        lore:
+          - ''
+          - '&7Click the head to select the player'
+          - ''
+      player:
+        material: player_head;%player%
+        display_name: '&e%player%'
+        lore:
+          - ''
+          - '&7Click to select'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+
 position-permission:
   ALL: 'All permissions'
   EMPLOY: 'Employ'
@@ -181,8 +345,8 @@ position-permission:
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'
 yourself: 'YOURSELF'
-yes: 'YES'
-no: 'NO'
+true: 'YES'
+false: 'NO'
 
 check-update:
   invalid: 'Unable to check for updates: '

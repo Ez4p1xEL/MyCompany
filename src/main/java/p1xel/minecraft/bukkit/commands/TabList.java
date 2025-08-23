@@ -31,7 +31,7 @@ public class TabList implements TabCompleter {
 
         if (args0.isEmpty()) {
             args0.add("?"); args0.add("found"); args0.add("disband"); args0.add("employ"); args0.add("fire"); args0.add("accept");
-            args0.add("resign"); args0.add("info"); args0.add("position"); args0.add("money"); args0.add("balance"); args0.add("reload");
+            args0.add("resign"); args0.add("info"); args0.add("position"); args0.add("money"); args0.add("balance"); args0.add("open"); args0.add("reload");
         }
 
         if (perms.isEmpty()) {

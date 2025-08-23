@@ -168,6 +168,169 @@ shop:
   not-enough-stock: '&7[&6%prefix%&7] &c该商店缺货中!'
   buy-success: '&7[&6%prefix%&7] &a你购买了 &b%company% &a的商品!'
 
+menu:
+  main:
+    title: '&b%company% &a公司菜单'
+    items:
+      user_info:
+        material: player_head;%player%
+        display_name: '&a目前处于 &b%company%'
+        lore:
+          - ''
+          - '&7你是该公司的 &e%label% &8(%position%)'
+          - '&7你的每日收入为 &e$%salary%'
+          - ''
+      company_info:
+        material: diamond
+        display_name: '&a公司 &b%company%'
+        lore:
+          - ''
+          - '&7点击查看公司资讯'
+          - '&7或者输入指令 /myc info %cid%'
+          - ''
+      balance:
+        material: gold_ingot
+        display_name: '&a财产'
+        lore:
+          - ''
+          - '&7公司目前拥有 &e$%cash%'
+          - '&7每日收入为 &e$%daily%&7/%total%.'
+          - ''
+          - '&7税项:'
+          - ' &7管理费用: &c$%tax_management%'
+          - ' &7财产税: &c%tax_property%'
+          - ' &7收入税: &c%tax_income%'
+          - ''
+          - '&7/myc balance %cid%'
+          - ''
+      employ:
+        material: leather_chestplate
+        display_name: '&d聘请'
+        lore:
+          - ''
+          - '&7聘请其他玩家成为员工'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_employ%'
+          - ''
+          - '&7点击聘请'
+      fire:
+        material: iron_door
+        display_name: '&d辞退'
+        lore:
+          - ''
+          - '&7炒鱿鱼'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_fire%'
+          - ''
+          - '&7Click to fire'
+      chestshop_create:
+        material: chest
+        display_name: '&d创建箱子商店'
+        lore:
+          - ''
+          - '&7为公司创建箱子商店以赚取收入'
+          - '&7你需要在靠在箱子面前放置一块告示牌'
+          - '&7告示牌内容如下:'
+          - '&f%chestshop_identifier%'
+          - '&f价格'
+          - '&7完成后，告示牌内容将会被自动更新'
+          - '&7接下来，放置一个连接至该箱子的漏斗(漏斗的传输目的地必须是该箱子)'
+          - '&7放置一个商品于漏斗中,并使其传输至箱子中'
+          - '&7如此一来,箱子商店的商品即可被确认!'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_chestshop_create%'
+          - ''
+      chestshop_delete:
+        material: trapped_chest
+        display_name: '&d删除箱子商店'
+        lore:
+          - ''
+          - '&7如果你需要删除箱子商店'
+          - '&7破坏箱子即可'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_chestshop_delete%'
+          - ''
+  employee-list:
+    title: '&b%company% &a员工列表'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&b%company% &a员工列表'
+        lore:
+          - ''
+          - '&7点击头颅选择员工'
+          - ''
+      employee:
+        material: player_head;%player%
+        display_name: '&e%player%'
+        lore:
+          - ''
+          - '&7点击选择'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  player-list:
+    title: '&a在线玩家'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&a在线且无业玩家'
+        lore:
+          - ''
+          - '&7点击头颅选择玩家'
+          - ''
+      player:
+        material: player_head;%player%
+        display_name: '&e%player%'
+        lore:
+          - ''
+          - '&7点击选择'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+
 position-permission:
   ALL: '所有权限'
   EMPLOY: '聘请'
@@ -178,8 +341,8 @@ position-permission:
 none: '无'
 unemployment: '无业游民'
 yourself: '你'
-yes: '是'
-no: '否'
+true: '是'
+false: '否'
 
 check-update:
   invalid: '无法查询更新: '

@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.BuildingManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.managers.ShopManager;
 import p1xel.minecraft.bukkit.managers.UserManager;
@@ -24,6 +25,7 @@ public class BackupCreator {
     private static final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
     private static final UserManager userManager = MyCompany.getCacheManager().getUserManager();
     private static final ShopManager shopManager = MyCompany.getCacheManager().getShopManager();
+    private static final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
 
     public static void createBackup(UUID uuid) {
         File folder = new File(MyCompany.getInstance().getDataFolder() + "/backup/companies", uuid.toString());
@@ -62,6 +64,14 @@ public class BackupCreator {
                     }
                     yaml.set(uuid + ".members." + position, companyManager.getEmployeeList(uuid, position).stream().map(UUID::toString).collect(Collectors.toList()));
                 }
+                Location location = buildingManager.getLocation(uuid);
+                yaml.set(uuid + ".location.location.world", location.getWorld().getName());
+                yaml.set(uuid + ".location.location.x", location.getX());
+                yaml.set(uuid + ".location.location.y", location.getY());
+                yaml.set(uuid + ".location.location.z", location.getZ());
+                yaml.set(uuid + ".location.location.yaw", location.getYaw());
+                yaml.set(uuid + ".location.location.pitch", location.getPitch());
+                yaml.set(uuid + ".location.area", buildingManager.getName(uuid));
             }
 
             if (fileName.equals("settings")) {

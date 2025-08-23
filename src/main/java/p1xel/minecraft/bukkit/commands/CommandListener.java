@@ -13,6 +13,7 @@ import p1xel.minecraft.bukkit.managers.BuildingManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.managers.gui.GUIMain;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
@@ -37,6 +38,31 @@ public class CommandListener implements CommandExecutor {
         boolean isAdmin = sender.hasPermission("mycompany.commands.admin");
 
         if (args.length == 1) {
+
+            if (args[0].equalsIgnoreCase("open")) {
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Locale.getMessage("must-be-player"));
+                    return true;
+                }
+
+                if (!sender.hasPermission("mycompany.commands.open")) {
+                    sender.sendMessage(Locale.getMessage("no-perm"));
+                    return true;
+                }
+
+                Player player = (Player) sender;
+                UUID playerUniqueId = player.getUniqueId();
+                UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+                // Check if the sender has company
+                if (companyUniqueId == null) {
+                    sender.sendMessage(Locale.getMessage("no-company"));
+                    return true;
+                }
+                GUIMain main = new GUIMain(playerUniqueId);
+                player.openInventory(main.getInventory());
+                return true;
+            }
+
             if (args[0].equalsIgnoreCase("reload")) {
 
                 if (!isAdmin) {

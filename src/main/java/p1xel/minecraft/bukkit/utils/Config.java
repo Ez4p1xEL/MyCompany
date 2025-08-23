@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.utils;
 
 
+import org.bukkit.configuration.Configuration;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
@@ -45,5 +46,10 @@ public class Config {
     public static double getDouble(String path) { return MyCompany.getInstance().getConfig().getDouble(path);}
 
     public static List<String> getStringList(String path) { return MyCompany.getInstance().getConfig().getStringList(path);}
+
+    public static double getTaxRate(String tax, String phase) {
+        Configuration config = MyCompany.getInstance().getConfig();
+        return config.getDouble("company-funds.cost-per-day." + tax +".phases." + phase + ".tax-rate", config.getDouble("company-funds.cost-per-day." + tax + ".default-tax-rate"));
+    }
 
 }

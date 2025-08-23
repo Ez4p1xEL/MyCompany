@@ -85,5 +85,9 @@ public class Locale {
         return ChatColor.translateAlternateColorCodes('&', message.replaceAll("%prefix%", yaml.getString("prefix")).replaceAll("%version%", Config.getVersion()));
     }
 
+    public static String getYesOrNo(boolean bool) {
+        return getMessage(Boolean.toString(bool).toLowerCase());
+    }
+
 
 }
