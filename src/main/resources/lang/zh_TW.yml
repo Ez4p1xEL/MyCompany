@@ -22,6 +22,7 @@ commands:
   position-permission-list: '&e/myc position permission list [職位] &7查看職位權限'
   setloc: '&e/myc setloc &7設定公司的傳送點'
   tp: '&e/myc tp [公司ID] &7傳送至公司的傳送點'
+  open: '&e/myc open &7打开公司選單'
   admin:
     money-give: '&e/myc money give <公司ID> <金額> &7給予公司資金'
     money-take: '&e/myc money take <公司ID> <金額> &7從公司提取資金'

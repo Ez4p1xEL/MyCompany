@@ -24,6 +24,7 @@ commands:
   position-permission-list: '&e/myc position permission list [position] &7View permission of the position.'
   setloc: '&e/myc setloc &7Set teleport location of the company.'
   tp: '&e/myc tp [CompanyId] &7Teleport to the location of the company.'
+  open: '&e/myc open &7Open menu.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
