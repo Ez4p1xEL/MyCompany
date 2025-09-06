@@ -38,10 +38,6 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
         }
     }
 
-    public GUIMain() {
-
-    }
-
     @Override
     public void init() {
         this.position = userManager.getPosition(playerUniqueId);

@@ -8,11 +8,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import p1xel.minecraft.bukkit.api.PersonalAPI;
 import p1xel.minecraft.bukkit.events.CompanyIncomeEvent;
 import p1xel.minecraft.bukkit.managers.BuildingManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.managers.gui.GUIFound;
 import p1xel.minecraft.bukkit.managers.gui.GUIMain;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
@@ -55,7 +57,9 @@ public class CommandListener implements CommandExecutor {
                 UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                 // Check if the sender has company
                 if (companyUniqueId == null) {
-                    sender.sendMessage(Locale.getMessage("no-company"));
+                    //sender.sendMessage(Locale.getMessage("no-company"));
+                    GUIFound found = new GUIFound(playerUniqueId);
+                    player.openInventory(found.getInventory());
                     return true;
                 }
                 GUIMain main = new GUIMain(playerUniqueId);
@@ -210,49 +214,7 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                if (!sender.hasPermission("mycompany.commands.found")) {
-                    sender.sendMessage(Locale.getMessage("no-perm"));
-                    return true;
-                }
-
-                Player p = (Player) sender;
-                UUID uniqueId = p.getUniqueId();
-                if (userManager.getCompanyUUID(uniqueId) != null) {
-                    sender.sendMessage(Locale.getMessage("has-company"));
-                    return true;
-                }
-
-                int length = args[1].length();
-                int max_length = Config.getInt("company-settings.max-length");
-
-                if (length > max_length) {
-                    sender.sendMessage(Locale.getMessage("out-of-length").replaceAll("%length%", String.valueOf(max_length)));
-                    return true;
-                }
-
-                if (MyCompany.getCacheManager().getCompanyManager().getCompaniesName().contains(args[1])) {
-                    sender.sendMessage(Locale.getMessage("company-exist").replaceAll("%company%", args[1]));
-                    return true;
-                }
-
-                double money = Config.getDouble("company-settings.founding-cost.money");
-                if (MyCompany.getEconomy().getBalance(p) < money) {
-                    sender.sendMessage(Locale.getMessage("not-enough-money").replaceAll("%money%", String.valueOf(money)));
-                    return true;
-                }
-
-                String labelled = args[1].replaceAll("_", " ");
-
-                MyCompany.getCacheManager().getCompanyManager().createCompany(labelled, ((Player) sender).getUniqueId());
-                MyCompany.getEconomy().withdrawPlayer(p, money);
-                sender.sendMessage(Locale.getMessage("found-success").replaceAll("%company%", labelled));
-
-                // Broadcast
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.sendMessage(Locale.getMessage("broadcast.company-found").replaceAll("%company%", labelled).replaceAll("%player%", sender.getName()));
-                    player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 3f, 3f);
-                }
-
+                new PersonalAPI((Player) sender).foundCompany(args[1]);
                 return true;
 
             }

@@ -335,6 +335,33 @@ menu:
           - ''
           - '&7Click to switch'
           - ''
+  text-input:
+    title: 'Text Input'
+    items:
+      first_item:
+        material: paper
+        display_name: 'Type cancel if you don'' want to continue'
+  found:
+    title: 'You do not have a company'
+    items:
+      found:
+        material: chest
+        display_name: '&aFound a company'
+        lore:
+          - ''
+          - '&7Found a company to earn money,'
+          - '&7and employ others'
+          - ''
+          - '&7Click to found'
+      wait_for_employ:
+        material: leather_chestplate
+        display_name: '&aWait for a recruitment'
+        lore:
+          - ''
+          - '&7If you do not want to found a company,'
+          - '&7you may wait the recruitment'
+          - '&7from other bosses.'
+          - ''
 
 position-permission:
   ALL: 'All permissions'
