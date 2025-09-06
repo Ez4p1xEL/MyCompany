@@ -65,13 +65,15 @@ public class BackupCreator {
                     yaml.set(uuid + ".members." + position, companyManager.getEmployeeList(uuid, position).stream().map(UUID::toString).collect(Collectors.toList()));
                 }
                 Location location = buildingManager.getLocation(uuid);
-                yaml.set(uuid + ".location.location.world", location.getWorld().getName());
-                yaml.set(uuid + ".location.location.x", location.getX());
-                yaml.set(uuid + ".location.location.y", location.getY());
-                yaml.set(uuid + ".location.location.z", location.getZ());
-                yaml.set(uuid + ".location.location.yaw", location.getYaw());
-                yaml.set(uuid + ".location.location.pitch", location.getPitch());
-                yaml.set(uuid + ".location.area", buildingManager.getName(uuid));
+                if (location != null) {
+                    yaml.set(uuid + ".location.location.world", location.getWorld().getName());
+                    yaml.set(uuid + ".location.location.x", location.getX());
+                    yaml.set(uuid + ".location.location.y", location.getY());
+                    yaml.set(uuid + ".location.location.z", location.getZ());
+                    yaml.set(uuid + ".location.location.yaw", location.getYaw());
+                    yaml.set(uuid + ".location.location.pitch", location.getPitch());
+                    yaml.set(uuid + ".location.area", buildingManager.getName(uuid));
+                }
             }
 
             if (fileName.equals("settings")) {
