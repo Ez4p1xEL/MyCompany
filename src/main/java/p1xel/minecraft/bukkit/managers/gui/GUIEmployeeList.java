@@ -155,6 +155,11 @@ public class GUIEmployeeList extends GUIAbstract implements InventoryHolder {
                 }
                 return false;
             }
+
+            if (action.equalsIgnoreCase("set_position")) {
+                new GUITextInput(playerUniqueId, "set_position:" + targetUniqueId);
+                return false;
+            }
         }
         return true;
     }

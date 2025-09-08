@@ -77,6 +77,7 @@ not-in-building: '&7[&6%prefix%&7] &cYou should do it in your company building!'
 not-your-protected-area: '&7[&6%prefix%&7] &cYou should stand in your protected area!'
 setloc-success: '&7[&6%prefix%&7] &aLocation set.'
 tp-success: '&7[&6%prefix%&7] &aTeleported to the company.'
+cant-do-to-self: '&7[&6%prefix%&7] &cYou can''t do it to yourself!'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'
@@ -106,6 +107,8 @@ cant-set-to-employer: '&7[&6%prefix%&7] &cYou cannot transfer your position by d
 position-permission-list: '&7[&6%prefix%&7] &aPermissions list:'
 position-permission-list-position: '&7[&6%prefix%&7] &aPermissions of &e%position%&a:'
 perm-list-page: '&b%permission%&7: %label%'
+cant-set-same-level: '&7[&6%prefix%&7] &cYou cannot set the position of the employee that has a same level of position as yours!'
+setlabel-employer-only: '&7[&6%prefix%&7] &cOnly employer can set the self position label.'
 
 # Broadcast
 broadcast:
@@ -259,6 +262,31 @@ menu:
           - '&7Permission required: &aYes'
           - '&7Permitted: %permit_chestshop_delete%'
           - ''
+      set_position:
+        material: experience_bottle
+        display_name: '&aPromote/demote employee'
+        lore:
+          - ''
+          - '&7You may promote the employee,'
+          - '&7if he/she did good thing.'
+          - '&7Otherwise, you may demote him/her.'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_set_position%'
+          - ''
+          - '&7Click to promote/demote'
+      position_setlabel:
+        material: name_tag
+        display_name: '&aSet label of position'
+        lore:
+          - ''
+          - '&7You can set the labelled name'
+          - '&7of the position.'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_position_setlabel%'
+          - ''
+          - '&7Click to set label'
   employee-list:
     title: '&aEmployee list of &b%company%'
     items:
@@ -314,6 +342,46 @@ menu:
           - ''
           - '&7Click to select'
           - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  position-list:
+    title: 'Position List'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&aList of positions'
+        lore:
+          - ''
+          - '&7Click the head to select the player'
+          - ''
+      position:
+        material: feather
+        display_name: '&aPosition &b%label%'
+        lore:
+          - ''
+          - '&7Position id: %position%'
+          - '&7Permissions: &d%permissions%'
+          - ''
+          - '&7Click to select'
       next_page:
         material: lime_stained_glass_pane
         display_name: '&aNext page'

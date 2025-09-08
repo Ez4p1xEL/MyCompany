@@ -1,7 +1,7 @@
 main: p1xel.minecraft.bukkit.MyCompany
 name: MyCompany
 api-version: 1.20
-version: 0.6.1
+version: 0.6.2
 depend: [Vault]
 softdepend: [PlaceholderAPI, Residence, Dominion]
 commands:

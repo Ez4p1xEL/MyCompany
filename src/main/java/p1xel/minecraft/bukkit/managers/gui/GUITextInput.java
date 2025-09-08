@@ -69,11 +69,26 @@ public class GUITextInput extends GUIAbstract {
     @Override
     public boolean check(String text) {
 
+        if (text.equalsIgnoreCase("cancel")) {
+            return true;
+        }
+
         //AnvilInventory inventory = view.getTopInventory();
-        switch (action) {
-            case "found":
-                new PersonalAPI(playerUniqueId).foundCompany(text);
-                break;
+        if (action.equalsIgnoreCase("found")) {
+            new PersonalAPI(playerUniqueId).foundCompany(text);
+            return true;
+        }
+
+        if (action.startsWith("position_setlabel:")) {
+            String position = action.split(":")[1];
+            new PersonalAPI(playerUniqueId).setPositionLabel(position, text);
+            return true;
+        }
+
+        if (action.startsWith("set_position:")) {
+            UUID targetUniqueId = UUID.fromString(action.split(":")[1]);
+            new PersonalAPI(playerUniqueId).setEmployeePosition(targetUniqueId, Bukkit.getPlayer(targetUniqueId).getName(), text);
+            return true;
         }
 
         return true;

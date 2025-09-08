@@ -54,6 +54,9 @@ public class UserManager {
     }
 
     public boolean hasPermission(UUID uniqueId, Permission permission) {
+        if (permission ==null) {
+            return false;
+        }
         List<Permission> list = MyCompany.getCacheManager().getCompanyManager().getPositionPermission(getCompanyUUID(uniqueId), getPosition(uniqueId));
         return list.contains(Permission.ALL) || list.contains(permission);
     }

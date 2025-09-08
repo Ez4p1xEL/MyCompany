@@ -957,42 +957,8 @@ public class CommandListener implements CommandExecutor {
                             return true;
                         }
 
-                        if (!sender.hasPermission("mycompany.commands.position.setlabel")) {
-                            sender.sendMessage(Locale.getMessage("no-perm"));
-                            return true;
-                        }
-
-                        Player player = (Player) sender;
-                        UUID uniqueId = player.getUniqueId();
-                        UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
-                        // Check if the sender has company
-                        if (companyUniqueId == null) {
-                            sender.sendMessage(Locale.getMessage("no-company"));
-                            return true;
-                        }
-
-                        if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
-                            sender.sendMessage(Locale.getMessage("employer-only"));
-                            return true;
-                        }
-
-                        if (!companyManager.getPositions(companyUniqueId).contains(args[2])) {
-                            sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[2]));
-                            return true;
-                        }
-
-                        String labelled = args[3].replaceAll("_", " ");
-
-
-                        if (args[2].equalsIgnoreCase("employer")) {
-                            companyManager.setEmployerLabel(companyUniqueId, labelled);
-                        } else if (args[2].equalsIgnoreCase("employee")) {
-                            companyManager.setEmployeeLabel(companyUniqueId, labelled);
-                        } else {
-                            companyManager.setPositionLabel(companyUniqueId, args[2], labelled);
-                        }
-
-                        sender.sendMessage(Locale.getMessage("position-setlabel").replaceAll("%position%", args[2]).replaceAll("%label%", labelled));
+                        UUID playerUniqueId = ((Player) sender).getUniqueId();
+                        new PersonalAPI(playerUniqueId).setPositionLabel(args[2], args[3]);
                         return true;
 
                     }
@@ -1004,66 +970,10 @@ public class CommandListener implements CommandExecutor {
                             return true;
                         }
 
-                        if (!sender.hasPermission("mycompany.commands.position.set")) {
-                            sender.sendMessage(Locale.getMessage("no-perm"));
-                            return true;
-                        }
-
-                        Player player = (Player) sender;
-                        UUID uniqueId = player.getUniqueId();
-                        UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
-                        // Check if the sender has company
-                        if (companyUniqueId == null) {
-                            sender.sendMessage(Locale.getMessage("no-company"));
-                            return true;
-                        }
-
-                        if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
-                            sender.sendMessage(Locale.getMessage("employer-only"));
-                            return true;
-                        }
-
-                        // args[2] = player name, args[3] = position id
-
+                        UUID playerUniqueId = ((Player) sender).getUniqueId();
                         OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[2]);
                         UUID targetUniqueId = off_target.getUniqueId();
-                        if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
-                            sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[2]));
-                            return true;
-                        }
-
-                        if (args[2].equalsIgnoreCase(sender.getName())) {
-                            sender.sendMessage(Locale.getMessage("employer-self"));
-                            return true;
-                        }
-
-                        if (!userManager.getCompanyUUID(targetUniqueId).equals(companyUniqueId)) {
-                            sender.sendMessage(Locale.getMessage("not-your-employee").replaceAll("%player%", args[2]));
-                            return true;
-                        }
-
-                        if (args[3].equalsIgnoreCase("employer")) {
-                            sender.sendMessage(Locale.getMessage("cant-set-to-employer"));
-                            return true;
-                        }
-
-                        if (!companyManager.getPositions(companyUniqueId).contains(args[3])) {
-                            sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[3]));
-                            return true;
-                        }
-
-                        if (companyManager.getEmployeeList(companyUniqueId, args[3]).contains(targetUniqueId)) {
-                            sender.sendMessage(Locale.getMessage("player-position-conflict").replaceAll("%player%", args[2]).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
-                            return true;
-                        }
-
-                        companyManager.setEmployeePosition(companyUniqueId, targetUniqueId, args[3]);
-                        sender.sendMessage(Locale.getMessage("position-set").replaceAll("%player%", args[2]).replaceAll("%position%", args[3]).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
-                        if (off_target.isOnline()) {
-                            Player target = (Player) off_target;
-                            target.sendMessage(Locale.getMessage("position-set-received").replaceAll("%company%", companyManager.getName(companyUniqueId)).replaceAll("%label%", companyManager.getPositionLabel(companyUniqueId, args[3])));
-                            player.playSound(player, Sound.ENTITY_WITHER_HURT, 3f, 3f);
-                        }
+                        new PersonalAPI(playerUniqueId).setEmployeePosition(targetUniqueId, args[2], args[3]);
                         return true;
 
                     }

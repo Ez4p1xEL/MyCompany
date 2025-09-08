@@ -61,10 +61,11 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                             .replaceAll("%tax_management%", String.valueOf(Config.getDouble("company-funds.cost-per-day.management-fee")))
                             .replaceAll("%tax_property%", String.valueOf(Config.getTaxRate("property", MyCompany.getTaxCollector().getPhase("property-tax", companyManager.getCash(companyUniqueId)))))
                             .replaceAll("%tax_income%", String.valueOf(Config.getTaxRate("income", MyCompany.getTaxCollector().getPhase("income-tax", companyManager.getDailyIncome(companyUniqueId)))))
-                            .replaceAll("%permit_employ%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.EMPLOY)))
-                            .replaceAll("%permit_fire%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.FIRE)))
-                            .replaceAll("%permit_chestshop_create%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_CREATE)))
-                            .replaceAll("%permit_chestshop_delete%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_DELETE)))
+                            .replaceAll("%permit_"+ item_name +"%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.matchPermission(item_name))))
+//                            .replaceAll("%permit_employ%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.EMPLOY)))
+//                            .replaceAll("%permit_fire%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.FIRE)))
+//                            .replaceAll("%permit_chestshop_create%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_CREATE)))
+//                            .replaceAll("%permit_chestshop_delete%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_DELETE)))
                             .replaceAll("%chestshop_identifier%", Config.getString("chest-shop.sign-create.identifier")))
                     .collect(Collectors.toList());
 
@@ -109,6 +110,12 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                     break;
                 case "chestshop_delete":
                     slot = 30;
+                    break;
+                case "set_position":
+                    slot = 22;
+                    break;
+                case "position_setlabel":
+                    slot = 31;
                     break;
             }
 
@@ -158,8 +165,26 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
             if (!userManager.hasPermission(playerUniqueId, Permission.FIRE)) {
                 return false;
             }
-            // Open employing menu...
+            // Open firing menu...
             Inventory newInv = new GUIEmployeeList(playerUniqueId, "fire", true, true, 1).getInventory();
+            player.openInventory(newInv);
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("position_setlabel")) {
+            if (!userManager.hasPermission(playerUniqueId, Permission.POSITION_SETLABEL)) {
+                return false;
+            }
+            Inventory newInv = new GUIPositionList(playerUniqueId, "position_setlabel", false,1).getInventory();
+            player.openInventory(newInv);
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("set_position")) {
+            if (!userManager.hasPermission(playerUniqueId, Permission.SET_POSITION)) {
+                return false;
+            }
+            Inventory newInv = new GUIEmployeeList(playerUniqueId, "set_position", true, true, 1).getInventory();
             player.openInventory(newInv);
             return true;
         }

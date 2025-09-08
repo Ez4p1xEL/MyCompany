@@ -1,5 +1,6 @@
 package p1xel.minecraft.bukkit.utils.permissions;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -9,7 +10,11 @@ public enum Permission {
     EMPLOY("EMPLOY"),
     FIRE("FIRE"),
     CHESTSHOP_CREATE("CHESTSHOP_CREATE"),
-    CHESTSHOP_DELETE("CHESTSHOP_DELETE");
+    CHESTSHOP_DELETE("CHESTSHOP_DELETE"),
+    SET_POSITION("SET_POSITION"),
+    POSITION_ADD("POSITION_ADD"),
+    POSITION_REMOVE("POSITION_REMOVE"),
+    POSITION_SETLABEL("POSITION_SETLABEL");
 
     private String name;
     private final static HashMap<String, Permission> namemap = new HashMap<>();
@@ -21,6 +26,7 @@ public enum Permission {
         return name;
     }
 
+    @Nullable
     public static Permission matchPermission(String name) {
         return namemap.get(name.toUpperCase());
     }
