@@ -117,6 +117,12 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                 case "position_setlabel":
                     slot = 31;
                     break;
+                case "position_add":
+                    slot = 23;
+                    break;
+                case "position_remove":
+                    slot = 32;
+                    break;
             }
 
             inventory.setItem(slot, item);
@@ -185,6 +191,23 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                 return false;
             }
             Inventory newInv = new GUIEmployeeList(playerUniqueId, "set_position", true, true, 1).getInventory();
+            player.openInventory(newInv);
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("position_add")) {
+            if (!userManager.hasPermission(playerUniqueId, Permission.POSITION_ADD)) {
+                return false;
+            }
+            new GUITextInput(playerUniqueId, "position_add");
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("position_remove")) {
+            if (!userManager.hasPermission(playerUniqueId, Permission.POSITION_REMOVE)) {
+                return false;
+            }
+            Inventory newInv = new GUIPositionList(playerUniqueId, "position_remove", false,1).getInventory();
             player.openInventory(newInv);
             return true;
         }

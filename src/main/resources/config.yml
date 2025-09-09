@@ -55,6 +55,10 @@ company-settings:
   # Set to false if you allow the employee to create
   # chestshops anywhere.
   chestshop-create-in-building: true
+  # The maximum amount of custom position that
+  # the company can have.
+  # The value is excluding employer and employee.
+  maximum-position: 5
 
 company-funds:
   default-asset: 120000.0

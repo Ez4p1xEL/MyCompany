@@ -5,12 +5,10 @@ commands:
   top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
   page: '&e/myc ? %page% &aPage %page%'
   space-1: '&f'
-  #help: '&e/myc help &7View help.'
   found: '&e/myc found <company> &7Found a company. (Use _ instead of SPACE)'
   disband: '&e/myc disband &7Disband your company.'
   employ: '&e/myc employ <player> &7Send an employment contract to the player.'
   fire: '&e/myc fire <employee> &7Fire the employee.'
-  #apply: '&e/myc apply <employer> &7Send joining application to the employer.'
   accept: '&e/myc accept <player> &7Accept the request.'
   resign: '&e/myc resign &7Resign from the company.'
   info: '&e/myc info [CompanyId] &7View information of the company.'
@@ -41,6 +39,7 @@ no-perm: '&7[&6%prefix%&7] &cYou have no permission to do that!'
 out-of-length: '&7[&6%prefix%&7] &cThe name is out of length. It Should be the maximum of &e%length%&c.'
 not-enough-money: '&7[&6%prefix%&7] &cYou do not have enough money. You need total &e%money%&c!'
 wrong-argument: '&7[&6%prefix%&7] &cIncorrect arguments.'
+something-went-wrong: '&7[&6%prefix%&7] &cSomething went wrong, please try again!'
 
 # Company
 found-success: '&7[&6%prefix%&7] &aYou successfully found a new company &e%company%&a!'
@@ -109,6 +108,7 @@ position-permission-list-position: '&7[&6%prefix%&7] &aPermissions of &e%positio
 perm-list-page: '&b%permission%&7: %label%'
 cant-set-same-level: '&7[&6%prefix%&7] &cYou cannot set the position of the employee that has a same level of position as yours!'
 setlabel-employer-only: '&7[&6%prefix%&7] &cOnly employer can set the self position label.'
+position-reach-maximum: '&7[&6%prefix%&7] &cThe amount of positions of the company has reached the maximum value!'
 
 # Broadcast
 broadcast:
@@ -287,6 +287,28 @@ menu:
           - '&7Permitted: %permit_position_setlabel%'
           - ''
           - '&7Click to set label'
+      position_add:
+        material: item_frame
+        display_name: '&aAdd position'
+        lore:
+          - ''
+          - '&7Add custom position'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_position_add%'
+          - ''
+          - '&7Click to add'
+      position_remove:
+        material: glow_item_frame
+        display_name: '&cRemove position'
+        lore:
+          - ''
+          - '&7Remove existing position'
+          - ''
+          - '&7Permission required: &aYes'
+          - '&7Permitted: %permit_position_remove%'
+          - ''
+          - '&7Click to remove'
   employee-list:
     title: '&aEmployee list of &b%company%'
     items:
@@ -371,7 +393,7 @@ menu:
         display_name: '&aList of positions'
         lore:
           - ''
-          - '&7Click the head to select the player'
+          - '&7Click the head to select the position'
           - ''
       position:
         material: feather

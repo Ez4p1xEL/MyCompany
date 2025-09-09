@@ -39,6 +39,7 @@ no-perm: '&7[&6%prefix%&7] &c你沒有權限執行此操作!'
 out-of-length: '&7[&6%prefix%&7] &c名稱超過長度限制，最多只能為 &e%length% 個字元'
 not-enough-money: '&7[&6%prefix%&7] &c你的資金不足，還需要 &e%money%&c!'
 wrong-argument: '&7[&6%prefix%&7] &c參數錯誤'
+something-went-wrong: '&7[&6%prefix%&7] &c出現錯誤，請重新再試!'
 
 # Company
 found-success: '&7[&6%prefix%&7] &a你已成功成立公司 &e%company%&a!'
@@ -75,6 +76,7 @@ not-in-building: '&7[&6%prefix%&7] &c你應該在你的公司範圍內這麼做�
 not-your-protected-area: '&7[&6%prefix%&7] &c你應該站在一個被保護的區域中！'
 setloc-success: '&7[&6%prefix%&7] &a傳送點已設定'
 tp-success: '&7[&6%prefix%&7] &a正在傳送'
+cant-do-to-self: '&7[&6%prefix%&7] &c你不能對你自己這麼做!'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &c請輸入正確格式的數字!'
@@ -104,6 +106,9 @@ cant-set-to-employer: '&7[&6%prefix%&7] &c你無法變更為雇主職位!'
 position-permission-list: '&7[&6%prefix%&7] &a權限列表:'
 position-permission-list-position: '&7[&6%prefix%&7] &e%position% &a的權限:'
 perm-list-page: '&b%permission%&7: %label%'
+cant-set-same-level: '&7[&6%prefix%&7] &c你不能對與你相同等級的人這麼做!'
+setlabel-employer-only: '&7[&6%prefix%&7] &c只有雇主才能更改其職位名稱!'
+position-reach-maximum: '&7[&6%prefix%&7] &c公司的職位數量已達到上限!'
 
 # Broadcast
 broadcast:
@@ -244,7 +249,6 @@ menu:
           - '&7權限需求: &a是'
           - '&7允許操作: %permit_chestshop_create%'
           - ''
-
       chestshop_delete:
         material: trapped_chest
         display_name: '&d刪除箱子商店'
@@ -256,6 +260,53 @@ menu:
           - '&7權限需求: &a是'
           - '&7允許操作: %permit_chestshop_delete%'
           - ''
+      set_position:
+        material: experience_bottle
+        display_name: '&a升職/降職'
+        lore:
+          - ''
+          - '&7你可透過此處調整員工的職位'
+          - '&7你可以使他們升職'
+          - '&7也可以降職'
+          - ''
+          - '&7權限需求: &a是'
+          - '&7允許操作: %permit_set_position%'
+          - ''
+          - '&7點擊調整'
+      position_setlabel:
+        material: name_tag
+        display_name: '&a設定職位名稱'
+        lore:
+          - ''
+          - '&7可為職位設定自訂名稱'
+          - '&7例如帥氣逼人的經理'
+          - ''
+          - '&7權限需求: &a是'
+          - '&7允許操作: %permit_position_setlabel%'
+          - ''
+          - '&7點擊設定'
+      position_add:
+        material: item_frame
+        display_name: '&a新增職位'
+        lore:
+          - ''
+          - '&7新增自訂職位'
+          - ''
+          - '&7權限需求: &a是'
+          - '&7允許操作: %permit_position_add%'
+          - ''
+          - '&7點擊新增'
+      position_remove:
+        material: glow_item_frame
+        display_name: '&c移除職位'
+        lore:
+          - ''
+          - '&7移除已存在的職位'
+          - ''
+          - '&7權限需求: &a是'
+          - '&7允許操作: %permit_position_remove%'
+          - ''
+          - '&7點擊移除'
   employee-list:
     title: '&b%company% &a員工列表'
     items:
@@ -333,7 +384,83 @@ menu:
           - ''
           - '&7點擊切換'
           - ''
-
+  position_remove:
+    material: ITEM_FRAME
+    display_name: '&c移除職位'
+    lore:
+      - ''
+      - '&7移除已存在的職位'
+      - ''
+      - '&7權限需求: &a是'
+      - '&7允許操作: %permit_position_remove%'
+      - ''
+      - '&7點擊移除'
+  position-list:
+    title: '職位列表'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&a職位列表'
+        lore:
+          - ''
+          - '&7點擊頭顱選擇職位'
+          - ''
+      position:
+        material: feather
+        display_name: '&a職位 &b%label%'
+        lore:
+          - ''
+          - '&7職位Id: %position%'
+          - '&7權限列表: &d%permissions%'
+          - ''
+          - '&7點擊選擇'
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+  text-input:
+    title: '文字輸入'
+    items:
+      first_item:
+        material: paper
+        display_name: '請輸入文字 (cancel以取消)'
+  found:
+    title: '你不在任何一間公司中'
+    items:
+      found:
+        material: chest
+        display_name: '&a成立一間公司'
+        lore:
+          - ''
+          - '&7成立公司賺取金錢'
+          - '&7並聘請玩家作為員工'
+          - ''
+          - '&7點擊成立'
+      wait_for_employ:
+        material: leather_chestplate
+        display_name: '&a等待被招募'
+        lore:
+          - ''
+          - '&7如果你不想當老闆'
+          - '&7你可以等待其他老闆的邀請'
+          - ''
 
 position-permission:
   ALL: '所有權限'

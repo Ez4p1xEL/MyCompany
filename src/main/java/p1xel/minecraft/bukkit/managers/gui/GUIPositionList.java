@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.api.PersonalAPI;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
@@ -150,7 +151,14 @@ public class GUIPositionList extends GUIAbstract implements InventoryHolder {
                 new GUITextInput(playerUniqueId, action + ":" + position);
                 return true;
             }
+
+            if (action.equalsIgnoreCase("position_remove")) {
+                new PersonalAPI(playerUniqueId).removePosition(position);
+                player.closeInventory();
+                return true;
+            }
         }
+
         return true;
     }
 

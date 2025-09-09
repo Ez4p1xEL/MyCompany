@@ -871,37 +871,25 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     Player player = (Player) sender;
-                    UUID uniqueId = player.getUniqueId();
-                    UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                    UUID playerUniqueId = player.getUniqueId();
+                    UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                     // Check if the sender has company
                     if (companyUniqueId == null) {
                         sender.sendMessage(Locale.getMessage("no-company"));
                         return true;
                     }
 
-                    if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
-                        sender.sendMessage(Locale.getMessage("employer-only"));
+                    // Check if the sender has the permission
+                    if (!userManager.hasPermission(playerUniqueId, Permission.POSITION_ADD)) {
+                        sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.POSITION_ADD.getName()));
                         return true;
                     }
 
-                    if (companyManager.getPositions(companyUniqueId).contains(args[2])) {
-                        sender.sendMessage(Locale.getMessage("position-already-existed").replaceAll("%position%", args[2]));
-                        return true;
-                    }
-
-//                    if (args[2].equalsIgnoreCase("employer") || args[2].equalsIgnoreCase("employee")) {
-//                        sender.sendMessage(Locale.getMessage("incorrect-position-id"));
-//                        return true;
-//                    }
-
-                    String LABEL = args[2];
+                    String LABEL = null;
                     if (args.length == 4) {
                         LABEL = args[3];
                     }
-
-                    companyManager.addPosition(companyUniqueId, args[2]);
-                    companyManager.setPositionLabel(companyUniqueId, args[2], LABEL);
-                    sender.sendMessage(Locale.getMessage("position-add").replaceAll("%position%", args[2]).replaceAll("%label%", LABEL));
+                    new PersonalAPI(playerUniqueId).addPosition(args[2], LABEL);
                     return true;
 
                 }
@@ -919,31 +907,21 @@ public class CommandListener implements CommandExecutor {
                     }
 
                     Player player = (Player) sender;
-                    UUID uniqueId = player.getUniqueId();
-                    UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                    UUID playerUniqueId = player.getUniqueId();
+                    UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                     // Check if the sender has company
                     if (companyUniqueId == null) {
                         sender.sendMessage(Locale.getMessage("no-company"));
                         return true;
                     }
 
-                    if (!userManager.getPosition(uniqueId).equalsIgnoreCase("employer")) {
-                        sender.sendMessage(Locale.getMessage("employer-only"));
+                    // Check if the sender has the permission
+                    if (!userManager.hasPermission(playerUniqueId, Permission.POSITION_REMOVE)) {
+                        sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.POSITION_REMOVE.getName()));
                         return true;
                     }
 
-                    if (!companyManager.getPositions(companyUniqueId).contains(args[2])) {
-                        sender.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", args[2]));
-                        return true;
-                    }
-
-                    if (args[2].equalsIgnoreCase("employer") || args[2].equalsIgnoreCase("employee")) {
-                        sender.sendMessage(Locale.getMessage("incorrect-position-id"));
-                        return true;
-                    }
-
-                    companyManager.removePosition(companyUniqueId, args[2]);
-                    sender.sendMessage(Locale.getMessage("position-remove").replaceAll("%position%", args[2]));
+                    new PersonalAPI(playerUniqueId).removePosition(args[2]);
                     return true;
 
                 }
@@ -957,7 +935,27 @@ public class CommandListener implements CommandExecutor {
                             return true;
                         }
 
-                        UUID playerUniqueId = ((Player) sender).getUniqueId();
+                        if (!sender.hasPermission("mycompany.commands.position.setlabel")) {
+                            sender.sendMessage(Locale.getMessage("no-perm"));
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+                        UUID playerUniqueId = player.getUniqueId();
+                        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+
+                        // Check if the sender has company
+                        if (companyUniqueId == null) {
+                            sender.sendMessage(Locale.getMessage("no-company"));
+                            return true;
+                        }
+
+                        // Check if the sender has the permission
+                        if (!userManager.hasPermission(playerUniqueId, Permission.POSITION_SETLABEL)) {
+                            sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.POSITION_SETLABEL.getName()));
+                            return true;
+                        }
+
                         new PersonalAPI(playerUniqueId).setPositionLabel(args[2], args[3]);
                         return true;
 
@@ -970,7 +968,27 @@ public class CommandListener implements CommandExecutor {
                             return true;
                         }
 
-                        UUID playerUniqueId = ((Player) sender).getUniqueId();
+                        if (!sender.hasPermission("mycompany.commands.position.set")) {
+                            sender.sendMessage(Locale.getMessage("no-perm"));
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+                        UUID playerUniqueId = player.getUniqueId();
+                        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+
+                        // Check if the sender has company
+                        if (companyUniqueId == null) {
+                            sender.sendMessage(Locale.getMessage("no-company"));
+                            return true;
+                        }
+
+                        // Check if the sender has the permission
+                        if (!userManager.hasPermission(playerUniqueId, Permission.SET_POSITION)) {
+                            sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.SET_POSITION.getName()));
+                            return true;
+                        }
+
                         OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[2]);
                         UUID targetUniqueId = off_target.getUniqueId();
                         new PersonalAPI(playerUniqueId).setEmployeePosition(targetUniqueId, args[2], args[3]);

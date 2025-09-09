@@ -39,6 +39,7 @@ no-perm: '&7[&6%prefix%&7] &c你没有权限这么做!'
 out-of-length: '&7[&6%prefix%&7] &c名称超出了长度上限, 它最多只能是 &e%length%'
 not-enough-money: '&7[&6%prefix%&7] &c你没有足够的金钱, 你仍然需要 &e%money%&c!'
 wrong-argument: '&7[&6%prefix%&7] &c错误的参数'
+something-went-wrong: '&7[&6%prefix%&7] &c出现错误,请重新再试!'
 
 # Company
 found-success: '&7[&6%prefix%&7] &a你成功地成立了公司 &e%company%&a!'
@@ -75,6 +76,7 @@ not-in-building: '&7[&6%prefix%&7] &c你应该在你的公司范围这么做!'
 not-your-protected-area: '&7[&6%prefix%&7] &c你应该站在一个被保护的区域中!'
 setloc-success: '&7[&6%prefix%&7] &a传送点已设置'
 tp-success: '&7[&6%prefix%&7] &a传送中'
+cant-do-to-self: '&7[&6%prefix%&7] &c你不能对你自己这么做!'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &c请输入正确格式的数字!'
@@ -104,6 +106,9 @@ cant-set-to-employer: '&7[&6%prefix%&7] &c你不能这么改变你的职位!'
 position-permission-list: '&7[&6%prefix%&7] &a权限列表:'
 position-permission-list-position: '&7[&6%prefix%&7] &e%position% &a的权限:'
 perm-list-page: '&b%permission%&7: %label%'
+cant-set-same-level: '&7[&6%prefix%&7] &c你不能对与你相同等级的人这么做!'
+setlabel-employer-only: '&7[&6%prefix%&7] &c只有雇主才能更改其职位名称!'
+position-reach-maximum: '&7[&6%prefix%&7] &c公司的职位数量以达到上限!'
 
 # Broadcast
 broadcast:
@@ -255,6 +260,53 @@ menu:
           - '&7权限需求: &a是'
           - '&7允许操作: %permit_chestshop_delete%'
           - ''
+      set_position:
+        material: experience_bottle
+        display_name: '&a升职/降职'
+        lore:
+          - ''
+          - '&7你可通过此处调整员工的职位'
+          - '&7你可以使他们升职'
+          - '&7也可以降职'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_set_position%'
+          - ''
+          - '&7点击调整'
+      position_setlabel:
+        material: name_tag
+        display_name: '&a设置职位名称'
+        lore:
+          - ''
+          - '&7可为职位设置自定义名称'
+          - '&7比如帅气逼人的经理'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_position_setlabel%'
+          - ''
+          - '&7点击设置'
+      position_add:
+        material: item_frame
+        display_name: '&a新增职位'
+        lore:
+          - ''
+          - '&7新增自定义职位'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_position_add%'
+          - ''
+          - '&7Click to add'
+      position_remove:
+        material: glow_item_frame
+        display_name: '&c移除职位'
+        lore:
+          - ''
+          - '&7移除已存在的职位'
+          - ''
+          - '&7权限需求: &a是'
+          - '&7允许操作: %permit_position_remove%'
+          - ''
+          - '&7点击移除'
   employee-list:
     title: '&b%company% &a员工列表'
     items:
@@ -330,6 +382,72 @@ menu:
         lore:
           - ''
           - '&7点击切换'
+          - ''
+  position-list:
+    title: '职位列表'
+    items:
+      company_info:
+        material: nether_star
+        display_name: '&a职位列表'
+        lore:
+          - ''
+          - '&7点击头颅选择职位'
+          - ''
+      position:
+        material: feather
+        display_name: '&a职位 &b%label%'
+        lore:
+          - ''
+          - '&7职位Id: %position%'
+          - '&7权限列表: &d%permissions%'
+          - ''
+          - '&7点击选择'
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  text-input:
+    title: '文字输入'
+    items:
+      first_item:
+        material: paper
+        display_name: '请输入文本 (cancel以取消)'
+  found:
+    title: '你不在任何一间公司中'
+    items:
+      found:
+        material: chest
+        display_name: '&a成立一间公司'
+        lore:
+          - ''
+          - '&7成立公司赚取金钱'
+          - '&7且聘请玩家作为员工'
+          - ''
+          - '&7点击成立'
+      wait_for_employ:
+        material: leather_chestplate
+        display_name: '&a等待被招牌'
+        lore:
+          - ''
+          - '&7如果你不想当老板'
+          - '&7你可以等待其他老板的邀请'
           - ''
 
 position-permission:

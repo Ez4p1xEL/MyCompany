@@ -91,6 +91,11 @@ public class GUITextInput extends GUIAbstract {
             return true;
         }
 
+        if (action.equalsIgnoreCase("position_add")) {
+            new PersonalAPI(playerUniqueId).addPosition(text, null);
+            return true;
+        }
+
         return true;
     }
 
