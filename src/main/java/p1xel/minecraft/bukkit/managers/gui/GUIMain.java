@@ -2,6 +2,7 @@ package p1xel.minecraft.bukkit.managers.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.api.PersonalAPI;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
@@ -123,6 +125,9 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                 case "position_remove":
                     slot = 32;
                     break;
+                case "tp":
+                    slot = 17;
+                    break;
             }
 
             inventory.setItem(slot, item);
@@ -209,6 +214,11 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
             }
             Inventory newInv = new GUIPositionList(playerUniqueId, "position_remove", false,1).getInventory();
             player.openInventory(newInv);
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("tp")) {
+            new PersonalAPI(playerUniqueId).teleportToCompany();
             return true;
         }
         return true;

@@ -314,7 +314,12 @@ public class CommandListener implements CommandExecutor {
 //                }
                 // Check if the sender has the permission
                 if (!userManager.hasPermission(uniqueId, Permission.EMPLOY)) {
-                    player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.EMPLOY.getName()));
+                    sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.EMPLOY.getName()));
+                    return true;
+                }
+
+                if (companyManager.getMemberAmount(companyUniqueId) >= Config.getInt("company-settings.maximum-players")) {
+                    sender.sendMessage(Locale.getMessage("player-reach-maximum"));
                     return true;
                 }
 
@@ -328,7 +333,7 @@ public class CommandListener implements CommandExecutor {
 
                 String targetName = off_target.getName(); assert targetName != null;
                 if (!off_target.isOnline()) {
-                    sender.sendMessage(Locale.getMessage("player-not-online").replaceAll("5player%", targetName));
+                    sender.sendMessage(Locale.getMessage("player-not-online").replaceAll("%player%", targetName));
                     return true;
                 }
 
@@ -637,6 +642,7 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
                 Player player = (Player) sender;
+                UUID playerUniqueId = player.getUniqueId();
 
                 if (args.length == 1) {
 
@@ -645,8 +651,7 @@ public class CommandListener implements CommandExecutor {
                         return true;
                     }
 
-                    UUID uniqueId = player.getUniqueId();
-                    companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                    companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                     // Check if the sender has company
                     if (companyUniqueId == null) {
                         sender.sendMessage(Locale.getMessage("no-company"));
@@ -684,8 +689,7 @@ public class CommandListener implements CommandExecutor {
 
                 }
 
-                player.teleport(location);
-                sender.sendMessage(Locale.getMessage("tp-success"));
+                new PersonalAPI(playerUniqueId).teleportToCompany(location);
                 return true;
 
             }

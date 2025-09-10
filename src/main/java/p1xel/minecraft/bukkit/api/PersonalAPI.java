@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.api;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -209,6 +210,23 @@ public class PersonalAPI {
 
         companyManager.removePosition(companyUniqueId, position);
         player.sendMessage(Locale.getMessage("position-remove").replaceAll("%position%", position));
+        return true;
+    }
+
+    public boolean teleportToCompany() {
+        Location location = buildingManager.getLocation(companyUniqueId);
+        teleportToCompany(location);
+        return true;
+    }
+
+    public boolean teleportToCompany(Location location) {
+        if (location == null) {
+            player.sendMessage(Locale.getMessage("location-not-exist"));
+            return true;
+        }
+
+        player.teleport(location);
+        player.sendMessage(Locale.getMessage("tp-success"));
         return true;
     }
 

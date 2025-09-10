@@ -77,6 +77,8 @@ not-your-protected-area: '&7[&6%prefix%&7] &cYou should stand in your protected 
 setloc-success: '&7[&6%prefix%&7] &aLocation set.'
 tp-success: '&7[&6%prefix%&7] &aTeleported to the company.'
 cant-do-to-self: '&7[&6%prefix%&7] &cYou can''t do it to yourself!'
+player-reach-maximum: '&7[&6%prefix%&7] &cThe players of the company have reached the maximum number!'
+location-not-exist: '&7[&6%prefix%&7] &cThe company has no location set.'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &cPlease write the correct format of number!'
@@ -264,7 +266,7 @@ menu:
           - ''
       set_position:
         material: experience_bottle
-        display_name: '&aPromote/demote employee'
+        display_name: '&dPromote/demote employee'
         lore:
           - ''
           - '&7You may promote the employee,'
@@ -277,7 +279,7 @@ menu:
           - '&7Click to promote/demote'
       position_setlabel:
         material: name_tag
-        display_name: '&aSet label of position'
+        display_name: '&dSet label of position'
         lore:
           - ''
           - '&7You can set the labelled name'
@@ -309,6 +311,16 @@ menu:
           - '&7Permitted: %permit_position_remove%'
           - ''
           - '&7Click to remove'
+      tp:
+        material: compass
+        display_name: '&bTeleport to company'
+        lore:
+          - ''
+          - '&7Teleport to the location'
+          - '&7of the company.'
+          - '&7If it has been set.'
+          - ''
+          - '&7Click to teleport'
   employee-list:
     title: '&aEmployee list of &b%company%'
     items:

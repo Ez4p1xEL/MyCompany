@@ -6,13 +6,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.api.PersonalAPI;
-import p1xel.minecraft.bukkit.utils.Config;
-import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import java.util.List;

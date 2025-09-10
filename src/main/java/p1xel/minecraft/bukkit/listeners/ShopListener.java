@@ -270,6 +270,9 @@ public class ShopListener implements Listener {
                 Directional directional = (Directional) sign.getBlock().getBlockData();
                 BlockFace attachedFace = directional.getFacing().getOppositeFace();
                 Block chestBlock = sign.getBlock().getRelative(attachedFace);
+                if (!(chestBlock.getState() instanceof Chest)) {
+                    return;
+                }
                 Chest chestState = (Chest) chestBlock.getState();
                 PersistentDataContainer container = chestState.getPersistentDataContainer();
                 if (Boolean.TRUE.equals(container.get(shopKey, PersistentDataType.BOOLEAN))) {
@@ -316,6 +319,9 @@ public class ShopListener implements Listener {
             Directional directional = (Directional) sign.getBlock().getBlockData();
             BlockFace attachedFace = directional.getFacing().getOppositeFace();
             Block chestBlock = sign.getBlock().getRelative(attachedFace);
+            if (!(chestBlock.getState() instanceof Chest)) {
+                return;
+            }
             Chest chestState = (Chest) chestBlock.getState();
             PersistentDataContainer container = chestState.getPersistentDataContainer();
             if (Boolean.TRUE.equals(container.get(shopKey, PersistentDataType.BOOLEAN))) {

@@ -59,6 +59,8 @@ company-settings:
   # the company can have.
   # The value is excluding employer and employee.
   maximum-position: 5
+  # The maximum amount of players in the company
+  maximum-players: 30
 
 company-funds:
   default-asset: 120000.0

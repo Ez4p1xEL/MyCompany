@@ -77,6 +77,8 @@ not-your-protected-area: '&7[&6%prefix%&7] &c你应该站在一个被保护的�
 setloc-success: '&7[&6%prefix%&7] &a传送点已设置'
 tp-success: '&7[&6%prefix%&7] &a传送中'
 cant-do-to-self: '&7[&6%prefix%&7] &c你不能对你自己这么做!'
+player-reach-maximum: '&7[&6%prefix%&7] &c公司的玩家数量已达到上限!'
+location-not-exist: '&7[&6%prefix%&7] &c公司没有设置传送点'
 
 # Money/Asset
 money-format-incorrect: '&7[&6%prefix%&7] &c请输入正确格式的数字!'
@@ -307,6 +309,15 @@ menu:
           - '&7允许操作: %permit_position_remove%'
           - ''
           - '&7点击移除'
+      tp:
+        material: compass
+        display_name: '&b传送至公司'
+        lore:
+          - ''
+          - '&7传送至公司的传送点'
+          - '&7如果有设置过'
+          - ''
+          - '&7点击传送'
   employee-list:
     title: '&b%company% &a员工列表'
     items:
