@@ -5,6 +5,7 @@ commands:
   top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
   page: '&e/myc ? %page% &a第 %page% 页'
   space-1: '&f'
+  open: '&e/myc open &7打开公司主菜单'
   found: '&e/myc found <名称> &7成立一间公司 (用_代替空格)'
   disband: '&e/myc disband &7解散你的公司'
   employ: '&e/myc employ <玩家> &7发送合同给玩家'
@@ -20,12 +21,13 @@ commands:
   position-permission-add: '&e/myc position permission add <职位> <权限> &7为职位新增权限'
   position-permission-remove: '&e/myc position permission remove <职位> <权限> &7为职位移除权限'
   position-permission-list: '&e/myc position permission list [职位] &7查看职位权限'
+  position-salary-set: '&e/myc position setsalary <职位> <金额> &7设置职位的工资'
   setloc: '&e/myc setloc &7设置公司的传送点'
   tp: '&e/myc tp [公司ID] &7传送至公司的传送点'
-  open: '&e/myc open &7打开公司主菜单'
   admin:
     money-give: '&e/myc money give <公司ID> <数量> &7给予金钱公司'
     money-take: '&e/myc money take <公司ID> <数量> &7从公司拿取金钱'
+    order-give: '&e/myc order forcegive <玩家> <订单> &7强制玩家接受订单'
     reload: '&e/myc reload &7重载配置文件及缓存'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
@@ -87,6 +89,8 @@ money-take-success: '&7[&6%prefix%&7] &a你拿走了 &e%company% &a的金钱 &e$
 
 # Salary
 salary-received: '&7[&b%company%&7] &a收到薪资 &e$%money%&a.'
+salary-set: '&7[&b%prefix%&7] &e%position% &a的工资已设置为 &e$%money%'
+salary-invalid: '&7[&b%prefix%&7] &c错误的输入值'
 
 # Position label and Permission
 position-already-existed: '&7[&6%prefix%&7] &c职位 &e%position% &c已存在!'
@@ -111,6 +115,12 @@ perm-list-page: '&b%permission%&7: %label%'
 cant-set-same-level: '&7[&6%prefix%&7] &c你不能对与你相同等级的人这么做!'
 setlabel-employer-only: '&7[&6%prefix%&7] &c只有雇主才能更改其职位名称!'
 position-reach-maximum: '&7[&6%prefix%&7] &c公司的职位数量以达到上限!'
+
+# Order
+order-forcegive-success: '&7[&6%prefix%&7] &a玩家 &e%player% &a获得了订单 &e%order%'
+order-not-exist: '&7[&6%prefix%&7] &c订单 &e%order% &c不存在!'
+quest-completed: '&7[&6%prefix%&7] &a订单 &e%order% &a里其中一个任务已完成 &b[%progress%]'
+order-completed: '&7[&6%prefix%&7] &a你完成了订单 &e%order%&a, 已为你发送奖励!'
 
 # Broadcast
 broadcast:
@@ -318,6 +328,44 @@ menu:
           - '&7如果有设置过'
           - ''
           - '&7点击传送'
+      salary:
+        material: emerald
+        display_name: '&a工资'
+        lore:
+          - ''
+          - '&7你的公司会于每天的&b%salary_time% '
+          - '&7向你发送你应得的工资'
+          - '&7你的工作值得 &d$%salary%'
+          - ''
+      works:
+        material: paper
+        display_name: '&d你应该干什么?'
+        lore:
+          - ''
+          - '&7为了帮助公司赚取利润'
+          - '&7作为员工, 你需要参与这个任务'
+          - '&7从公司的箱子商店中赚取金钱'
+          - '&7应该是个不错的选择'
+          - ''
+      resign:
+        material: barrier
+        display_name: '&c辞职'
+        lore:
+          - ''
+          - '&7当牛马觉得太累了?'
+          - '&7你可以随时离开'
+          - ''
+          - '&7点击辞职 &c(请在点击前三思)'
+      order:
+        material: writable_book
+        display_name: '&d完成员工订单'
+        lore:
+          - ''
+          - '&7你的公司向你发送了一些'
+          - '&7需完成的订单'
+          - '&7这些订单每天都会刷新'
+          - ''
+          - '&7点击查看'
   employee-list:
     title: '&b%company% &a员工列表'
     items:
@@ -460,6 +508,51 @@ menu:
           - '&7如果你不想当老板'
           - '&7你可以等待其他老板的邀请'
           - ''
+  orders:
+    title: '员工订单'
+    items:
+      orders_info:
+        material: writable_book
+        display_name: '&a员工订单'
+        lore:
+          - ''
+          - '&7点击下方查看今日订单信息'
+          - ''
+      order:
+        material: paper
+        display_name: '&a%label%'
+        lore:
+          - '&8(%order%)'
+          - ''
+          - '&7%description%'
+          - ''
+          - '&进度:'
+          - ' &7%quest_progress%'
+          - ''
+          - '&奖励:'
+          - ' &f%order_reward%'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
 
 position-permission:
   ALL: '所有权限'
@@ -473,6 +566,17 @@ unemployment: '无业游民'
 yourself: '你'
 true: '是'
 false: '否'
+
+quest-progress: '%action_description% %target% - %progress_value%/%target_value%'
+order-finished: '&a订单已完成'
+order-reward: '%reward%'
+rewards:
+  item: '%item% x%amount%'
+  company_income: '公司收入 +%income%'
+  money: '金钱 %money%'
+  experience: '经验 %exp%'
+action-description:
+  break_block: '破坏方块'
 
 check-update:
   invalid: '无法查询更新: '

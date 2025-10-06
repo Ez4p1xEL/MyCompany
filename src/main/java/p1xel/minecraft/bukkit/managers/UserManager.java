@@ -2,6 +2,7 @@ package p1xel.minecraft.bukkit.managers;
 
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
+import p1xel.minecraft.bukkit.utils.storage.EmployeeOrders;
 import p1xel.minecraft.bukkit.utils.storage.UserData;
 
 import javax.annotation.Nullable;
@@ -61,5 +62,33 @@ public class UserManager {
         return list.contains(Permission.ALL) || list.contains(permission);
     }
 
+    public List<String> getOrdersInProgress(UUID uniqueId) {
+        return this.data.getOrdersInProgress(uniqueId);
+    }
+
+    public void createOrderForPlayer(UUID uniqueId, String order) {
+        this.data.createOrderForPlayer(uniqueId, order);
+    }
+
+    public void updateOrderValue(UUID uniqueId, String order, String quest, int value) {
+        this.data.updateOrderValue(uniqueId, order, quest, value);
+    }
+
+    public void removeOrder(UUID uniqueId, String order) {
+        this.data.removeOrder(uniqueId, order);
+    }
+
+    public void removeAllOrders(UUID uniqueId) {
+        this.data.removeAllOrders(uniqueId);
+    }
+
+    public void randomizeDailyOrder(UUID uniqueId) {
+        this.data.randomizeDailyOrder(uniqueId);
+        EmployeeOrders.saveCacheToLocal();
+    }
+
+    public List<String> getDailyOrders(UUID uniqueId) {
+        return this.data.getDailyOrders(uniqueId);
+    }
 
 }

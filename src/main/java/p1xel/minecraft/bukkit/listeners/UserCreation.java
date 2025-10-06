@@ -5,6 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.utils.storage.EmployeeOrders;
 
 import java.util.UUID;
 
@@ -15,7 +17,17 @@ public class UserCreation implements Listener {
         Player player = event.getPlayer();
         UUID uniqueId = player.getUniqueId();
 
-        MyCompany.getCacheManager().getUserManager().createUser(uniqueId);
+        // Create cache or user file
+        UserManager userManager = MyCompany.getCacheManager().getUserManager();
+        userManager.createUser(uniqueId);
+
+        if (userManager.getDailyOrders(uniqueId).isEmpty()) {
+            EmployeeOrders.createEmptyMap(uniqueId);
+            userManager.randomizeDailyOrder(uniqueId);
+        } else {
+            // Create cache of employee orders
+            EmployeeOrders.saveToCache(uniqueId);
+        }
 
 
     }

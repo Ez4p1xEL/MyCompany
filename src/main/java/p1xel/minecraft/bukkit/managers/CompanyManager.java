@@ -59,6 +59,7 @@ public class CompanyManager {
 
     public void employPlayer(UUID companyUniqueId, UUID playerUniqueId, String position) {
         this.data.employPlayer(companyUniqueId, playerUniqueId, position);
+        MyCompany.getCacheManager().getUserManager().randomizeDailyOrder(playerUniqueId);
     }
 
     public void disbandCompany(UUID uniqueId) {

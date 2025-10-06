@@ -1,6 +1,5 @@
 package p1xel.minecraft.bukkit.listeners;
 
-import com.sun.tools.javac.jvm.Items;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Directional;

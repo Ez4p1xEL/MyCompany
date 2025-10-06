@@ -95,6 +95,20 @@ public class GUIListener implements Listener {
             return;
         }
 
+        if (holder instanceof GUIDailyOrder) {
+            ItemStack item = inventory.getItem(event.getSlot());
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            if (container.has(menu_id_key, PersistentDataType.STRING)) {
+                GUIDailyOrder gui = (GUIDailyOrder) holder;
+                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
+                    Player player = (Player) event.getWhoClicked();
+                    player.closeInventory();
+                }
+            }
+            event.setCancelled(true);
+            return;
+        }
+
 //        InventoryView view = event.getView();
 //        if (view instanceof AnvilView) {
 //            if (holder instanceof GUITextInput) {

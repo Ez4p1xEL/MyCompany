@@ -10,8 +10,7 @@ import p1xel.minecraft.bukkit.utils.Logger;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class YamlUserData extends UserData{
@@ -138,6 +137,117 @@ public class YamlUserData extends UserData{
     @Override
     public String getPosition(UUID uniqueId) {
         return (String) get(uniqueId, "company.position");
+    }
+
+    @Override
+    public List<String> getOrdersInProgress(UUID uniqueId) {
+        // Format: "orderName:questName:actionName:Value"
+        List<String> list = new ArrayList<>();
+        FileConfiguration yaml = yamls.get(uniqueId);
+        for (String order : yaml.getConfigurationSection(uniqueId.toString() + ".orders.progress").getKeys(false)) {
+            for (String quest : yaml.getConfigurationSection(uniqueId.toString()+ ".orders.progress." + order).getKeys(false)) {
+                String actionName = "";
+                int value = -1;
+                // Should be one object only!!!
+                for (String action : yaml.getConfigurationSection(uniqueId.toString() + ".orders.progress." + order + "." + quest).getKeys(false)) {
+                    actionName = action;
+                    value = yaml.getInt(uniqueId.toString()+".orders.progress." + order + "." + quest + "." + action);
+                }
+
+                if (actionName.isEmpty() || value < 0) {
+                    continue;
+                }
+
+                String name = order + ":" + quest + ":" + actionName + ":" + String.valueOf(value);
+                list.add(name);
+
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public void createOrderForPlayer(UUID uniqueId, String order) {
+        File file = files.get(uniqueId);
+        FileConfiguration yaml = yamls.get(uniqueId);
+        for (String quest : EmployeeOrders.yaml.getConfigurationSection(order + ".quest").getKeys(false)) {
+            String action = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".type");
+            yaml.set(uniqueId.toString()+".orders.progress." + order + "." + quest + "." + action, 0);
+        }
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateOrderValue(UUID uniqueId, String order, String quest, int value) {
+        File file = files.get(uniqueId);
+        FileConfiguration yaml = yamls.get(uniqueId);
+        // Should be one object only!!!
+        for (String action : yaml.getConfigurationSection(uniqueId.toString() + ".orders.progress." + order + "." + quest).getKeys(false)) {
+            yaml.set(uniqueId.toString()+".orders.progress." + order + "." + quest + "." + action, value);
+        }
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void removeOrder(UUID uniqueId, String order) {
+        File file = files.get(uniqueId);
+        FileConfiguration yaml = yamls.get(uniqueId);
+        yaml.set(uniqueId.toString() + ".orders.progress." + order, null);
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void removeAllOrders(UUID uniqueId) {
+        File file = files.get(uniqueId);
+        FileConfiguration yaml = yamls.get(uniqueId);
+        //for (String order : yaml.getConfigurationSection(uniqueId.toString()+ ".orders.progress").getKeys(false)) {
+        yaml.set(uniqueId.toString() + ".orders.progress", null);
+        //}
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void randomizeDailyOrder(UUID uniqueId) {
+        File file = files.get(uniqueId);
+        FileConfiguration yaml = yamls.get(uniqueId);
+        //for (String order : yaml.getConfigurationSection(uniqueId.toString()+ ".orders.progress").getKeys(false)) {
+        yaml.set(uniqueId.toString() + ".orders.progress", null);
+        List<String> orderList = new ArrayList<>(EmployeeOrders.getOrderList().stream().toList());
+        Collections.shuffle(orderList);
+        List<String> randomList = orderList.subList(0, Math.min(orderList.size(), 5));
+        yaml.set(uniqueId.toString() + ".orders.daily", randomList);
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        for (String order : randomList) {
+            createOrderForPlayer(uniqueId, order);
+        }
+        EmployeeOrders.saveToCache(uniqueId);
+
+    }
+
+    @Override
+    public List<String> getDailyOrders(UUID uniqueId) {
+        FileConfiguration yaml = yamls.get(uniqueId);
+        return yaml.getStringList(uniqueId.toString()+ ".orders.daily");
     }
 
 }

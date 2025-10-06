@@ -5,6 +5,7 @@ commands:
   top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
   page: '&e/myc ? %page% &a第 %page% 頁'
   space-1: '&f'
+  open: '&e/myc open &7打开公司選單'
   found: '&e/myc found <名稱> &7成立一間公司 (請用_代替空格)'
   disband: '&e/myc disband &7解散你的公司'
   employ: '&e/myc employ <玩家> &7發送合約給玩家'
@@ -22,10 +23,10 @@ commands:
   position-permission-list: '&e/myc position permission list [職位] &7查看職位權限'
   setloc: '&e/myc setloc &7設定公司的傳送點'
   tp: '&e/myc tp [公司ID] &7傳送至公司的傳送點'
-  open: '&e/myc open &7打开公司選單'
   admin:
     money-give: '&e/myc money give <公司ID> <金額> &7給予公司資金'
     money-take: '&e/myc money take <公司ID> <金額> &7從公司提取資金'
+    order-give: '&e/myc order forcegive <玩家> <訂單> &7强制玩家接受訂單单'
     reload: '&e/myc reload &7重新載入設定檔與快取'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
@@ -87,6 +88,8 @@ money-take-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a提取金額 &e$
 
 # Salary
 salary-received: '&7[&b%company%&7] &a你已收到薪資 &e$%money%&a。'
+salary-set: '&7[&b%prefix%&7] &e%position% &a的薪資已設置為 &e$%money%'
+salary-invalid: '&7[&b%prefix%&7] &c錯誤的輸入值'
 
 # Position label and Permission
 position-already-existed: '&7[&6%prefix%&7] &c職位 &e%position% &c已存在!'
@@ -111,6 +114,12 @@ perm-list-page: '&b%permission%&7: %label%'
 cant-set-same-level: '&7[&6%prefix%&7] &c你不能對與你相同等級的人這麼做!'
 setlabel-employer-only: '&7[&6%prefix%&7] &c只有雇主才能更改其職位名稱!'
 position-reach-maximum: '&7[&6%prefix%&7] &c公司的職位數量已達到上限!'
+
+# Order
+order-forcegive-success: '&7[&6%prefix%&7] &a玩家 &e%player% &a獲得了訂單 &e%order%'
+order-not-exist: '&7[&6%prefix%&7] &c訂單 &e%order% &c不存在!'
+quest-completed: '&7[&6%prefix%&7] &a訂單 &e%order% &a中的其中一個任務已完成 &b[%progress%]'
+order-completed: '&7[&6%prefix%&7] &a你已完成訂單 &e%order%&a，獎勵已發送給你！'
 
 # Broadcast
 broadcast:
@@ -318,6 +327,44 @@ menu:
           - '&7如果有曾設置'
           - ''
           - '&7點擊傳送'
+      salary:
+        material: emerald
+        display_name: '&a工資'
+        lore:
+          - ''
+          - '&7你的公司會於每天的&b%salary_time% '
+          - '&7向你發送你應得的工資'
+          - '&7你的工作值得 &d$%salary%'
+          - ''
+      works:
+        material: paper
+        display_name: '&d你應該做什麼?'
+        lore:
+          - ''
+          - '&7為了幫助公司賺取利潤'
+          - '&7作為員工，你需要參與這個任務'
+          - '&7從公司的箱子商店中賺取金錢'
+          - '&7應該是不錯的選擇'
+          - ''
+      resign:
+        material: barrier
+        display_name: '&c辭職'
+        lore:
+          - ''
+          - '&7當牛馬覺得太累了?'
+          - '&7你可以隨時離開'
+          - ''
+          - '&7點擊辭職 &c(請在點擊前三思)'
+      order:
+        material: writable_book
+        display_name: '&d完成員工訂單'
+        lore:
+          - ''
+          - '&7你的公司向你發送了一些'
+          - '&7需完成的訂單'
+          - '&7這些訂單每天都會刷新'
+          - ''
+          - '&7點擊查看'
   employee-list:
     title: '&b%company% &a員工列表'
     items:
@@ -472,6 +519,52 @@ menu:
           - '&7如果你不想當老闆'
           - '&7你可以等待其他老闆的邀請'
           - ''
+  orders:
+    title: '員工訂單'
+    items:
+      orders_info:
+        material: writable_book
+        display_name: '&a員工訂單'
+        lore:
+          - ''
+          - '&7點擊下方查看今日訂單資訊'
+          - ''
+      order:
+        material: paper
+        display_name: '&a%label%'
+        lore:
+          - '&8(%order%)'
+          - ''
+          - '&7%description%'
+          - ''
+          - '&進度:'
+          - ' &7%quest_progress%'
+          - ''
+          - '&獎勵:'
+          - ' &f%order_reward%'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+
 
 position-permission:
   ALL: '所有權限'
@@ -485,6 +578,18 @@ unemployment: '待業中'
 yourself: '你'
 true: '是'
 false: '否'
+
+quest-progress: '%action_description% %target% - %progress_value%/%target_value%'
+order-finished: '&a訂單已完成'
+order-reward: '%reward%'
+rewards:
+  item: '%item% x%amount%'
+  company_income: '公司收入 +%income%'
+  money: '金錢 %money%'
+  experience: '經驗 %exp%'
+action-description:
+  break_block: '破壞方塊'
+
 
 check-update:
   invalid: '無法檢查更新: '

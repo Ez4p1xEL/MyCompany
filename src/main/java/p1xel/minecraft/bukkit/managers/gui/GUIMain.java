@@ -68,7 +68,9 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
 //                            .replaceAll("%permit_fire%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.FIRE)))
 //                            .replaceAll("%permit_chestshop_create%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_CREATE)))
 //                            .replaceAll("%permit_chestshop_delete%", Locale.getYesOrNo(userManager.hasPermission(playerUniqueId, Permission.CHESTSHOP_DELETE)))
-                            .replaceAll("%chestshop_identifier%", Config.getString("chest-shop.sign-create.identifier")))
+                            .replaceAll("%chestshop_identifier%", Config.getString("chest-shop.sign-create.identifier"))
+                            .replaceAll("%salary_time%", Config.getString("company-funds.cost-per-day.tax-time"))
+                            .replaceAll("%salary%", String.valueOf(companyManager.getSalary(companyUniqueId, userManager.getPosition(playerUniqueId)))))
                     .collect(Collectors.toList());
 
             String material = Locale.getMessage("menu.main.items." + item_name + ".material");
@@ -127,6 +129,18 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                     break;
                 case "tp":
                     slot = 17;
+                    break;
+                case "order":
+                    slot = 26;
+                    break;
+                case "salary":
+                    slot = 9;
+                    break;
+                case "works":
+                    slot = 18;
+                    break;
+                case "resign":
+                    slot = 27;
                     break;
             }
 
@@ -219,6 +233,21 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
 
         if (name.equalsIgnoreCase("tp")) {
             new PersonalAPI(playerUniqueId).teleportToCompany();
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("resign")) {
+            if (userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
+                player.sendMessage(Locale.getMessage("disband-instead"));
+                return true;
+            }
+            new PersonalAPI(playerUniqueId).resignFromCompany();
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("order")) {
+            Inventory newInv = new GUIDailyOrder(playerUniqueId, "daily_order",1).getInventory();
+            player.openInventory(newInv);
             return true;
         }
         return true;

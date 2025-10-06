@@ -7,6 +7,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import p1xel.minecraft.bukkit.commands.CommandListener;
 import p1xel.minecraft.bukkit.commands.TabList;
 import p1xel.minecraft.bukkit.listeners.GUIListener;
+import p1xel.minecraft.bukkit.listeners.OrderListener;
 import p1xel.minecraft.bukkit.listeners.ShopListener;
 import p1xel.minecraft.bukkit.listeners.UserCreation;
 import p1xel.minecraft.bukkit.managers.*;
@@ -22,6 +23,7 @@ import p1xel.minecraft.bukkit.utils.storage.backups.BackupCreator;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class MyCompany extends JavaPlugin {
 
@@ -72,6 +74,7 @@ public class MyCompany extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new UserCreation(), this);
         getServer().getPluginManager().registerEvents(new ShopListener(), this);
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
+        getServer().getPluginManager().registerEvents(new OrderListener(), this);
 
         if (!setupEconomy()) {
             getLogger().warning("Vault is not found! Disabling MyCompany...");
@@ -106,6 +109,18 @@ public class MyCompany extends JavaPlugin {
         } else {
             cache.getBuildingManager().setModule(new DefaultBuildingArea());
         }
+
+        // After all managers are ready
+        EmployeeOrders.init();
+        // Saving interval
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Logger.debug(Level.INFO, "Start to save cached progress of orders...");
+                EmployeeOrders.saveCacheToLocal();
+                Logger.debug(Level.INFO, "Saved successfully!");
+            }
+        }.runTaskTimer(this, 0L, 20L * 30);
 
         Logger.setEnabled(Config.getBool("debug"));
 

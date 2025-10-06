@@ -1,0 +1,79 @@
+stone_breaker:
+  label: 'Stone Breaker'
+  description:
+    - '&7We receive a job'
+    - '&7from the miners.'
+  quest:
+    1:
+      type: break_block
+      item: stone
+      amount: 16
+  reward:
+    - 'item;diamond;16'
+    - 'company_income;1500.0'
+    - 'money;100.0'
+    - 'experience;10'
+miner:
+  label: 'Miner'
+  description:
+    - '&7Mine ores'
+  quest:
+    1:
+      type: break_block
+      item: iron_ore
+      amount: 4
+    2:
+      type: break_block
+      item: gold_ore
+      amount: 4
+    damn:
+      type: break_block
+      item: diamond_ore
+      amount: 4
+  reward:
+    - 'item;nether_star;1'
+    - 'company_income;3000'
+diamond_finder:
+  label: 'Diamond Finder'
+  description:
+    - '&7find some diamonds'
+  quest:
+    example:
+      type: break_block
+      item: diamond_ore
+      amount: 8
+  reward:
+    - 'company_income;1000'
+lumberjack:
+  label: 'Lumberjack'
+  description:
+    - '&7break some oak logs'
+  quest:
+    oak:
+      type: break_block
+      item: oak_log
+      amount: 4
+  reward:
+    - 'company_income;1000'
+cobblestone_lover:
+  label: 'Cobblestone Lover'
+  description:
+    - '&7break some cobblestones'
+  quest:
+    oak:
+      type: break_block
+      item: cobblestone
+      amount: 8
+  reward:
+    - 'company_income;1000'
+grass_eater:
+  label: 'Grass Eater'
+  description:
+    - '&7break some grasses'
+  quest:
+    oak:
+      type: break_block
+      item: grass_block
+      amount: 8
+  reward:
+    - 'company_income;1000'

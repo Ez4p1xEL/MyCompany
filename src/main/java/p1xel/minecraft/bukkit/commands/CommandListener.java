@@ -18,6 +18,7 @@ import p1xel.minecraft.bukkit.managers.gui.GUIFound;
 import p1xel.minecraft.bukkit.managers.gui.GUIMain;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
+import p1xel.minecraft.bukkit.utils.storage.EmployeeOrders;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 import p1xel.minecraft.bukkit.utils.storage.backups.BackupCreator;
 
@@ -150,16 +151,7 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                MyCompany.getCacheManager().getCompanyManager().dismissEmployee(companyUniqueId, uniqueId);
-                String companyName = MyCompany.getCacheManager().getCompanyManager().getName(companyUniqueId);
-                sender.sendMessage(Locale.getMessage("resign-success").replaceAll("%company%", companyName));
-
-                UUID employerUniqueId = MyCompany.getCacheManager().getCompanyManager().getEmployer(companyUniqueId);
-                Player employer = Bukkit.getPlayer(employerUniqueId);
-                if (employer != null) {
-                    employer.sendMessage(Locale.getMessage("resigned").replaceAll("%player%", sender.getName()));
-                    employer.playSound(employer, Sound.ENTITY_VILLAGER_NO, 3f, 3f);
-                }
+                new PersonalAPI(uniqueId).resignFromCompany();
                 return true;
 
             }
@@ -788,6 +780,51 @@ public class CommandListener implements CommandExecutor {
 
             }
 
+            if (args[0].equalsIgnoreCase("order")) {
+
+                if (args[1].equalsIgnoreCase("forcegive")) {
+
+                    if (!isAdmin) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    // args[2] is player name
+                    // args[3] is order name
+
+                    OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[2]);
+                    UUID targetUniqueId = off_target.getUniqueId();
+                    // Check if the target player is existed.
+                    if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
+                        sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[1]));
+                        return true;
+                    }
+
+                    String targetName = off_target.getName(); assert targetName != null;
+                    if (!off_target.isOnline()) {
+                        sender.sendMessage(Locale.getMessage("player-not-online").replaceAll("%player%", targetName));
+                        return true;
+                    }
+
+                    UUID targetCompanyUniqueId = userManager.getCompanyUUID(targetUniqueId);
+                    if (targetCompanyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("target-has-no-company").replaceAll("%player%", targetName));
+                        return true;
+                    }
+
+                    if (!EmployeeOrders.getOrderList().contains(args[3])) {
+                        sender.sendMessage(Locale.getMessage("order-not-exist").replaceAll("%order%", args[3]));
+                        return true;
+                    }
+
+                    EmployeeOrders.acceptOrder(targetUniqueId, args[3]);
+                    sender.sendMessage(Locale.getMessage("order-forcegive-success").replaceAll("%player%", args[2]).replaceAll("%order%", args[3]));
+                    return true;
+
+                }
+
+            }
+
 
         }
 
@@ -961,6 +998,38 @@ public class CommandListener implements CommandExecutor {
                         }
 
                         new PersonalAPI(playerUniqueId).setPositionLabel(args[2], args[3]);
+                        return true;
+
+                    }
+
+                    if (args[1].equalsIgnoreCase("setsalary")) {
+
+                        if (!(sender instanceof Player)) {
+                            sender.sendMessage(Locale.getMessage("must-be-player"));
+                            return true;
+                        }
+
+                        if (!sender.hasPermission("mycompany.commands.position.setsalary")) {
+                            sender.sendMessage(Locale.getMessage("no-perm"));
+                            return true;
+                        }
+
+                        Player player = (Player) sender;
+                        UUID playerUniqueId = player.getUniqueId();
+                        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+
+                        // Check if the sender has company
+                        if (companyUniqueId == null) {
+                            sender.sendMessage(Locale.getMessage("no-company"));
+                            return true;
+                        }
+
+                        if (!userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
+                            sender.sendMessage(Locale.getMessage("employer-only"));
+                            return true;
+                        }
+
+                        new PersonalAPI(playerUniqueId).setSalary(args[2], args[3]);
                         return true;
 
                     }

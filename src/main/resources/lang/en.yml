@@ -5,6 +5,7 @@ commands:
   top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
   page: '&e/myc ? %page% &aPage %page%'
   space-1: '&f'
+  open: '&e/myc open &7Open menu.'
   found: '&e/myc found <company> &7Found a company. (Use _ instead of SPACE)'
   disband: '&e/myc disband &7Disband your company.'
   employ: '&e/myc employ <player> &7Send an employment contract to the player.'
@@ -20,12 +21,13 @@ commands:
   position-permission-add: '&e/myc position permission add <position> <permission> &7Add permission for the position.'
   position-permission-remove: '&e/myc position permission remove <position> <permission> &7Remove permission of the position.'
   position-permission-list: '&e/myc position permission list [position] &7View permission of the position.'
+  position-salary-set: '&e/myc position setsalary <position> <amount> &7Set salary of the position.'
   setloc: '&e/myc setloc &7Set teleport location of the company.'
   tp: '&e/myc tp [CompanyId] &7Teleport to the location of the company.'
-  open: '&e/myc open &7Open menu.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
+    order-give: '&e/myc order forcegive <player> <order> &7Forcing the player to accept the order.'
     reload: '&e/myc reload &7Reload the configuration and cache.'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
@@ -87,6 +89,8 @@ money-take-success: '&7[&6%prefix%&7] &aYou take &e$%money% &afrom &e%company%&a
 
 # Salary
 salary-received: '&7[&b%company%&7] &aYou received the salary &e$%money%&a.'
+salary-set: '&7[&b%prefix%&7] &aSalary of &e%position% &ahas been set to &e$%money%&a.'
+salary-invalid: '&7[&b%prefix%&7] &cInvalid input amount.'
 
 # Position label and Permission
 position-already-existed: '&7[&6%prefix%&7] &cPosition id &e%position% &cis already existed!'
@@ -111,6 +115,12 @@ perm-list-page: '&b%permission%&7: %label%'
 cant-set-same-level: '&7[&6%prefix%&7] &cYou cannot set the position of the employee that has a same level of position as yours!'
 setlabel-employer-only: '&7[&6%prefix%&7] &cOnly employer can set the self position label.'
 position-reach-maximum: '&7[&6%prefix%&7] &cThe amount of positions of the company has reached the maximum value!'
+
+# Order
+order-forcegive-success: '&7[&6%prefix%&7] &aThe player &e%player% &ahas received the order &e%order%&a.'
+order-not-exist: '&7[&6%prefix%&7] &cThe order name &e%order% &cdoes not exist!'
+quest-completed: '&7[&6%prefix%&7] &aOne of the missions in the order &e%order% &ahas been completed &b[%progress%]'
+order-completed: '&7[&6%prefix%&7] &aYou completed order &e%order%&a, you should have received the rewards!'
 
 # Broadcast
 broadcast:
@@ -321,6 +331,46 @@ menu:
           - '&7If it has been set.'
           - ''
           - '&7Click to teleport'
+      salary:
+        material: emerald
+        display_name: '&aSalary'
+        lore:
+          - ''
+          - '&7Your company will send the '
+          - '&7salary to your at every '
+          - '&b%salary_time% &7at the day.'
+          - '&7Your work is worth &d$%salary%'
+          - ''
+      works:
+        material: paper
+        display_name: '&dWhat should you do?'
+        lore:
+          - ''
+          - '&7In order to earn profit for the company,'
+          - '&7you need to participate in the mission.'
+          - '&7Earning money from promoting chestshop'
+          - '&7could be a good way'
+          - ''
+      resign:
+        material: barrier
+        display_name: '&cResign from the company'
+        lore:
+          - ''
+          - '&7Too tired as the employee?'
+          - '&7Feel free to leave'
+          - ''
+          - '&7Click to resign &c(Think before action)'
+      order:
+        material: writable_book
+        display_name : '&dEmployee orders'
+        lore:
+          - ''
+          - '&7Your company has sent some'
+          - '&7orders to you to complete.'
+          - '&7These orders are being refreshed'
+          - '&7every day.'
+          - ''
+          - '&7Click to view'
   employee-list:
     title: '&aEmployee list of &b%company%'
     items:
@@ -464,6 +514,51 @@ menu:
           - '&7you may wait the recruitment'
           - '&7from other bosses.'
           - ''
+  orders:
+    title: 'Employee orders'
+    items:
+      orders_info:
+        material: writable_book
+        display_name: '&aEmployee orders'
+        lore:
+          - ''
+          - '&7Click the order to select or view the it'
+          - ''
+      order:
+        material: paper
+        display_name: '&a%label%'
+        lore:
+          - '&8(%order%)'
+          - ''
+          - '&7%description%'
+          - ''
+          - '&7Progress:'
+          - ' &7%quest_progress%'
+          - ''
+          - '&7Rewards:'
+          - ' &f%order_reward%'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
 
 position-permission:
   ALL: 'All permissions'
@@ -477,6 +572,17 @@ unemployment: 'UNEMPLOYMENT'
 yourself: 'YOURSELF'
 true: 'YES'
 false: 'NO'
+
+quest-progress: '%action_description% %target% - %progress_value%/%target_value%'
+order-finished: '&aThis order has been completed.'
+order-reward: '%reward%'
+rewards:
+  item: '%item% x%amount%'
+  company_income: 'Company Income +%income%'
+  money: 'Money %money%'
+  experience: 'Experience %exp%'
+action-description:
+  break_block: 'Break block(s)'
 
 check-update:
   invalid: 'Unable to check for updates: '

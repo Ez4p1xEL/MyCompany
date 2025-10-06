@@ -161,6 +161,18 @@ public class TaxCollector {
                 manager.setCash(uniqueId, manager.getCash(uniqueId) - outcome);
             }
 
+            UserManager userManager = MyCompany.getCacheManager().getUserManager();
+            // Refresh employees' daily orders
+            for (UUID uuid : companies) {
+                List<String> positions = manager.getPositions(uuid);
+                for (String position : positions) {
+                    for (UUID employeeUniqueId : manager.getEmployeeList(uuid, position)) {
+                        userManager.randomizeDailyOrder(employeeUniqueId);
+                    }
+                }
+                userManager.randomizeDailyOrder(manager.getEmployer(uuid));
+            }
+
         }, initialDelay, period );
     }
 

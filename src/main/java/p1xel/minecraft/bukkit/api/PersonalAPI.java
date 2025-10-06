@@ -12,6 +12,7 @@ import p1xel.minecraft.bukkit.managers.ShopManager;
 import p1xel.minecraft.bukkit.managers.UserManager;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
+import p1xel.minecraft.bukkit.utils.storage.EmployeeOrders;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import java.util.List;
@@ -227,6 +228,45 @@ public class PersonalAPI {
 
         player.teleport(location);
         player.sendMessage(Locale.getMessage("tp-success"));
+        return true;
+    }
+
+    public boolean resignFromCompany() {
+        companyManager.dismissEmployee(companyUniqueId, playerUniqueId);
+        EmployeeOrders.removeAllCacheOrders(playerUniqueId);
+        String companyName = companyManager.getName(companyUniqueId);
+        player.sendMessage(Locale.getMessage("resign-success").replaceAll("%company%", companyName));
+
+        UUID employerUniqueId = MyCompany.getCacheManager().getCompanyManager().getEmployer(companyUniqueId);
+        Player employer = Bukkit.getPlayer(employerUniqueId);
+        if (employer != null) {
+            employer.sendMessage(Locale.getMessage("resigned").replaceAll("%player%", player.getName()));
+            employer.playSound(employer, Sound.ENTITY_VILLAGER_NO, 3f, 3f);
+        }
+        return true;
+    }
+
+    public boolean setSalary(String position, Object amount) {
+
+        if (!companyManager.getPositions(companyUniqueId).contains(position)) {
+            player.sendMessage(Locale.getMessage("position-not-existed").replaceAll("%position%", position));
+            return true;
+        }
+
+        int salary;
+        try {
+            salary = Integer.parseInt((String) amount);
+        } catch (NumberFormatException e) {
+            salary = -1;
+        }
+
+        if (salary < 0) {
+            player.sendMessage(Locale.getMessage("salary-invalid"));
+            return true;
+        }
+
+        companyManager.setSalary(companyUniqueId, position, salary);
+        player.sendMessage(Locale.getMessage("salary-set").replaceAll("%position%", position).replaceAll("%salary%", String.valueOf(salary)));
         return true;
     }
 
