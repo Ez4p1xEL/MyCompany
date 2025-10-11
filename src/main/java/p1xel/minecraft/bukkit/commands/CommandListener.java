@@ -10,10 +10,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import p1xel.minecraft.bukkit.api.PersonalAPI;
 import p1xel.minecraft.bukkit.events.CompanyIncomeEvent;
+import p1xel.minecraft.bukkit.managers.AreaManager;
 import p1xel.minecraft.bukkit.managers.BuildingManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
 import p1xel.minecraft.bukkit.managers.gui.GUIFound;
 import p1xel.minecraft.bukkit.managers.gui.GUIMain;
 import p1xel.minecraft.bukkit.utils.Config;
@@ -23,16 +25,14 @@ import p1xel.minecraft.bukkit.utils.storage.Locale;
 import p1xel.minecraft.bukkit.utils.storage.backups.BackupCreator;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CommandListener implements CommandExecutor {
 
     private final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
     private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
     private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
+    private final AreaManager areaManager = MyCompany.getCacheManager().getAreaManager();
 
     @Override
     @ParametersAreNonnullByDefault
@@ -408,6 +408,109 @@ public class CommandListener implements CommandExecutor {
 
             }
 
+            if (args[0].equalsIgnoreCase("givetool")) {
+
+                if (!isAdmin) {
+                    sender.sendMessage(Locale.getMessage("no-perm"));
+                    return true;
+                }
+
+                OfflinePlayer off_target = Bukkit.getOfflinePlayer(args[1]);
+                UUID targetUniqueId = off_target.getUniqueId();
+                // Check if the target player is existed.
+                if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
+                    sender.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", args[1]));
+                    return true;
+                }
+
+                String targetName = off_target.getName(); assert targetName != null;
+                if (!off_target.isOnline()) {
+                    sender.sendMessage(Locale.getMessage("player-not-online").replaceAll("%player%", targetName));
+                    return true;
+                }
+
+                new PersonalAPI(targetUniqueId).getSelectionTool();
+                return true;
+
+            }
+
+            if (args[0].equalsIgnoreCase("area")) {
+
+                if (args[1].equalsIgnoreCase("info")) {
+
+                    if (!(sender instanceof Player player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.area.info")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    UUID playerUniqueId = player.getUniqueId();
+                    new PersonalAPI(playerUniqueId).getAreaInfo();
+                    return true;
+
+                }
+
+                if (args[1].equalsIgnoreCase("setloc")) {
+
+                    if (!(sender instanceof Player player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.area.setloc")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    UUID playerUniqueId = player.getUniqueId();
+                    // Check if the sender has the permission
+                    if (!userManager.hasPermission(playerUniqueId, Permission.AREA_SETLOC)) {
+                        sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.AREA_SETLOC.getName()));
+                        return true;
+                    }
+
+                    new PersonalAPI(playerUniqueId).setAreaLocation();
+                    return true;
+
+                }
+
+                if (args[1].equalsIgnoreCase("list")) {
+
+                    if (!(sender instanceof Player player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.area.list")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    UUID uniqueId = player.getUniqueId();
+                    UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    Set<String> areas = areaManager.getAreas(companyUniqueId);
+                    if (areas.isEmpty()) {
+                        sender.sendMessage(Locale.getMessage("area-list-empty"));
+                        return true;
+                    }
+
+                    sender.sendMessage(Locale.getMessage("area-list-success").replaceAll("%list%", areas.toString()));
+                    return true;
+
+                }
+
+            }
+
         }
 
         if (args.length <= 2 && args.length > 0) {
@@ -688,6 +791,77 @@ public class CommandListener implements CommandExecutor {
 
         }
 
+        if (args.length == 3) {
+
+            if (args[0].equalsIgnoreCase("area")) {
+
+                if (args[1].equalsIgnoreCase("create")) {
+
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.area.create")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    UUID playerUniqueId = player.getUniqueId();
+                    UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    // Check if the sender has the permission
+                    if (!userManager.hasPermission(playerUniqueId, Permission.AREA_CREATE)) {
+                        sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.AREA_CREATE.getName()));
+                        return true;
+                    }
+
+                    new PersonalAPI(playerUniqueId).createArea(args[2]);
+                    return true;
+                }
+
+                if (args[1].equalsIgnoreCase("delete")) {
+
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.area.create")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    UUID playerUniqueId = player.getUniqueId();
+                    UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    // Check if the sender has the permission
+                    if (!userManager.hasPermission(playerUniqueId, Permission.AREA_DELETE)) {
+                        sender.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", Permission.AREA_DELETE.getName()));
+                        return true;
+                    }
+
+                    new PersonalAPI(playerUniqueId).deleteArea(args[2]);
+                    return true;
+
+                }
+
+            }
+
+        }
+
         if (args.length == 4) {
 
             if (args[0].equalsIgnoreCase("money")) {
@@ -819,6 +993,45 @@ public class CommandListener implements CommandExecutor {
 
                     EmployeeOrders.acceptOrder(targetUniqueId, args[3]);
                     sender.sendMessage(Locale.getMessage("order-forcegive-success").replaceAll("%player%", args[2]).replaceAll("%order%", args[3]));
+                    return true;
+
+                }
+
+            }
+
+            if (args[0].equalsIgnoreCase("area")) {
+
+                if (args[1].equalsIgnoreCase("tp")) {
+
+                    if (!(sender instanceof Player player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    if (!sender.hasPermission("mycompany.commands.tp.other")) {
+                        sender.sendMessage(Locale.getMessage("no-perm"));
+                        return true;
+                    }
+
+                    int cid;
+
+                    try {
+                        cid = Integer.parseInt(args[2]);
+                    } catch (NumberFormatException e) {
+                        cid = -1;
+                    }
+                    if (cid < 0) {
+                        sender.sendMessage(Locale.getMessage("id-invalid"));
+                        return true;
+                    }
+
+                    UUID companyUniqueId = companyManager.getUUIDFromId(cid);
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("id-not-exist").replaceAll("%cid%", args[2]));
+                        return true;
+                    }
+
+                    new PersonalAPI(player.getUniqueId()).teleportToLocation(companyUniqueId, args[3]);
                     return true;
 
                 }

@@ -1,11 +1,14 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
+import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public abstract class CompanyData {
@@ -96,4 +99,20 @@ public abstract class CompanyData {
     //public abstract UUID getCompanyUUID(UUID uniqueId);
 
     //public abstract UUID getCreator(UUID uniqueId);
+
+    public abstract int getLocationPos(UUID uniqueId, String area, String type);
+
+    public abstract void createArea(UUID uniqueId, CompanyArea companyArea, Player creator, Location firstBlock, Location secondBlock);
+
+    public abstract Set<String> getAreas(UUID uniqueId);
+
+    public abstract void setAccessibleCompanies(UUID uniqueId, String area, List<UUID> companyList);
+
+    public abstract List<UUID> getAccessibleCompanies(UUID uniqueId, String area);
+
+    public abstract void deleteArea(UUID uniqueId, CompanyArea companyArea);
+
+    public abstract void setAreaLocation(UUID uniqueId, String area, Location location);
+
+    public abstract Location getAreaLocation(UUID uniqueId, String area);
 }

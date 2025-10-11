@@ -24,10 +24,17 @@ commands:
   position-salary-set: '&e/myc position setsalary <职位> <金额> &7设置职位的工资'
   setloc: '&e/myc setloc &7设置公司的传送点'
   tp: '&e/myc tp [公司ID] &7传送至公司的传送点'
+  area-create: '&e/myc area create <领地> &7创建私有领地'
+  area-delete: '&e/myc area delete <领地> &7删除私有领地'
+  area-setloc: '&e/myc area setloc &7设置当前私有领地的传送点'
+  area-tp: '&e/myc area tp <公司ID> <领地> &7传送至领地'
+  area-info: '&e/myc area info &7查看当前位置的私有领地信息'
+  area-list: '&e/myc area list &7查看公司拥有的私有领地'
   admin:
     money-give: '&e/myc money give <公司ID> <数量> &7给予金钱公司'
     money-take: '&e/myc money take <公司ID> <数量> &7从公司拿取金钱'
     order-give: '&e/myc order forcegive <玩家> <订单> &7强制玩家接受订单'
+    givetool: '&e/myc givetool <玩家> &7给予玩家圈地工具'
     reload: '&e/myc reload &7重载配置文件及缓存'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
@@ -121,6 +128,27 @@ order-forcegive-success: '&7[&6%prefix%&7] &a玩家 &e%player% &a获得了订单
 order-not-exist: '&7[&6%prefix%&7] &c订单 &e%order% &c不存在!'
 quest-completed: '&7[&6%prefix%&7] &a订单 &e%order% &a里其中一个任务已完成 &b[%progress%]'
 order-completed: '&7[&6%prefix%&7] &a你完成了订单 &e%order%&a, 已为你发送奖励!'
+
+# Company Area
+not-in-x-range: '&7[&6%prefix%&7] &cX轴的大小应在 &e%min% &c到 &e%max%&c 之间！'
+not-in-y-range: '&7[&6%prefix%&7] &cY轴的大小应在 &e%min% &c到 &e%max%&c 之间！'
+not-in-z-range: '&7[&6%prefix%&7] &cZ轴的大小应在 &e%min% &c到 &e%max%&c 之间！'
+area-created: '&7[&6%prefix%&7] &a领地 &e%name% &a已成功创建！'
+area-name-existed: '&7[&6%prefix%&7] &c领地 &e%name% &c已存在！'
+area-name-not-existed: '&7[&6%prefix%&7] &c领地 &e%name% &c似乎不存在！'
+selection-missing: '&7[&6%prefix%&7] &c你需要先使用选择工具选定领地区域！'
+tool-item-null: '物品为空，请检查配置文件。'
+givetool-target-success: '&7[&6%prefix%&7] &a你已获得选择工具物品。'
+first-block-selected: '&7[&6%prefix%&7] &a你已选择第一个方块，坐标为 &e%x%&a,&e%y%&a,&e%z%&a。'
+second-block-selected: '&7[&6%prefix%&7] &a你已选择第二个方块，坐标为 &e%x%&a,&e%y%&a,&e%z%&a。'
+no-area-in-location: '&7[&6%prefix%&7] &c你当前位置没有任何领地。'
+area-delete-success: '&7[&6%prefix%&7] &a领地 &e%name% &a已成功删除！'
+area-setloc-success: '&7[&6%prefix%&7] &a传送点已设置成功！'
+area-loc-not-set: '&7[&6%prefix%&7] &c领地 &e%name% &c尚未设置传送点！'
+area-tp-success: '&7[&6%prefix%&7] &a正在传送至公司 &b%company%&a 的领地 &e%name%&a...'
+area-list-empty: '&7[&6%prefix%&7] &c你的公司没有任何领地！'
+area-list-success: '&7[&6%prefix%7] &a领地列表：&e%list%'
+
 
 # Broadcast
 broadcast:
@@ -560,6 +588,9 @@ position-permission:
   FIRE: '开除'
   CHESTSHOP_CREATE: '创建箱子商店'
   CHESTSHOP_DELETE: '删除箱子商店'
+  AREA_CREATE: '创建公司领地'
+  AREA_DELETE: '删除公司领地'
+  AREA_SETLOC: '设置公司领地的传送点'
 
 none: '无'
 unemployment: '无业游民'
@@ -577,6 +608,7 @@ rewards:
   experience: '经验 %exp%'
 action-description:
   break_block: '破坏方块'
+  place_block: '放置方块'
 
 check-update:
   invalid: '无法查询更新: '

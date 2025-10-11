@@ -3,6 +3,7 @@ package p1xel.minecraft.bukkit.utils;
 
 import org.bukkit.configuration.Configuration;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.areas.AreaSelectionMode;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class Config {
         //config = NoBuildPlus.getInstance().getConfig();
         MyCompany.getCacheManager().init();
         Locale.createLocaleFile();
+        AreaSelectionMode.initTool();
         MyCompany.getTaxCollector().cancelTask();
         MyCompany.getTaxCollector().startTask();
         Logger.setEnabled(Config.getBool("debug"));

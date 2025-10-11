@@ -49,8 +49,8 @@ company-settings:
     # If there are multiple supporting plugins enabled,
     # MyCompany would select the first one.
     supported-plugins:
-      Residence: true
-      Dominion: true
+      Residence: false
+      Dominion: false
   # Should the chestshop be created in company's building?
   # Set to false if you allow the employee to create
   # chestshops anywhere.
@@ -128,6 +128,29 @@ chest-shop:
     identifier: '[COMPANYSHOP]'
   # how many seconds that the player can enter the amount to buy item
   buy-time: 10
+
+# Company Areas
+company-area:
+  selection-tool:
+    material: golden_hoe
+    display_name: '&bCompany Area Selection Tool'
+    lore:
+      - ''
+      - '&aLeft Click &7the first block;'
+      - '&aRight Click &7the second block.'
+      - ''
+      - '&7/myc area create <name>'
+      - '&7Execute the command to complete creating the area.'
+      - ''
+  maximum-area: 3
+  area:
+    size:
+      minX: 16
+      maxX: 128
+      minY: 3
+      maxY: 128
+      minZ: 16
+      maxZ: 128
 
 backup-creator:
   # How many minutes should the plugin to start creating backup after starting the server.

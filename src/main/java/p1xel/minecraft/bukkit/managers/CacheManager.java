@@ -17,12 +17,14 @@ public class CacheManager {
     private UserManager users;
     private ShopManager shops;
     private BuildingManager buildings;
+    private AreaManager areas;
 
     public CacheManager(CompanyManager companies, UserManager users) {
         this.companies = companies;
         this.users = users;
         this.shops = new ShopManager(companies.getData());
         this.buildings = new BuildingManager(companies.getData());
+        this.areas = new AreaManager(companies.getData());
     }
 
     public CompanyManager getCompanyManager() {
@@ -37,9 +39,12 @@ public class CacheManager {
 
     public BuildingManager getBuildingManager() { return buildings;}
 
+    public AreaManager getAreaManager() { return areas; }
+
     public void init() {
         this.companies.init();
         this.users.init();
+        this.areas.init();
     }
 
 

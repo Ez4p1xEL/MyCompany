@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.hirerequests.HireRequest;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 

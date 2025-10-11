@@ -6,9 +6,11 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.Logger;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
@@ -20,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class YamlCompanyData extends CompanyData{
 
@@ -47,7 +50,7 @@ public class YamlCompanyData extends CompanyData{
 
                 UUID uniqueId = UUID.fromString(folder.getName());
 
-                String[] filesName = new String[]{"info", "settings", "inventory", "shop", "asset"};
+                String[] filesName = new String[]{"info", "settings", "inventory", "shop", "asset", "area"};
 
                 if (com_files.get(uniqueId) == null) {
                     HashMap<String, File> files_map = new HashMap<>();
@@ -176,7 +179,7 @@ public class YamlCompanyData extends CompanyData{
         // 逐個創建文件
         HashMap<String, File> files_map = new HashMap<>();
         HashMap<String, FileConfiguration> yamls_map = new HashMap<>();
-        String[] filesName = new String[]{"info", "settings", "inventory", "shop", "asset"};
+        String[] filesName = new String[]{"info", "settings", "inventory", "shop", "asset", "area"};
         for (String fileName : filesName) {
             File file = new File(MyCompany.getInstance().getDataFolder() + "/companies/" + uuid, fileName+ ".yml");
             try {
@@ -245,6 +248,12 @@ public class YamlCompanyData extends CompanyData{
                 }
 
             }
+
+//            if (fileName.equalsIgnoreCase("area")) {
+//
+//                yaml.set(uuid + ".areas", null);
+//
+//            }
 
             files_map.put(fileName, file);
             yamls_map.put(fileName, yaml);
@@ -559,6 +568,126 @@ public class YamlCompanyData extends CompanyData{
     }
 
     // shop.yml - END
+
+    // area.yml - BEGIN
+
+    @Override
+    public int getLocationPos(UUID uniqueId, String area, String type) {
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        return yaml.getInt(uniqueId + ".areas." + area + ".location." + type);
+    }
+
+    @Override
+    public void createArea(UUID uniqueId, CompanyArea companyArea, Player creator, Location firstBlock, Location secondBlock) {
+        File file = com_files.get(uniqueId).get("area");
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        String area = companyArea.getName();
+        yaml.set(uniqueId + ".areas." + area + ".location.world", companyArea.getWorldName());
+        yaml.set(uniqueId + ".areas." + area + ".location.minX", companyArea.getMinX());
+        yaml.set(uniqueId + ".areas." + area + ".location.maxX", companyArea.getMaxX());
+        yaml.set(uniqueId + ".areas." + area + ".location.minY", companyArea.getMinY());
+        yaml.set(uniqueId + ".areas." + area + ".location.maxY", companyArea.getMaxY());
+        yaml.set(uniqueId + ".areas." + area + ".location.minZ", companyArea.getMinZ());
+        yaml.set(uniqueId + ".areas." + area + ".location.maxZ", companyArea.getMaxZ());
+        yaml.set(uniqueId + ".areas." + area + ".creator.uuid", creator.getUniqueId().toString());
+        yaml.set(uniqueId + ".areas." + area + ".creator.name", creator.getName());
+        yaml.set(uniqueId + ".areas." + area + ".info.first-block.world", firstBlock.getWorld().getName());
+        yaml.set(uniqueId + ".areas." + area + ".info.first-block.x", firstBlock.getBlockX());
+        yaml.set(uniqueId + ".areas." + area + ".info.first-block.y", firstBlock.getBlockY());
+        yaml.set(uniqueId + ".areas." + area + ".info.first-block.z", firstBlock.getBlockZ());
+        yaml.set(uniqueId + ".areas." + area + ".info.second-block.world", secondBlock.getWorld().getName());
+        yaml.set(uniqueId + ".areas." + area + ".info.second-block.x", secondBlock.getBlockX());
+        yaml.set(uniqueId + ".areas." + area + ".info.second-block.y", secondBlock.getBlockY());
+        yaml.set(uniqueId + ".areas." + area + ".info.second-block.z", secondBlock.getBlockZ());
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteArea(UUID uniqueId, CompanyArea companyArea) {
+        File file = com_files.get(uniqueId).get("area");
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        String area = companyArea.getName();
+        yaml.set(uniqueId + ".areas." + area, null);
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Set<String> getAreas(UUID uniqueId) {
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        try {
+            return yaml.getConfigurationSection(uniqueId + ".areas").getKeys(false);
+        } catch (NullPointerException exception) {
+            return Collections.emptySet();
+        }
+    }
+
+    @Override
+    public void setAccessibleCompanies(UUID uniqueId, String area, List<UUID> companyList) {
+        List<String> stringList = companyList.stream()
+                .map(UUID::toString)
+                .collect(Collectors.toList());
+        File file = com_files.get(uniqueId).get("area");
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        yaml.set(uniqueId + ".areas." + area + ".accessible", stringList);
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<UUID> getAccessibleCompanies(UUID uniqueId, String area) {
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        List<UUID> list = new ArrayList<>();
+        for (String uuid : yaml.getStringList(uniqueId + ".areas." + area + ".accessible")) {
+            list.add(UUID.fromString(uuid));
+        }
+        return list;
+    }
+
+    @Override
+    public void setAreaLocation(UUID uniqueId, String area, Location location) {
+        File file = com_files.get(uniqueId).get("area");
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        yaml.set(uniqueId + ".areas." + area + ".tp-loc.world", location.getWorld().getName());
+        yaml.set(uniqueId + ".areas." + area + ".tp-loc.x", location.getX());
+        yaml.set(uniqueId + ".areas." + area + ".tp-loc.y", location.getY());
+        yaml.set(uniqueId + ".areas." + area + ".tp-loc.z", location.getZ());
+        yaml.set(uniqueId + ".areas." + area + ".tp-loc.yaw", location.getYaw());
+        yaml.set(uniqueId + ".areas." + area + ".tp-loc.pitch", location.getPitch());
+        try {
+            yaml.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Location getAreaLocation(UUID uniqueId, String area) {
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        if (yaml.getString(uniqueId + ".areas." + area + ".tp-loc.world") == null) {
+            return null;
+        }
+        String world = yaml.getString(uniqueId + ".areas." + area + ".tp-loc.world");
+        double x = yaml.getDouble(uniqueId + ".areas." + area + ".tp-loc.x");
+        double y = yaml.getDouble(uniqueId + ".areas." + area + ".tp-loc.y");
+        double z = yaml.getDouble(uniqueId + ".areas." + area + ".tp-loc.z");
+        float yaw = (float) yaml.getDouble(uniqueId + ".areas." + area + ".tp-loc.yaw");
+        float pitch = (float) yaml.getDouble(uniqueId + ".areas." + area + ".tp-loc.pitch");
+        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+
+    }
+
+    // area.yml - END
 
     // Others - BEGIN
 

@@ -23,6 +23,7 @@ import org.bukkit.scheduler.BukkitTask;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.events.CompanyIncomeEvent;
 import p1xel.minecraft.bukkit.managers.*;
+import p1xel.minecraft.bukkit.managers.shops.ShopItemBuyMode;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.Logger;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;

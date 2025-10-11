@@ -14,7 +14,10 @@ public enum Permission {
     SET_POSITION("SET_POSITION"),
     POSITION_ADD("POSITION_ADD"),
     POSITION_REMOVE("POSITION_REMOVE"),
-    POSITION_SETLABEL("POSITION_SETLABEL");
+    POSITION_SETLABEL("POSITION_SETLABEL"),
+    AREA_CREATE("AREA_CREATE"),
+    AREA_DELETE("AREA_DELETE"),
+    AREA_SETLOC("AREA_SETLOC");
 
     private String name;
     private final static HashMap<String, Permission> namemap = new HashMap<>();

@@ -1,4 +1,4 @@
-package p1xel.minecraft.bukkit.managers;
+package p1xel.minecraft.bukkit.managers.shops;
 
 import org.bukkit.scheduler.BukkitTask;
 import p1xel.minecraft.bukkit.utils.storage.Shop;

@@ -24,10 +24,17 @@ commands:
   position-salary-set: '&e/myc position setsalary <position> <amount> &7Set salary of the position.'
   setloc: '&e/myc setloc &7Set teleport location of the company.'
   tp: '&e/myc tp [CompanyId] &7Teleport to the location of the company.'
+  area-create: '&e/myc area create <area> &7Create a company area.'
+  area-delete: '&e/myc area delete <area> &7Delete the company area.'
+  area-setloc: '&e/myc area setloc &7Set the teleport location of the current area.'
+  area-tp: '&e/myc area tp <CompanyId> <area> &7Teleport to the area.'
+  area-info: '&e/myc area info &7View the company area in the current location.'
+  area-list: '&e/myc area list &7View the areas of the company.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
     order-give: '&e/myc order forcegive <player> <order> &7Forcing the player to accept the order.'
+    givetool: '&e/myc givetool <player> &7Give selection tool to the player.'
     reload: '&e/myc reload &7Reload the configuration and cache.'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
@@ -122,6 +129,26 @@ order-not-exist: '&7[&6%prefix%&7] &cThe order name &e%order% &cdoes not exist!'
 quest-completed: '&7[&6%prefix%&7] &aOne of the missions in the order &e%order% &ahas been completed &b[%progress%]'
 order-completed: '&7[&6%prefix%&7] &aYou completed order &e%order%&a, you should have received the rewards!'
 
+# Company Area
+not-in-x-range: '&7[&6%prefix%&7] &cThe size of x-axis should between &e%min% &cand &e%max%&c!'
+not-in-y-range: '&7[&6%prefix%&7] &cThe size of y-axis should between &e%min% &cand &e%max%&c!'
+not-in-z-range: '&7[&6%prefix%&7] &cThe size of z-axis should between &e%min% &cand &e%max%&c!'
+area-created: '&7[&6%prefix%&7] &aArea &e%name% &ahas been created successfully!'
+area-name-existed: '&7[&6%prefix%&7] &cArea &e%name% &cis already existed!'
+area-name-not-existed: '&7[&6%prefix%&7] &cArea &e%name% &cdoesn''t seem to be existed!'
+selection-missing: '&7[&6%prefix%&7] &cYou should use the selection tool to select the area first!'
+tool-item-null: 'The item is null, please check the config.'
+givetool-target-success: '&7[&6%prefix%&7] &aYou received the selection tool item.'
+first-block-selected: '&7[&6%prefix%&7] &aYou selected the first block, at &e%x%&a,&e%y%&a,&e%z%&a.'
+second-block-selected: '&7[&6%prefix%&7] &aYou selected the second block, at &e%x%&a,&e%y%&a,&e%z%&a.'
+no-area-in-location: '&7[&6%prefix%&7] &cThere is no area in your current location.'
+area-delete-success: '&7[&6%prefix%&7] &aArea &e%name% &ahas been deleted!'
+area-setloc-success: '&7[&6%prefix%&7] &aLocation has been set!'
+area-loc-not-set: '&7[&6%prefix%&7] &cThe location of area &e%name% &chas not been set!'
+area-tp-success: '&7[&6%prefix%&7] &aTeleporting to area &e%name% &aof company &b%company%&a...'
+area-list-empty: '&7[&6%prefix%&7] &cYour company does not have any area!'
+area-list-success: '&7[&6%prefix%7] &aArea list: &e%list%'
+
 # Broadcast
 broadcast:
   company-found: '&7[&6Announcement&7] &aA new company &e%company% &ahas been founded by &e%player%&a!'
@@ -160,6 +187,15 @@ info:
     - '&7Daily income: &b%daily%'
     - ''
     - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+  area:
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+    - ''
+    - '&7Company: &b%company% &8(%cid%)'
+    - '&7Area name: &a%area%'
+    - ''
+    - '&7Created by &e%creator%&7.'
+    - ''
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
 
 # Chest shop sign
 shop:
@@ -180,7 +216,6 @@ shop:
     - '%status%'
     - '&aPlease enter the amount of item you are going to purchase.'
   already-created: '&7[&6%prefix%&7] &cThe shop is already created!'
-  #item-specified: '&7[&6%prefix%&7] &aItem is specified successfully!'
   break-chest-instead: '&7[&6%prefix%&7] &cYou should break the sign instead to delete the shop!'
   shop-deleted: '&7[&6%prefix%&7] &cShop has been deleted!'
   invalid-buy-amount: '&7[&6%prefix%&7] &cInvalid amount.'
@@ -566,6 +601,9 @@ position-permission:
   FIRE: 'Fire'
   CHESTSHOP_CREATE: 'Chestshop Creation'
   CHESTSHOP_DELETE: 'Chestshop Deleting'
+  AREA_CREATE: 'Company Area Creation'
+  AREA_DELETE: 'Company Area Deleting'
+  AREA_SETLOC: 'Location Set of Company Area'
 
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'
@@ -583,6 +621,7 @@ rewards:
   experience: 'Experience %exp%'
 action-description:
   break_block: 'Break block(s)'
+  place_block: 'Place block(s)'
 
 check-update:
   invalid: 'Unable to check for updates: '

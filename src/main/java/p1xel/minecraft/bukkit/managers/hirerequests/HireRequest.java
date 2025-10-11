@@ -1,4 +1,4 @@
-package p1xel.minecraft.bukkit.managers;
+package p1xel.minecraft.bukkit.managers.hirerequests;
 
 import org.bukkit.scheduler.BukkitTask;
 

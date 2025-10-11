@@ -6,11 +6,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import p1xel.minecraft.bukkit.commands.CommandListener;
 import p1xel.minecraft.bukkit.commands.TabList;
-import p1xel.minecraft.bukkit.listeners.GUIListener;
-import p1xel.minecraft.bukkit.listeners.OrderListener;
-import p1xel.minecraft.bukkit.listeners.ShopListener;
-import p1xel.minecraft.bukkit.listeners.UserCreation;
+import p1xel.minecraft.bukkit.listeners.*;
 import p1xel.minecraft.bukkit.managers.*;
+import p1xel.minecraft.bukkit.managers.areas.AreaSelectionMode;
 import p1xel.minecraft.bukkit.managers.buildings.DefaultBuildingArea;
 import p1xel.minecraft.bukkit.managers.buildings.DominionBuildingArea;
 import p1xel.minecraft.bukkit.managers.buildings.ResidenceBuildingArea;
@@ -68,6 +66,8 @@ public class MyCompany extends JavaPlugin {
 
         // Initialize existed companies
         cache.init();
+        // Initialize selection tool item
+        AreaSelectionMode.initTool();
 
         getServer().getPluginCommand("MyCompany").setExecutor(new CommandListener());
         getServer().getPluginCommand("MyCompany").setTabCompleter(new TabList());
@@ -75,6 +75,7 @@ public class MyCompany extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ShopListener(), this);
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new OrderListener(), this);
+        getServer().getPluginManager().registerEvents(new AreaSelection(), this);
 
         if (!setupEconomy()) {
             getLogger().warning("Vault is not found! Disabling MyCompany...");

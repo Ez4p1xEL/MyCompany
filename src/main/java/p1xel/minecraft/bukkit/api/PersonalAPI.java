@@ -1,22 +1,21 @@
 package p1xel.minecraft.bukkit.api;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.MyCompany;
-import p1xel.minecraft.bukkit.managers.BuildingManager;
-import p1xel.minecraft.bukkit.managers.CompanyManager;
-import p1xel.minecraft.bukkit.managers.ShopManager;
-import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.managers.*;
+import p1xel.minecraft.bukkit.managers.areas.AreaSelectionMode;
+import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
 import p1xel.minecraft.bukkit.utils.Config;
+import p1xel.minecraft.bukkit.utils.Logger;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.EmployeeOrders;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class PersonalAPI {
 
@@ -27,6 +26,7 @@ public class PersonalAPI {
     private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
     private final ShopManager shopManager = MyCompany.getCacheManager().getShopManager();
     private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
+    private final AreaManager areaManager = MyCompany.getCacheManager().getAreaManager();
 
     public PersonalAPI(UUID playerUniqueId) {
         this.playerUniqueId = playerUniqueId;
@@ -39,6 +39,15 @@ public class PersonalAPI {
         if (player != null) {
             this.playerUniqueId = player.getUniqueId();
             this.companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+        }
+    }
+
+    // For admin
+    public PersonalAPI(Player player, UUID companyUniqueId) {
+        this.player = player;
+        this.companyUniqueId = companyUniqueId;
+        if (player != null) {
+            this.playerUniqueId = player.getUniqueId();
         }
     }
 
@@ -268,6 +277,143 @@ public class PersonalAPI {
         companyManager.setSalary(companyUniqueId, position, salary);
         player.sendMessage(Locale.getMessage("salary-set").replaceAll("%position%", position).replaceAll("%salary%", String.valueOf(salary)));
         return true;
+    }
+
+    public boolean createArea(String name) {
+        Location firstBlock = AreaSelectionMode.getFBMap().get(playerUniqueId);
+        Location secondBlock = AreaSelectionMode.getSBMap().get(playerUniqueId);
+        if (firstBlock == null || secondBlock == null) {
+            player.sendMessage(Locale.getMessage("selection-missing"));
+            return true;
+        }
+
+        if (areaManager.getAreas(companyUniqueId).contains(name)) {
+            player.sendMessage(Locale.getMessage("area-name-existed").replaceAll("%name%", name));
+            return true;
+        }
+
+        String world = firstBlock.getWorld().getName();
+        int minX = Math.min(firstBlock.getBlockX(), secondBlock.getBlockX());
+        int maxX = Math.max(firstBlock.getBlockX(), secondBlock.getBlockX());
+        int minY = Math.min(firstBlock.getBlockY(), secondBlock.getBlockY());
+        int maxY = Math.max(firstBlock.getBlockY(), secondBlock.getBlockY());
+        int minZ = Math.min(firstBlock.getBlockZ(), secondBlock.getBlockZ());
+        int maxZ = Math.max(firstBlock.getBlockZ(), secondBlock.getBlockZ());
+
+        if ((maxX-minX) < Config.getInt("company-area.area.size.minX") || (maxX-minX) > Config.getInt("company-area.area.size.maxX")) {
+            // send Message that the size should between the minimum and the maximum
+            player.sendMessage(Locale.getMessage("not-in-x-range").replaceAll("%min%", Config.getString("company-area.area.size.minX"))
+                    .replaceAll("%max%", Config.getString("company-area.area.size.maxX")));
+            return true;
+        }
+
+        if ((maxY-minY) < Config.getInt("company-area.area.size.minY") || (maxY-minY) > Config.getInt("company-area.area.size.maxY")) {
+            // send Message
+            player.sendMessage(Locale.getMessage("not-in-y-range").replaceAll("%min%", Config.getString("company-area.area.size.minY"))
+                    .replaceAll("%max%", Config.getString("company-area.area.size.maxY")));
+            return true;
+        }
+
+        if ((maxZ-minZ) < Config.getInt("company-area.area.size.minZ") || (maxZ-minZ) > Config.getInt("company-area.area.size.maxZ")) {
+            // send Message
+            player.sendMessage(Locale.getMessage("not-in-z-range").replaceAll("%min%", Config.getString("company-area.area.size.minZ"))
+                    .replaceAll("%max%", Config.getString("company-area.area.size.maxZ")));
+            return true;
+        }
+
+        // Create area here
+        CompanyArea companyArea = new CompanyArea(companyUniqueId, name, world, minX, maxX, minY, maxY, minZ, maxZ, firstBlock, secondBlock);
+        areaManager.createArea(companyUniqueId, companyArea, player, firstBlock, secondBlock);
+        player.sendMessage(Locale.getMessage("area-created").replaceAll("%name%", name));
+        return true;
+
+    }
+
+    public boolean getSelectionTool() {
+        ItemStack tool = AreaSelectionMode.getToolItem();
+        if (tool == null) {
+            Logger.log(Level.WARNING, Locale.getMessage("tool-item-null"));
+            return true;
+        }
+
+        player.getInventory().addItem(tool);
+        player.sendMessage(Locale.getMessage("givetool-target-success"));
+        return true;
+    }
+
+    public boolean getAreaInfo() {
+
+        Location location = player.getLocation();
+        CompanyArea area = areaManager.getAreaByLoc(location);
+        if (area == null) {
+            player.sendMessage(Locale.getMessage("no-area-in-location"));
+            return true;
+        }
+
+        UUID cuuid = area.getCompanyUUID();
+        for (String message : Locale.yaml.getStringList("info.area")) {
+
+            message = ChatColor.translateAlternateColorCodes('&', message);
+            message = message.replaceAll("%company%", companyManager.getName(cuuid));
+            message = message.replaceAll("%cid%", String.valueOf(companyManager.getId(cuuid)));
+            message = message.replaceAll("%area%", area.getName());
+            message = message.replaceAll("%creator%", area.getCreatorName());
+
+            player.sendMessage(message);
+        }
+        return true;
+
+    }
+
+    public boolean deleteArea(String name) {
+        if (!areaManager.getAreas(companyUniqueId).contains(name)) {
+            player.sendMessage(Locale.getMessage("area-name-not-existed").replaceAll("%name%", name));
+            return true;
+        }
+
+        CompanyArea area = new CompanyArea(companyUniqueId, name);
+        areaManager.deleteArea(companyUniqueId, area);
+        player.sendMessage(Locale.getMessage("area-delete-success").replaceAll("%name%", name));
+        return true;
+
+    }
+
+    public boolean setAreaLocation(String area, Location location) {
+        areaManager.setLocation(companyUniqueId, area, location);
+        player.sendMessage(Locale.getMessage("area-setloc-success"));
+        return true;
+    }
+
+    public boolean setAreaLocation() {
+        Location location = player.getLocation();
+        CompanyArea area = areaManager.getAreaByLoc(location);
+        if (area == null) {
+            player.sendMessage(Locale.getMessage("no-area-in-location"));
+            return true;
+        }
+
+        setAreaLocation(area.getName(), location);
+        return true;
+
+    }
+
+    public boolean teleportToLocation(UUID targetCompanyUniqueId, String area) {
+
+        if (!areaManager.getAreas(targetCompanyUniqueId).contains(area)) {
+            player.sendMessage(Locale.getMessage("area-name-not-existed").replaceAll("%name%", area));
+            return true;
+        }
+
+        Location location = areaManager.getLocation(targetCompanyUniqueId, area);
+        if (location == null) {
+            player.sendMessage(Locale.getMessage("area-loc-not-set").replaceAll("%name%", area));
+            return true;
+        }
+
+        player.sendMessage(Locale.getMessage("area-tp-success").replaceAll("%name%", area).replaceAll("%company%", companyManager.getName(targetCompanyUniqueId)));
+        player.teleportAsync(location);
+        return true;
+
     }
 
 }

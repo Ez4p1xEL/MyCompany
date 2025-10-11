@@ -183,6 +183,13 @@ public class EmployeeOrders {
             progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":break_block"));
             target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
         }
+
+        if (type.equalsIgnoreCase("place_block")) {
+            description = Locale.getMessage("action-description.place_block");
+            target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
+            progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":place_block"));
+            target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
+        }
         progressMessage = progressMessage.replaceAll("%action_description%", description)
                 .replaceAll("%target%", target)
                 .replaceAll("%progress_value%", progress_value)

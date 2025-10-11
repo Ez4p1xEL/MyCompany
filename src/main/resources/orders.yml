@@ -77,3 +77,14 @@ grass_eater:
       amount: 8
   reward:
     - 'company_income;1000'
+example_place_block:
+  label: 'Placer Example'
+  description:
+    - '&7Place some dirt'
+  quest:
+    dirt:
+      type: place_block
+      item: dirt
+      amount: 4
+  reward:
+    - 'company_income;500'
