@@ -16,7 +16,7 @@ Each company needs to pay daily salaries and handle taxes, in order to create re
 MyCompany needs your ideas and feedback to grow and reach the goal of immersive economic gameplay
 
 ## Version Support
-- 1.20.1+ (Paper, Purpur)
+- 1.20+ (Paper, Purpur)
 
 ## Documentation
 - For the use of plugin: [wiki](https://github.com/Ez4p1xEL/MyCompany/wiki/MyCompany-Wiki)
