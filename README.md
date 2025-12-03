@@ -19,7 +19,7 @@ MyCompany needs your ideas and feedback to grow and reach the goal of immersive 
 - 1.20+ (Paper, Purpur)
 
 ## Documentation
-- For the use of plugin: [wiki](https://github.com/Ez4p1xEL/MyCompany/wiki/MyCompany-Wiki)
+- For the use of plugin: [wiki](https://github.com/Ez4p1xEL/MyCompany/wiki)
 
 ## Downloads
 ### Direct links
