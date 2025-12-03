@@ -1,12 +1,14 @@
 package p1xel.minecraft.bukkit.utils.storage;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
-import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
+import p1xel.minecraft.bukkit.managers.areas.CompanyArea;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -102,7 +104,7 @@ public abstract class CompanyData {
 
     public abstract int getLocationPos(UUID uniqueId, String area, String type);
 
-    public abstract void createArea(UUID uniqueId, CompanyArea companyArea, Player creator, Location firstBlock, Location secondBlock);
+    public abstract void createArea(UUID uniqueId, CompanyArea companyArea, OfflinePlayer creator, Location firstBlock, Location secondBlock);
 
     public abstract Set<String> getAreas(UUID uniqueId);
 
@@ -115,4 +117,6 @@ public abstract class CompanyData {
     public abstract void setAreaLocation(UUID uniqueId, String area, Location location);
 
     public abstract Location getAreaLocation(UUID uniqueId, String area);
+
+    public abstract HashMap<UUID, List<String>> getAreasRented(UUID uniqueId);
 }

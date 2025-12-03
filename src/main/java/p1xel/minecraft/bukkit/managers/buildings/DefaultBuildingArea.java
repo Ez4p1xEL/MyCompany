@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.AreaManager;
 import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.managers.areas.CompanyArea;
 
 import java.util.UUID;
 

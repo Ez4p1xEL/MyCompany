@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.Company;
 import p1xel.minecraft.bukkit.MyCompany;
-import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
+import p1xel.minecraft.bukkit.managers.areas.CompanyArea;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.Logger;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
@@ -578,7 +578,7 @@ public class YamlCompanyData extends CompanyData{
     }
 
     @Override
-    public void createArea(UUID uniqueId, CompanyArea companyArea, Player creator, Location firstBlock, Location secondBlock) {
+    public void createArea(UUID uniqueId, CompanyArea companyArea, OfflinePlayer creator, Location firstBlock, Location secondBlock) {
         File file = com_files.get(uniqueId).get("area");
         FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
         String area = companyArea.getName();
@@ -599,6 +599,11 @@ public class YamlCompanyData extends CompanyData{
         yaml.set(uniqueId + ".areas." + area + ".info.second-block.x", secondBlock.getBlockX());
         yaml.set(uniqueId + ".areas." + area + ".info.second-block.y", secondBlock.getBlockY());
         yaml.set(uniqueId + ".areas." + area + ".info.second-block.z", secondBlock.getBlockZ());
+        yaml.set(uniqueId + ".areas." + area + ".trade.mode", "none");
+        yaml.set(uniqueId + ".areas." + area + ".trade.on-market", false);
+        yaml.set(uniqueId + ".areas." + area + ".trade.rent.start-time", 0L);
+        yaml.set(uniqueId + ".areas." + area + ".trade.rent.end-time", 0L);
+        //yaml.set(uniqueId + ".areas." + area + ".trade.sell.available", false);
         try {
             yaml.save(file);
         } catch (IOException e) {
@@ -685,6 +690,21 @@ public class YamlCompanyData extends CompanyData{
         float pitch = (float) yaml.getDouble(uniqueId + ".areas." + area + ".tp-loc.pitch");
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 
+    }
+
+    @Override
+    public HashMap<UUID, List<String>> getAreasRented(UUID uniqueId) {
+        FileConfiguration yaml = com_yamls.get(uniqueId).get("area");
+        HashMap<UUID, List<String>> map = new HashMap<>();
+        ConfigurationSection section = yaml.getConfigurationSection(uniqueId + ".rent-area");
+        if (section != null) {
+            for (String uuid_string : section.getKeys(false)) {
+                UUID originalCompanyUniqueId = UUID.fromString(uuid_string);
+                List<String> list = new ArrayList<>(section.getConfigurationSection(uuid_string).getKeys(false));
+                map.put(originalCompanyUniqueId, list);
+            }
+        }
+        return map;
     }
 
     // area.yml - END

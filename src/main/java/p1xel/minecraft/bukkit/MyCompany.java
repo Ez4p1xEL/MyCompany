@@ -30,6 +30,7 @@ public class MyCompany extends JavaPlugin {
     private static HireRequestManager request;
     private static Economy econ = null;
     private static TaxCollector tax;
+    private AreaProtector areaProtector;
 
     public static MyCompany getInstance() { return instance;}
     public static CacheManager getCacheManager() { return cache;}
@@ -76,6 +77,12 @@ public class MyCompany extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new OrderListener(), this);
         getServer().getPluginManager().registerEvents(new AreaSelection(), this);
+
+        if (Config.getBool("company-area.protection.enable")) {
+            areaProtector = new AreaProtector();
+            getServer().getPluginManager().registerEvents(areaProtector, this);
+            areaProtector.init();
+        }
 
         if (!setupEconomy()) {
             getLogger().warning("Vault is not found! Disabling MyCompany...");
@@ -171,6 +178,9 @@ public class MyCompany extends JavaPlugin {
         econ = rsp.getProvider();
         return econ != null;
     }
+
+    public AreaProtector getAreaProtector() { return areaProtector; }
+    public void setAreaProtector(AreaProtector areaProtector) { this.areaProtector = areaProtector; }
 
 
 }

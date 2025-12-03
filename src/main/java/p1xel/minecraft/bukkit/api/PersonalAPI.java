@@ -6,7 +6,8 @@ import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.*;
 import p1xel.minecraft.bukkit.managers.areas.AreaSelectionMode;
-import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
+import p1xel.minecraft.bukkit.managers.areas.AreaTradeMarket;
+import p1xel.minecraft.bukkit.managers.areas.CompanyArea;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.Logger;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
@@ -27,6 +28,7 @@ public class PersonalAPI {
     private final ShopManager shopManager = MyCompany.getCacheManager().getShopManager();
     private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
     private final AreaManager areaManager = MyCompany.getCacheManager().getAreaManager();
+    private final AreaTradeMarket areaMarket = areaManager.getMarketManager();
 
     public PersonalAPI(UUID playerUniqueId) {
         this.playerUniqueId = playerUniqueId;
@@ -275,7 +277,7 @@ public class PersonalAPI {
         }
 
         companyManager.setSalary(companyUniqueId, position, salary);
-        player.sendMessage(Locale.getMessage("salary-set").replaceAll("%position%", position).replaceAll("%salary%", String.valueOf(salary)));
+        player.sendMessage(Locale.getMessage("salary-set").replaceAll("%position%", position).replaceAll("%money%", String.valueOf(salary)));
         return true;
     }
 
@@ -321,8 +323,14 @@ public class PersonalAPI {
             return true;
         }
 
-        // Create area here
+        // Check overlaps
         CompanyArea companyArea = new CompanyArea(companyUniqueId, name, world, minX, maxX, minY, maxY, minZ, maxZ, firstBlock, secondBlock);
+        if (!areaManager.getOverlappingAreas(companyArea).isEmpty()) {
+            player.sendMessage(Locale.getMessage("area-overlap"));
+            return true;
+        }
+
+        // Create area here
         areaManager.createArea(companyUniqueId, companyArea, player, firstBlock, secondBlock);
         player.sendMessage(Locale.getMessage("area-created").replaceAll("%name%", name));
         return true;
@@ -378,6 +386,16 @@ public class PersonalAPI {
 
     }
 
+    public boolean deleteArea(UUID areaCompanyUniqueId, String name) {
+        if (!areaCompanyUniqueId.equals(companyUniqueId)) {
+            player.sendMessage(Locale.getMessage("cant-delete-other-area"));
+            return true;
+        }
+
+        return deleteArea(name);
+
+    }
+
     public boolean setAreaLocation(String area, Location location) {
         areaManager.setLocation(companyUniqueId, area, location);
         player.sendMessage(Locale.getMessage("area-setloc-success"));
@@ -412,6 +430,127 @@ public class PersonalAPI {
 
         player.sendMessage(Locale.getMessage("area-tp-success").replaceAll("%name%", area).replaceAll("%company%", companyManager.getName(targetCompanyUniqueId)));
         player.teleportAsync(location);
+        return true;
+
+    }
+
+    public boolean pushAreaToRentMarket(String areaName, double rentPrice) {
+        if (areaManager.isAreaRented(companyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("rented-already").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        if (areaMarket.onMarket(companyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("on-market-already").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        if (areaName.startsWith("rent#")) {
+            player.sendMessage(Locale.getMessage("not-your-area"));
+            return true;
+        }
+
+        areaMarket.createRentArea(companyUniqueId, areaName, rentPrice);
+        areaMarket.setOnMarket(companyUniqueId, areaName, true);
+        areaMarket.setTradeMode(companyUniqueId, areaName, "rent");
+        //areaMarket.addAreaIntoRentMarket(companyUniqueId, areaName);
+        return true;
+
+    }
+
+    public boolean rentArea(UUID areaCompanyUniqueId, String areaName) {
+
+        if (!areaMarket.onMarket(areaCompanyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("area-not-on-market").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        if (areaCompanyUniqueId.equals(companyUniqueId)) {
+            player.sendMessage(Locale.getMessage("cant-rent-your-own-area"));
+            return true;
+        }
+
+        if (areaManager.isAreaRented(areaCompanyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("rented-already").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        double balance = companyManager.getCash(companyUniqueId);
+        double price = areaMarket.getRentPrice(areaCompanyUniqueId, areaName);
+        if (balance < price) {
+            player.sendMessage(Locale.getMessage("company-not-enough-money").replaceAll("%money%", String.valueOf(balance)));
+            return true;
+        }
+
+        areaManager.getMarketManager().rentArea(areaCompanyUniqueId, companyUniqueId, areaName);
+        int days = Config.getInt("company-area.trade-market.rent.default-rent-time");
+        companyManager.takeMoney(companyUniqueId, price);
+        // This will not through event
+        companyManager.giveMoney(areaCompanyUniqueId, price);
+        player.sendMessage(Locale.getMessage("area-rent-success").replaceAll("%area%", areaName).replaceAll("%company%", companyManager.getName(areaCompanyUniqueId)).replaceAll("%time%", String.valueOf(days)).replaceAll("%money%", String.valueOf(price)));
+        return true;
+    }
+
+    public boolean pushAreaToSaleMarket(String areaName, double sellPrice) {
+        if (areaManager.isAreaRented(companyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("rented-already").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        if (areaMarket.onMarket(companyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("on-market-already").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        if (areaName.startsWith("rent#")) {
+            player.sendMessage(Locale.getMessage("not-your-area"));
+            return true;
+        }
+
+        areaMarket.setOnMarket(companyUniqueId, areaName, true);
+        areaMarket.createTradableArea(companyUniqueId, areaName, sellPrice);
+        areaMarket.setTradeMode(companyUniqueId, areaName, "sell");
+        //areaMarket.addAreaIntoMarket(companyUniqueId, areaName);
+        return true;
+
+    }
+
+    public boolean buyArea(UUID areaCompanyUniqueId, String areaName) {
+
+        if (!areaMarket.onMarket(areaCompanyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("area-not-on-market").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        if (areaCompanyUniqueId.equals(companyUniqueId)) {
+            player.sendMessage(Locale.getMessage("cant-buy-your-own-area"));
+            return true;
+        }
+
+        if (areaManager.isAreaRented(areaCompanyUniqueId, areaName)) {
+            player.sendMessage(Locale.getMessage("rented-already").replaceAll("%area%", areaName));
+            return true;
+        }
+
+        double balance = companyManager.getCash(companyUniqueId);
+        double price = areaMarket.getSellPrice(areaCompanyUniqueId, areaName);
+        if (balance < price) {
+            player.sendMessage(Locale.getMessage("company-not-enough-money").replaceAll("%money%", String.valueOf(balance)));
+            return true;
+        }
+
+        areaManager.getMarketManager().sellArea(areaCompanyUniqueId, companyUniqueId, areaName);
+        companyManager.takeMoney(companyUniqueId, price);
+        // This will not through event
+        companyManager.giveMoney(areaCompanyUniqueId, price);
+        player.sendMessage(Locale.getMessage("area-buy-success").replaceAll("%area%", areaName).replaceAll("%company%", companyManager.getName(areaCompanyUniqueId)).replaceAll("%money%", String.valueOf(price)));
+        return true;
+    }
+
+    public boolean removeAreaFromMarket(UUID areaCompanyUniqueId, String areaName) {
+
+        areaMarket.removeFromMarket(areaCompanyUniqueId, areaName);
+        player.sendMessage(Locale.getMessage("market-remove-success").replaceAll("%area%", areaName));
         return true;
 
     }

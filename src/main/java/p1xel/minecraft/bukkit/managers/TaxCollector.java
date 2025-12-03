@@ -67,6 +67,11 @@ public class TaxCollector {
 
                 // Priority: Income Tax > Property Tax > Management Fee
 
+                // Cancel if company has no money
+                if (manager.getCash(uniqueId) <= 0) {
+                    return;
+                }
+
                 // Income Tax
                 double balance = manager.getCash(uniqueId);
                 double dailyIncome = manager.getDailyIncome(uniqueId);
@@ -114,8 +119,29 @@ public class TaxCollector {
                     return;
                 }
 
+                // Cancel if company has no money
                 if (manager.getCash(uniqueId) <= 0) {
-                    continue;
+                    for (String position : manager.getPositions(uniqueId)) {
+                        // employer
+                        if (position.equals("employer")) {
+                            Player employer = Bukkit.getPlayer(manager.getEmployer(uniqueId));
+                            if (employer != null) {
+                                employer.sendMessage(Locale.getMessage("salary-cancel-due-to-break"));
+                                employer.playSound(employer, Sound.ENTITY_VILLAGER_NO, 3f, 3f);
+                            }
+                            continue;
+                        }
+                        // employee
+                        for (UUID employeeUniqueId : manager.getEmployeeList(uniqueId, position)) {
+                            Player employee = Bukkit.getPlayer(employeeUniqueId);
+                            if (employee != null) {
+                                employee.sendMessage(Locale.getMessage("salary-cancel-due-to-break"));
+                                employee.playSound(employee, Sound.ENTITY_VILLAGER_NO, 3f, 3f);
+                            }
+                            continue;
+                        }
+                    }
+                    return;
                 }
 
                 String companyName = manager.getName(uniqueId);

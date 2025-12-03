@@ -109,6 +109,77 @@ public class GUIListener implements Listener {
             return;
         }
 
+        if (holder instanceof GUICompanyArea) {
+            ItemStack item = inventory.getItem(event.getSlot());
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            if (container.has(menu_id_key, PersistentDataType.STRING)) {
+                GUICompanyArea gui = (GUICompanyArea) holder;
+                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
+                    Player player = (Player) event.getWhoClicked();
+                    player.closeInventory();
+                }
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIAreaList) {
+            ItemStack item = inventory.getItem(event.getSlot());
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            if (container.has(menu_id_key, PersistentDataType.STRING)) {
+                GUIAreaList gui = (GUIAreaList) holder;
+                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING), event.getClick())) {
+                    Player player = (Player) event.getWhoClicked();
+                    player.closeInventory();
+                }
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIAreaTradeMarket) {
+            ItemStack item = inventory.getItem(event.getSlot());
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            if (container.has(menu_id_key, PersistentDataType.STRING)) {
+                GUIAreaTradeMarket gui = (GUIAreaTradeMarket) holder;
+                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
+                    Player player = (Player) event.getWhoClicked();
+                    player.closeInventory();
+                }
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIAreaRentMarket) {
+            ItemStack item = inventory.getItem(event.getSlot());
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            if (container.has(menu_id_key, PersistentDataType.STRING)) {
+                GUIAreaRentMarket gui = (GUIAreaRentMarket) holder;
+                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING), event.getClick())) {
+                    Player player = (Player) event.getWhoClicked();
+                    player.closeInventory();
+                }
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIAreaSaleMarket) {
+            ItemStack item = inventory.getItem(event.getSlot());
+            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+            if (container.has(menu_id_key, PersistentDataType.STRING)) {
+                GUIAreaSaleMarket gui = (GUIAreaSaleMarket) holder;
+                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING), event.getClick())) {
+                    Player player = (Player) event.getWhoClicked();
+                    player.closeInventory();
+                }
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+
 //        InventoryView view = event.getView();
 //        if (view instanceof AnvilView) {
 //            if (holder instanceof GUITextInput) {

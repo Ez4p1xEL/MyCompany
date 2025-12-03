@@ -133,6 +133,9 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
                 case "order":
                     slot = 26;
                     break;
+                case "area":
+                    slot = 35;
+                    break;
                 case "salary":
                     slot = 9;
                     break;
@@ -247,6 +250,12 @@ public class GUIMain extends GUIAbstract implements InventoryHolder {
 
         if (name.equalsIgnoreCase("order")) {
             Inventory newInv = new GUIDailyOrder(playerUniqueId, "daily_order",1).getInventory();
+            player.openInventory(newInv);
+            return true;
+        }
+
+        if (name.equalsIgnoreCase("area")) {
+            Inventory newInv = new GUICompanyArea(playerUniqueId).getInventory();
             player.openInventory(newInv);
             return true;
         }

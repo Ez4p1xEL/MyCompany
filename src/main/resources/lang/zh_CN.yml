@@ -30,6 +30,7 @@ commands:
   area-tp: '&e/myc area tp <公司ID> <领地> &7传送至领地'
   area-info: '&e/myc area info &7查看当前位置的私有领地信息'
   area-list: '&e/myc area list &7查看公司拥有的私有领地'
+  area-market: '&e/myc area market [buy/rent] &7查看公司领地交易市场'
   admin:
     money-give: '&e/myc money give <公司ID> <数量> &7给予金钱公司'
     money-take: '&e/myc money take <公司ID> <数量> &7从公司拿取金钱'
@@ -49,6 +50,7 @@ out-of-length: '&7[&6%prefix%&7] &c名称超出了长度上限, 它最多只能�
 not-enough-money: '&7[&6%prefix%&7] &c你没有足够的金钱, 你仍然需要 &e%money%&c!'
 wrong-argument: '&7[&6%prefix%&7] &c错误的参数'
 something-went-wrong: '&7[&6%prefix%&7] &c出现错误,请重新再试!'
+invalid-amount: '&7[&6%prefix%&7] &c错误数值'
 
 # Company
 found-success: '&7[&6%prefix%&7] &a你成功地成立了公司 &e%company%&a!'
@@ -98,6 +100,7 @@ money-take-success: '&7[&6%prefix%&7] &a你拿走了 &e%company% &a的金钱 &e$
 salary-received: '&7[&b%company%&7] &a收到薪资 &e$%money%&a.'
 salary-set: '&7[&b%prefix%&7] &e%position% &a的工资已设置为 &e$%money%'
 salary-invalid: '&7[&b%prefix%&7] &c错误的输入值'
+salary-cancel-due-to-break: '&7[&b%prefix%&7] &c由于贵公司已破产, 你没有收到任何薪资!'
 
 # Position label and Permission
 position-already-existed: '&7[&6%prefix%&7] &c职位 &e%position% &c已存在!'
@@ -148,7 +151,26 @@ area-loc-not-set: '&7[&6%prefix%&7] &c领地 &e%name% &c尚未设置传送点！
 area-tp-success: '&7[&6%prefix%&7] &a正在传送至公司 &b%company%&a 的领地 &e%name%&a...'
 area-list-empty: '&7[&6%prefix%&7] &c你的公司没有任何领地！'
 area-list-success: '&7[&6%prefix%7] &a领地列表：&e%list%'
+cant-delete-other-area: '&7[&6%prefix%&7] &c你不能刪除其他公司的領地!'
+area-overlap: '&7[&6%prefix%&7] &c附近已存在公司領地!'
+area-enter: '&a你進入了 &b%company% &a的領地 &e%area%'
+area-left: '&a你離開了 &b%company% &a的領地 &e%area%'
 
+# Company Area Trade Market
+on-market-already: '&7[&6%prefix%&7] &e%area% &c已存在市場中!'
+rented-already: '&7[&6%prefix%&7] &e%area% &c已被租借!'
+not-your-area: '&7[&6%prefix%&7] &c這不是貴公司的領地!'
+area-rent-success: '&7[&6%prefix%&7] &a你花費 &e$money% &a從 &b%company% &a租借了領地 &e%area% &e%time% &a天!'
+area-buy-success: '&7[&6%prefix%&7] &a你花費 &e$%money% &a從 &b%company% &a購買了領地 &e%area%&a!'
+area-rented: '&7[&6%prefix%&7] &a你的公司領地 &e%area% &a已被 &b%company% &a租借了 &e%time% &a天! 你的公司賺取了 &e$%money%&a!'
+area-bought: '&7[&6%prefix%&7] &a你的領地 &e%area% &a已被出售至 &b%company%! 你的公司賺取了 &e$%money%&a!'
+cant-rent-your-own-area: '&7[&6%prefix%&7] &c你不能租借你的領地'
+cant-buy-your-own-area: '&7[&6%prefix%&7] &c你不能購買你的領地'
+area-rent-expired-renter: '&7[&6%prefix%&7] &c向公司 &b%company% &c租借的公司領地 &e%area% 合同到期!'
+area-rent-expired: '&7[&6%prefix%&7] &c出租的公司領地 &e%area% &c合同已到期!'
+market-remove-success: '&7[&6%prefix%&7] &c你將 &e%area% &c從市場中移除!'
+company-not-enough-money: '&7[&6%prefix%&7] &c你的公司沒有足夠的金錢! 當前資產: &e$%money%&c.'
+area-not-on-market: '&7[&6%prefix%&7] &e%area% &c不在市場中!'
 
 # Broadcast
 broadcast:
@@ -581,6 +603,267 @@ menu:
           - ''
           - '&7点击切换'
           - ''
+  area-rent-market:
+    title: '公司领地租借市场'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&a公司领地'
+        lore:
+          - ''
+          - '&7点击领地查看资讯'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area%'
+        lore:
+          - ''
+          - '&7拥有者: &b%company%'
+          - ''
+          - '&7状态: &d出租中'
+          - '&7租界时间: &d1 天'
+          - '&7价格: &e%price%'
+          - ''
+          - '&7左键点击购买/下架'
+          - '&7右键点击传送至领地'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  area-sale-market:
+    title: '公司领地出售市场'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&a公司领地'
+        lore:
+          - ''
+          - '&7点击领地查看资讯'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area%'
+        lore:
+          - ''
+          - '&7拥有者: &b%company%'
+          - ''
+          - '&7状态: &d出售中'
+          - '&7价格: &e%price%'
+          - ''
+          - '&7左键点击购买/下架'
+          - '&7右键点击传送至领地'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  company-area:
+    title: '公司领地'
+    items:
+      create:
+        material: golden_hoe
+        display_name: '&a创建领地'
+        lore:
+          - ''
+          - '&7使用 &6&l区域选择工具'
+          - '&7选择指定区域的两个角落'
+          - '&7然后执行以下的指令或者点击此处'
+          - '&7/mycompany area create <名称>'
+          - '&7即可创建公司领地'
+          - ''
+      list:
+        material: item_frame
+        display_name: '&a查看公司拥有的领地'
+        lore:
+          - ''
+          - '&7查看当前公司所'
+          - '&7拥有的领地(包括租借领地)'
+          - ''
+          - '&7点击查看'
+          - ''
+      delete:
+        material: red_dye
+        display_name: '&a删除领地'
+        lore:
+          - ''
+          - '&7删除众多领地之中'
+          - '&7的其中一个领地'
+          - ''
+          - '&7点击删除'
+          - ''
+      rent:
+        material: gold_ingot
+        display_name: '&a出租领地'
+        lore:
+          - ''
+          - '&7将领地上架至'
+          - '&7公司领地租借市场'
+          - ''
+          - '&7点击出租'
+          - ''
+      sell:
+        material: diamond
+        display_name: '&a出售领地'
+        lore:
+          - ''
+          - '&7将领地出售'
+          - '&7将领地上架至市场'
+          - ''
+          - '&7点击出售'
+          - ''
+      market:
+        material: chest
+        display_name: '&a公司领地交易市场'
+        lore:
+          - ''
+          - '&7你可以购买或租借领地'
+          - '&7在这个庞大的公司领地交易市场'
+          - ''
+          - '&7点击查看'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  area-trade-market:
+    title: '公司领地交易市场'
+    items:
+      rent:
+        material: paper
+        display_name: '&a租借市场'
+        lore:
+          - ''
+          - '&7你可以将领地'
+          - '&7上架至该市场'
+          - ''
+          - '&7点击查看'
+          - ''
+      sell:
+        material: gold_ingot
+        display_name: '&a销售市场'
+        lore:
+          - ''
+          - '&7你可以将领地'
+          - '&7上架至该市场'
+          - ''
+          - '&7点击查看'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  area-list:
+    title: '公司领地列表'
+    actions:
+      list:
+        left: '左键点击传送'
+        right: '右键点击设置传送点'
+      delete:
+        left: '点击删除'
+        right: '#remove#'
+      rent:
+        left: '点击上架至租借市场'
+        right: '#remove#'
+      sell:
+        left: '点击上架至销售市场'
+        right: '#remove#'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&a公司领地'
+        lore:
+          - ''
+          - '&7点击领地查看资讯'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area% &b[公司拥有]'
+        lore:
+          - ''
+          - '&7世界: &f%world%'
+          - '&7首格方块: &f[%x1%,%y1%,%z1%]'
+          - '&7次格方块: &f[%x2%,%y2%,%z2%]'
+          - ''
+          - '&7%left_click%'
+          - '&7%right_click%'
+          - ''
+      area-rent:
+        material: paper
+        display_name: '&a%area% &d[公司租借]'
+        lore:
+          - ''
+          - '&7拥有者: &b%company%'
+          - '&7世界: &f%world%'
+          - '&7首格方块: &f[%x1%,%y1%,%z1%]'
+          - '&7次格方块: &f[%x2%,%y2%,%z2%]'
+          - ''
+          - '&7Expire Time: &d%end_time%'
+          - ''
+          - '&7%left_click%'
+          - '&7%right_click%'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
 
 position-permission:
   ALL: '所有权限'
@@ -591,6 +874,10 @@ position-permission:
   AREA_CREATE: '创建公司领地'
   AREA_DELETE: '删除公司领地'
   AREA_SETLOC: '设置公司领地的传送点'
+  AREA_MARKET_RENT: '上架领地至租界市场'
+  AREA_MARKET_SELL: '上架领地至销售市场'
+  AREA_RENT: '领地租借'
+  AREA_SELL: '领地购买'
 
 none: '无'
 unemployment: '无业游民'

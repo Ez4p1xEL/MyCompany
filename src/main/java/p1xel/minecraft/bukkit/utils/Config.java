@@ -2,7 +2,10 @@ package p1xel.minecraft.bukkit.utils;
 
 
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.HandlerList;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.listeners.AreaProtector;
 import p1xel.minecraft.bukkit.managers.areas.AreaSelectionMode;
 import p1xel.minecraft.bukkit.utils.storage.Locale;
 
@@ -24,7 +27,9 @@ public class Config {
 
     public static void reloadConfig() {
 
-        MyCompany.getInstance().reloadConfig();
+        MyCompany plugin = MyCompany.getInstance();
+
+        plugin.reloadConfig();
         //config = NoBuildPlus.getInstance().getConfig();
         MyCompany.getCacheManager().init();
         Locale.createLocaleFile();
@@ -32,6 +37,24 @@ public class Config {
         MyCompany.getTaxCollector().cancelTask();
         MyCompany.getTaxCollector().startTask();
         Logger.setEnabled(Config.getBool("debug"));
+
+        AreaProtector existed = plugin.getAreaProtector();
+        if (Config.getBool("company-area.protection.enable")) {
+            if (existed == null) {
+                AreaProtector areaProtector = new AreaProtector();
+                plugin.getServer().getPluginManager().registerEvents(areaProtector, plugin);
+                plugin.setAreaProtector(areaProtector);
+                areaProtector.init();
+                return;
+            }
+            return;
+        } else {
+            if (existed != null) {
+                HandlerList.unregisterAll(existed);
+                plugin.setAreaProtector(null);
+                return;
+            }
+        }
 
     }
 
@@ -53,5 +76,7 @@ public class Config {
         Configuration config = MyCompany.getInstance().getConfig();
         return config.getDouble("company-funds.cost-per-day." + tax +".phases." + phase + ".tax-rate", config.getDouble("company-funds.cost-per-day." + tax + ".default-tax-rate"));
     }
+
+    public static ConfigurationSection getConfigurationSection(String path) { return MyCompany.getInstance().getConfig().getConfigurationSection(path);}
 
 }

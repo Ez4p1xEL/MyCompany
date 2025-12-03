@@ -15,9 +15,7 @@ import p1xel.minecraft.bukkit.managers.BuildingManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.UserManager;
-import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
-import p1xel.minecraft.bukkit.managers.gui.GUIFound;
-import p1xel.minecraft.bukkit.managers.gui.GUIMain;
+import p1xel.minecraft.bukkit.managers.gui.*;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
 import p1xel.minecraft.bukkit.utils.storage.EmployeeOrders;
@@ -786,6 +784,53 @@ public class CommandListener implements CommandExecutor {
 
                 new PersonalAPI(playerUniqueId).teleportToCompany(location);
                 return true;
+
+            }
+
+        }
+
+        if (args.length >= 2 && args.length <= 3) {
+
+            if (args[0].equalsIgnoreCase("area")) {
+
+                if (args[1].equalsIgnoreCase("market")) {
+
+                    String mode = "";
+
+                    if (!(sender instanceof Player)) {
+                        sender.sendMessage(Locale.getMessage("must-be-player"));
+                        return true;
+                    }
+
+                    Player player = (Player) sender;
+                    UUID playerUniqueId = player.getUniqueId();
+                    UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+                    // Check if the sender has company
+                    if (companyUniqueId == null) {
+                        sender.sendMessage(Locale.getMessage("no-company"));
+                        return true;
+                    }
+
+                    if (args.length == 3) {
+                        mode = args[2];
+                    }
+
+
+                    switch (mode) {
+                        case "rent":
+                            player.openInventory(new GUIAreaRentMarket(playerUniqueId, "rent", 1).getInventory());
+                            break;
+                        case "buy":
+                            player.openInventory(new GUIAreaSaleMarket(playerUniqueId, "sell", 1).getInventory());
+                            break;
+                        default:
+                            player.openInventory(new GUIAreaTradeMarket(playerUniqueId).getInventory());
+                            break;
+                    }
+
+                    return true;
+
+                }
 
             }
 

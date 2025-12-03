@@ -2,10 +2,9 @@ package p1xel.minecraft.bukkit.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import p1xel.minecraft.bukkit.managers.buildings.CompanyArea;
+import org.bukkit.OfflinePlayer;
+import p1xel.minecraft.bukkit.managers.areas.AreaTradeMarket;
+import p1xel.minecraft.bukkit.managers.areas.CompanyArea;
 import p1xel.minecraft.bukkit.utils.storage.CompanyData;
 
 import java.util.*;
@@ -15,6 +14,7 @@ public class AreaManager {
     private CompanyData data;
     private HashMap<String, List<CompanyArea>> gridIndex = new HashMap<>();
     private static final int GRID_SIZE = 32;
+    private AreaTradeMarket atm;
     public AreaManager(CompanyData data) {
         this.data = data;
     }
@@ -36,7 +36,7 @@ public class AreaManager {
         return UUID.fromString((String) this.data.get(uniqueId, "area", "areas." + area + ".creator.uuid"));
     }
 
-    public void createArea(UUID uniqueId, CompanyArea companyArea, Player creator, Location firstBlock, Location secondBlock) {
+    public void createArea(UUID uniqueId, CompanyArea companyArea, OfflinePlayer creator, Location firstBlock, Location secondBlock) {
         this.data.createArea(uniqueId, companyArea, creator, firstBlock, secondBlock);
         buildGridIndex(companyArea);
     }
@@ -71,6 +71,13 @@ public class AreaManager {
         for (CompanyArea area : areas) {
             buildGridIndex(area);
         }
+
+        atm = new AreaTradeMarket();
+        atm.init();
+    }
+
+    public AreaTradeMarket getMarketManager() {
+        return atm;
     }
 
     public String getGridKey(Location loc) {
@@ -89,6 +96,43 @@ public class AreaManager {
             }
         }
         return null;
+    }
+
+    public List<CompanyArea> getOverlappingAreas(CompanyArea newArea) {
+        List<CompanyArea> overlaps = new ArrayList<>();
+
+        int minGridX = newArea.getMinX() / GRID_SIZE;
+        int maxGridX = newArea.getMaxX() / GRID_SIZE;
+        int minGridZ = newArea.getMinZ() / GRID_SIZE;
+        int maxGridZ = newArea.getMaxZ() / GRID_SIZE;
+
+        Set<CompanyArea> checked = new HashSet<>();
+
+        for (int gx = minGridX; gx <= maxGridX; gx++) {
+            for (int gz = minGridZ; gz <= maxGridZ; gz++) {
+                String key = newArea.getWorldName() + ":" + gx + ":" + gz;
+                List<CompanyArea> candidates = gridIndex.getOrDefault(key, Collections.emptyList());
+
+                for (CompanyArea existing : candidates) {
+                    if (checked.add(existing)) { // Avoid repeat
+                        if (isOverlap(newArea, existing)) {
+                            overlaps.add(existing);
+                        }
+                    }
+                }
+            }
+        }
+        return overlaps;
+    }
+
+    private boolean isOverlap(CompanyArea area1, CompanyArea area2) {
+        if (!area1.getWorldName().equals(area2.getWorldName())) {return false; }
+
+        boolean overlapX = area1.getMinX() <= area2.getMaxX() && area1.getMaxX() >= area2.getMinX();
+        boolean overlapY = area1.getMinY() <= area2.getMaxY() && area1.getMaxY() >= area2.getMinY();
+        boolean overlapZ = area1.getMinZ() <= area2.getMaxZ() && area1.getMaxZ() >= area2.getMinZ();
+
+        return overlapX && overlapY && overlapZ;
     }
 
     public void deleteArea(UUID uniqueId, CompanyArea area) {
@@ -155,11 +199,35 @@ public class AreaManager {
     }
 
     public Location getFirstBlockLocation(UUID uniqueId, String area) {
-        String world = (String) data.get(uniqueId, "area", ".areas." + area + ".info.first-block.world");
-        int x = (int) data.get(uniqueId, "area", ".areas." + area + ".info.first-block.x");
-        int y = (int) data.get(uniqueId, "area", ".areas." + area + ".info.first-block.y");
-        int z = (int) data.get(uniqueId, "area", ".areas." + area + ".info.first-block.z");
+        String world = (String) data.get(uniqueId, "area", "areas." + area + ".info.first-block.world");
+        int x = (int) data.get(uniqueId, "area", "areas." + area + ".info.first-block.x");
+        int y = (int) data.get(uniqueId, "area", "areas." + area + ".info.first-block.y");
+        int z = (int) data.get(uniqueId, "area", "areas." + area + ".info.first-block.z");
         return Bukkit.getWorld(world).getBlockAt(x,y,z).getLocation();
+    }
+
+    public Location getSecondBlockLocation(UUID uniqueId, String area) {
+        String world = (String) data.get(uniqueId, "area", "areas." + area + ".info.second-block.world");
+        int x = (int) data.get(uniqueId, "area", "areas." + area + ".info.second-block.x");
+        int y = (int) data.get(uniqueId, "area", "areas." + area + ".info.second-block.y");
+        int z = (int) data.get(uniqueId, "area", "areas." + area + ".info.second-block.z");
+        return Bukkit.getWorld(world).getBlockAt(x,y,z).getLocation();
+    }
+
+    public HashMap<UUID, List<String>> getAreasRented(UUID uniqueId) {
+        return this.data.getAreasRented(uniqueId);
+    }
+
+    public Long getRentEndTime(UUID uniqueId, UUID areaCompanyUniqueId, String area) {
+        return Long.parseLong(Objects.toString(data.get(uniqueId, "area", "rent-area." + areaCompanyUniqueId + ".rent#"+area + ".end-time")));
+    }
+
+    public boolean isAreaRented(UUID uniqueId, String area) {
+        return Long.parseLong(Objects.toString(data.get(uniqueId, "area", "areas." + area + ".trade.rent.end-time"))) != 0L;
+    }
+
+    public UUID getAreaRenter(UUID uniqueId, String area) {
+        return UUID.fromString((String) data.get(uniqueId, "area", "areas." + area + ".trade.rent.renter"));
     }
 
 

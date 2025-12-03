@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.managers.AreaManager;
 import p1xel.minecraft.bukkit.managers.CompanyManager;
 import p1xel.minecraft.bukkit.managers.UserManager;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
@@ -16,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class TabList implements TabCompleter {
 
     private final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
     private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
+    private final AreaManager areaManager = MyCompany.getCacheManager().getAreaManager();
     List<String> args0 = new ArrayList<>();
     List<String> perms = new ArrayList<>();
     List<String> bool = new ArrayList<>(Arrays.asList("true", "false"));
@@ -30,8 +31,14 @@ public class TabList implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (args0.isEmpty()) {
-            args0.add("?"); args0.add("found"); args0.add("disband"); args0.add("employ"); args0.add("fire"); args0.add("accept");
-            args0.add("resign"); args0.add("info"); args0.add("position"); args0.add("money"); args0.add("balance"); args0.add("open"); args0.add("reload");
+            args0.add("?"); args0.add("area"); args0.add("found"); args0.add("disband"); args0.add("employ"); args0.add("fire"); args0.add("accept");
+            args0.add("resign"); args0.add("info"); args0.add("position"); args0.add("money"); args0.add("balance"); args0.add("open"); args0.add("tp");
+            args0.add("setloc");
+            if (sender.hasPermission("mycompany.commands.admin")) {
+                args0.add("givetool");
+                args0.add("order");
+                args0.add("reload");
+            }
         }
 
         if (perms.isEmpty()) {
@@ -49,7 +56,7 @@ public class TabList implements TabCompleter {
         }
 
         if (args.length == 2) {
-            if (args[0].equalsIgnoreCase("employ") || args[0].equalsIgnoreCase("accept")) {
+            if (args[0].equalsIgnoreCase("employ") || args[0].equalsIgnoreCase("accept") || (args[0].equalsIgnoreCase("givetool") && sender.hasPermission("mycompany.commands.admin"))) {
                 List<String> result = new ArrayList<>();
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     String name = player.getName();
@@ -83,7 +90,7 @@ public class TabList implements TabCompleter {
                 return result;
             }
 
-            if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("balance")) {
+            if (args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("balance") || args[0].equalsIgnoreCase("tp")) {
                 List<String> result = new ArrayList<>();
                 for (int id : companyManager.getCIds().keySet()) {
                     result.add(String.valueOf(id));
@@ -92,7 +99,7 @@ public class TabList implements TabCompleter {
             }
 
             if (args[0].equalsIgnoreCase("position")) {
-                return Arrays.asList("set", "add", "remove", "setlabel", "permission");
+                return Arrays.asList("set", "add", "remove", "setlabel", "permission", "setsalary");
             }
 
             if (args[0].equalsIgnoreCase("money")) {
@@ -100,6 +107,10 @@ public class TabList implements TabCompleter {
                     return new ArrayList<>();
                 }
                 return Arrays.asList("give", "take");
+            }
+
+            if (args[0].equalsIgnoreCase("area")) {
+                return Arrays.asList("create", "delete", "setloc", "tp", "info", "list", "market");
             }
 
 
@@ -114,14 +125,12 @@ public class TabList implements TabCompleter {
                         UUID playerUniqueId = player.getUniqueId();
                         UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                         if (companyUniqueId != null) {
-                            if (userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
-                                for (String position : companyManager.getPositions(companyUniqueId)) {
-                                    for (UUID employeeUniqueId : companyManager.getEmployeeList(companyUniqueId, position)) {
-                                        OfflinePlayer off_player = Bukkit.getOfflinePlayer(employeeUniqueId);
-                                        String name = off_player.getName();
-                                        if (name.toLowerCase().startsWith(args[2].toLowerCase())) {
-                                            result.add(name);
-                                        }
+                            for (String position : companyManager.getPositions(companyUniqueId)) {
+                                for (UUID employeeUniqueId : companyManager.getEmployeeList(companyUniqueId, position)) {
+                                    OfflinePlayer off_player = Bukkit.getOfflinePlayer(employeeUniqueId);
+                                    String name = off_player.getName();
+                                    if (name.toLowerCase().startsWith(args[2].toLowerCase())) {
+                                        result.add(name);
                                     }
                                 }
                             }
@@ -130,18 +139,16 @@ public class TabList implements TabCompleter {
                     return result;
                 }
 
-                if (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("setlabel")) {
+                if (args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("setlabel") || args[1].equalsIgnoreCase("setsalary")) {
                     List<String> result = new ArrayList<>();
                     if (sender instanceof Player) {
                         Player player = (Player) sender;
                         UUID playerUniqueId = player.getUniqueId();
                         UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                         if (companyUniqueId != null) {
-                            if (userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
-                                for (String position : companyManager.getPositions(companyUniqueId)) {
-                                    if (position.toLowerCase().startsWith(args[2].toLowerCase())) {
-                                        result.add(position);
-                                    }
+                            for (String position : companyManager.getPositions(companyUniqueId)) {
+                                if (position.toLowerCase().startsWith(args[2].toLowerCase())) {
+                                    result.add(position);
                                 }
                             }
                         }
@@ -173,6 +180,40 @@ public class TabList implements TabCompleter {
                     return result;
                 }
             }
+
+            if (args[0].equalsIgnoreCase("area")) {
+
+                if (args[1].equalsIgnoreCase("tp")) {
+
+                    List<String> result = new ArrayList<>();
+                    for (int id : companyManager.getCIds().keySet()) {
+                        result.add(String.valueOf(id));
+                    }
+                    return result;
+
+                }
+
+                if (args[1].equalsIgnoreCase("create")) {
+                    return new ArrayList<>();
+                }
+
+                if (args[1].equalsIgnoreCase("delete")) {
+                    List<String> result = new ArrayList<>();
+                    if (sender instanceof Player player) {
+                        UUID playerUniqueId = player.getUniqueId();
+                        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
+                        if (companyUniqueId != null) {
+                            result.addAll(areaManager.getAreas(companyUniqueId));
+                        }
+                    }
+                    return result;
+                }
+
+                if (args[1].equalsIgnoreCase("market")) {
+                    return Arrays.asList("", "buy", "rent");
+                }
+
+            }
         }
 
         if (args.length == 4) {
@@ -184,11 +225,9 @@ public class TabList implements TabCompleter {
                         UUID playerUniqueId = player.getUniqueId();
                         UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                         if (companyUniqueId != null) {
-                            if (userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
-                                for (String position : companyManager.getPositions(companyUniqueId)) {
-                                    if (position.toLowerCase().startsWith(args[2].toLowerCase())) {
-                                        result.add(position);
-                                    }
+                            for (String position : companyManager.getPositions(companyUniqueId)) {
+                                if (position.toLowerCase().startsWith(args[2].toLowerCase())) {
+                                    result.add(position);
                                 }
                             }
                         }
@@ -205,11 +244,9 @@ public class TabList implements TabCompleter {
                             UUID playerUniqueId = player.getUniqueId();
                             UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                             if (companyUniqueId != null) {
-                                if (userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
-                                    for (String position : companyManager.getPositions(companyUniqueId)) {
-                                        if (position.toLowerCase().startsWith(args[3].toLowerCase())) {
-                                            result.add(position);
-                                        }
+                                for (String position : companyManager.getPositions(companyUniqueId)) {
+                                    if (position.toLowerCase().startsWith(args[3].toLowerCase())) {
+                                        result.add(position);
                                     }
                                 }
                             }
@@ -218,6 +255,31 @@ public class TabList implements TabCompleter {
 
 
                     }
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("area")) {
+
+                if (args[1].equalsIgnoreCase("tp")) {
+                    List<String> result = new ArrayList<>();
+                    int cid;
+                    try {
+                        cid = Integer.parseInt(args[2]);
+                    } catch (NumberFormatException e) {
+                        return result;
+                    }
+                    UUID companyUniqueId = companyManager.getUUIDFromId(cid);
+                    if (companyUniqueId != null) {
+                        result.addAll(areaManager.getAreas(companyUniqueId));
+                    }
+                    return result;
+                }
+
+            }
+
+            if (args[0].equalsIgnoreCase("position")) {
+                if (args[1].equalsIgnoreCase("setsalary")) {
+                    return new ArrayList<>();
                 }
             }
 
@@ -239,11 +301,9 @@ public class TabList implements TabCompleter {
                             UUID playerUniqueId = player.getUniqueId();
                             UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
                             if (companyUniqueId != null) {
-                                if (userManager.getPosition(playerUniqueId).equalsIgnoreCase("employer")) {
-                                    for (String permission : Permission.getAllInString()) {
-                                        if (permission.toLowerCase().startsWith(args[4].toLowerCase())) {
-                                            result.add(permission);
-                                        }
+                                for (String permission : Permission.getAllInString()) {
+                                    if (permission.toLowerCase().startsWith(args[4].toLowerCase())) {
+                                        result.add(permission);
                                     }
                                 }
                             }

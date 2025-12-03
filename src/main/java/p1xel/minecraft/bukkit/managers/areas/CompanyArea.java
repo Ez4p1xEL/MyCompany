@@ -1,8 +1,7 @@
-package p1xel.minecraft.bukkit.managers.buildings;
+package p1xel.minecraft.bukkit.managers.areas;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.AreaManager;
 import p1xel.minecraft.bukkit.managers.CacheManager;
@@ -54,6 +53,15 @@ public class CompanyArea {
         minZ = areaManager.getLocationPos(companyUniqueId, area, "minZ");
         maxZ = areaManager.getLocationPos(companyUniqueId, area, "maxZ");
         first = areaManager.getFirstBlockLocation(companyUniqueId, area);
+        second = areaManager.getSecondBlockLocation(companyUniqueId, area);
+    }
+
+    // Only for checking!!!
+    public CompanyArea(UUID companyUniqueId, String areaName, Location firstBlock, Location secondBlock) {
+        this.companyUniqueId = companyUniqueId;
+        this.area = areaName;
+        this.first = firstBlock;
+        this.second = secondBlock;
     }
 
     public boolean isLocInArea(Location location) {
@@ -100,5 +108,6 @@ public class CompanyArea {
     public int getMinZ() { return minZ;}
     public int getMaxZ() { return maxZ;}
     public Location getFirst() { return first; }
+    public Location getSecond() { return second; }
 
 }

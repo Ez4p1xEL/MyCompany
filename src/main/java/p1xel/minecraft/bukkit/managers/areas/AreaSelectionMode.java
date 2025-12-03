@@ -7,7 +7,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.utils.Config;
-import p1xel.minecraft.bukkit.utils.storage.Locale;
 
 import java.util.HashMap;
 import java.util.List;

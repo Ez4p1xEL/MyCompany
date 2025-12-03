@@ -5,23 +5,24 @@ commands:
   top-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
   page: '&e/myc ? %page% &a第 %page% 頁'
   space-1: '&f'
-  open: '&e/myc open &7打开公司選單'
-  found: '&e/myc found <名稱> &7成立一間公司 (請用_代替空格)'
+  open: '&e/myc open &7打開公司主選單'
+  found: '&e/myc found <名稱> &7成立一間公司 (用_代替空格)'
   disband: '&e/myc disband &7解散你的公司'
-  employ: '&e/myc employ <玩家> &7發送合約給玩家'
-  fire: '&e/myc fire <員工> &7解雇員工'
-  accept: '&e/myc accept <玩家> &7接受合約'
+  employ: '&e/myc employ <玩家> &7發送合同給玩家'
+  fire: '&e/myc fire <員工> &7開除員工'
+  accept: '&e/myc accept <玩家> &7接受合同'
   resign: '&e/myc resign &7辭職'
   info: '&e/myc info [公司ID] &7查看公司資訊'
   balance: '&e/myc balance [公司ID] &7查看公司財產'
-  position-set: '&e/myc position set <員工> <職位> &7設定員工職位'
-  position-add: '&e/myc position add <職位> [自訂名稱] &7新增職位'
+  position-set: '&e/myc position set <員工> <職位> &7設置員工的職位'
+  position-add: '&e/myc position add <職位> [自定義名稱] &7新增職位'
   position-remove: '&e/myc position remove <職位> &7移除職位'
-  position-label-set: '&e/myc position setlabel <職位> <自訂名稱> &7設定職位的自訂名稱 (請用_代替空格)'
-  position-permission-add: '&e/myc position permission add <職位> <權限> &7新增職位權限'
-  position-permission-remove: '&e/myc position permission remove <職位> <權限> &7移除職位權限'
+  position-label-set: '&e/myc position setlabel <職位> <自定義名稱> &7設置職位的自定義名稱 (用_代替空格)'
+  position-permission-add: '&e/myc position permission add <職位> <權限> &7為職位新增權限'
+  position-permission-remove: '&e/myc position permission remove <職位> <權限> &7為職位移除權限'
   position-permission-list: '&e/myc position permission list [職位] &7查看職位權限'
-  setloc: '&e/myc setloc &7設定公司的傳送點'
+  position-salary-set: '&e/myc position setsalary <職位> <金額> &7設置職位的工資'
+  setloc: '&e/myc setloc &7設置公司的傳送點'
   tp: '&e/myc tp [公司ID] &7傳送至公司的傳送點'
   area-create: '&e/myc area create <領地> &7創建私有領地'
   area-delete: '&e/myc area delete <領地> &7刪除私有領地'
@@ -29,25 +30,27 @@ commands:
   area-tp: '&e/myc area tp <公司ID> <領地> &7傳送至領地'
   area-info: '&e/myc area info &7查看當前位置的私有領地資訊'
   area-list: '&e/myc area list &7查看公司擁有的私有領地'
+  area-market: '&e/myc area market [buy/rent] &7查看公司領地交易市場'
   admin:
-    money-give: '&e/myc money give <公司ID> <金額> &7給予公司資金'
-    money-take: '&e/myc money take <公司ID> <金額> &7從公司提取資金'
-    order-give: '&e/myc order forcegive <玩家> <訂單> &7强制玩家接受訂單单'
+    money-give: '&e/myc money give <公司ID> <數量> &7給予金錢公司'
+    money-take: '&e/myc money take <公司ID> <數量> &7從公司拿取金錢'
+    order-give: '&e/myc order forcegive <玩家> <訂單> &7強制玩家接受訂單'
     givetool: '&e/myc givetool <玩家> &7給予玩家圈地工具'
-    reload: '&e/myc reload &7重新載入設定檔與快取'
+    reload: '&e/myc reload &7重載配置檔案及快取'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
 
 # Admin Commands
-reload-success: '&7[&6%prefix%&7] &a設定檔重新載入成功!'
+reload-success: '&7[&6%prefix%&7] &a配置檔案重載成功!'
 
 # Homeless
-must-be-player: '&7[&6%prefix%&7] &c你必須是玩家才能執行此操作!'
-no-perm: '&7[&6%prefix%&7] &c你沒有權限執行此操作!'
-out-of-length: '&7[&6%prefix%&7] &c名稱超過長度限制，最多只能為 &e%length% 個字元'
-not-enough-money: '&7[&6%prefix%&7] &c你的資金不足，還需要 &e%money%&c!'
-wrong-argument: '&7[&6%prefix%&7] &c參數錯誤'
-something-went-wrong: '&7[&6%prefix%&7] &c出現錯誤，請重新再試!'
+must-be-player: '&7[&6%prefix%&7] &c你必須是名玩家才能這麼做!'
+no-perm: '&7[&6%prefix%&7] &c你沒有權限這麼做!'
+out-of-length: '&7[&6%prefix%&7] &c名稱超出了長度上限, 它最多只能是 &e%length%'
+not-enough-money: '&7[&6%prefix%&7] &c你沒有足夠的金錢, 你仍然需要 &e%money%&c!'
+wrong-argument: '&7[&6%prefix%&7] &c錯誤的參數'
+something-went-wrong: '&7[&6%prefix%&7] &c出現錯誤,請重新再試!'
+invalid-amount: '&7[&6%prefix%&7] &c錯誤數值'
 
 # Company
 found-success: '&7[&6%prefix%&7] &a你已成功成立公司 &e%company%&a!'
@@ -68,7 +71,8 @@ resign-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a辭職'
 resigned: '&7[&6%prefix%&7] &c你的員工 &e%player% &c已辭職'
 disband-instead: '&7[&6%prefix%&7] &c請使用 /myc disband 指令來解散公司'
 contract-send: '&7[&6%prefix%&7] &a你已向 &e%player% &a發送合約，對方有 &e%second% &a秒可接受'
-contract-received: '&7[&6%prefix%&7] &a你收到來自 &e%player% 於 &e%company% &a的合約，請於 %second% 秒內輸入 /myc accept &e%player% &a以接受'
+contract-received: '&7[&6%prefix%&7] &a你收到來自 &e%player% 於 &e%company% &a的合約，請於 %second%
+  秒內輸入 /myc accept &e%player% &a以接受'
 contract-accept-employer: '&7[&6%prefix%&7] &e%player% &a已接受你的合約'
 contract-accept-employee: '&7[&6%prefix%&7] &a你已成為 &e%company% &a的員工'
 contract-expire-employer: '&7[&6%prefix%&7] &c發送給 &e%player% &c的合約已逾時!'
@@ -97,6 +101,7 @@ money-take-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a提取金額 &e$
 salary-received: '&7[&b%company%&7] &a你已收到薪資 &e$%money%&a。'
 salary-set: '&7[&b%prefix%&7] &e%position% &a的薪資已設置為 &e$%money%'
 salary-invalid: '&7[&b%prefix%&7] &c錯誤的輸入值'
+salary-cancel-due-to-break: '&7[&b%prefix%&7] &c由於貴公司已破產, 你沒有收到薪資!'
 
 # Position label and Permission
 position-already-existed: '&7[&6%prefix%&7] &c職位 &e%position% &c已存在!'
@@ -136,7 +141,7 @@ area-created: '&7[&6%prefix%&7] &a領地 &e%name% &a已成功建立！'
 area-name-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c已存在！'
 area-name-not-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c似乎不存在！'
 selection-missing: '&7[&6%prefix%&7] &c你需要先使用選擇工具選定領地區域！'
-tool-item-null: '物品為空，請檢查配置檔。'
+tool-item-null: 物品為空，請檢查配置檔。
 givetool-target-success: '&7[&6%prefix%&7] &a你已獲得選擇工具物品。'
 first-block-selected: '&7[&6%prefix%&7] &a你已選擇第一個方塊，座標為 &e%x%&a,&e%y%&a,&e%z%&a。'
 second-block-selected: '&7[&6%prefix%&7] &a你已選擇第二個方塊，座標為 &e%x%&a,&e%y%&a,&e%z%&a。'
@@ -482,7 +487,7 @@ menu:
       - ''
       - '&7點擊移除'
   position-list:
-    title: '職位列表'
+    title: 職位列表
     items:
       company_info:
         material: nether_star
@@ -522,13 +527,13 @@ menu:
           - '&7點擊切換'
           - ''
   text-input:
-    title: '文字輸入'
+    title: 文字輸入
     items:
       first_item:
         material: paper
-        display_name: '請輸入文字 (cancel以取消)'
+        display_name: 請輸入文字 (cancel以取消)
   found:
-    title: '你不在任何一間公司中'
+    title: 你不在任何一間公司中
     items:
       found:
         material: chest
@@ -548,7 +553,7 @@ menu:
           - '&7你可以等待其他老闆的邀請'
           - ''
   orders:
-    title: '員工訂單'
+    title: 員工訂單
     items:
       orders_info:
         material: writable_book
@@ -592,37 +597,303 @@ menu:
           - ''
           - '&7點擊切換'
           - ''
+  area-rent-market:
+    title: '公司領地租借市場'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&a公司領地'
+        lore:
+          - ''
+          - '&7點擊領地查看資訊'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area%'
+        lore:
+          - ''
+          - '&7擁有者: &b%company%'
+          - ''
+          - '&7狀態: &d出租中'
+          - '&7租借時間: &d1 天'
+          - '&7價格: &e%price%'
+          - ''
+          - '&7左鍵點擊購買/下架'
+          - '&7右鍵點擊傳送至領地'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+  area-sale-market:
+    title: '公司領地出售市場'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&a公司領地'
+        lore:
+          - ''
+          - '&7點擊領地查看資訊'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area%'
+        lore:
+          - ''
+          - '&7擁有者: &b%company%'
+          - ''
+          - '&7狀態: &d出售中'
+          - '&7價格: &e%price%'
+          - ''
+          - '&7左鍵點擊購買/下架'
+          - '&7右鍵點擊傳送至領地'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+  company-area:
+    title: '公司領地'
+    items:
+      create:
+        material: golden_hoe
+        display_name: '&a創建領地'
+        lore:
+          - ''
+          - '&7使用 &6&l區域選擇工具'
+          - '&7選擇指定區域的兩個角落'
+          - '&7然後執行以下的指令或者點擊此處'
+          - '&7/mycompany area create <名稱>'
+          - '&7即可創建公司領地'
+          - ''
+      list:
+        material: item_frame
+        display_name: '&a查看公司擁有的領地'
+        lore:
+          - ''
+          - '&7查看當前公司所'
+          - '&7擁有的領地(包括租借領地)'
+          - ''
+          - '&7點擊查看'
+          - ''
+      delete:
+        material: red_dye
+        display_name: '&a刪除領地'
+        lore:
+          - ''
+          - '&7刪除眾多領地之中'
+          - '&7的其中一個領地'
+          - ''
+          - '&7點擊刪除'
+          - ''
+      rent:
+        material: gold_ingot
+        display_name: '&a出租領地'
+        lore:
+          - ''
+          - '&7將領地上架至'
+          - '&7公司領地租借市場'
+          - ''
+          - '&7點擊出租'
+          - ''
+      sell:
+        material: diamond
+        display_name: '&a出售領地'
+        lore:
+          - ''
+          - '&7將領地出售'
+          - '&7將領地上架至市場'
+          - ''
+          - '&7點擊出售'
+          - ''
+      market:
+        material: chest
+        display_name: '&a公司領地交易市場'
+        lore:
+          - ''
+          - '&7你可以購買或租借領地'
+          - '&7在這個龐大的公司領地交易市場'
+          - ''
+          - '&7點擊查看'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+  area-trade-market:
+    title: '公司領地交易市場'
+    items:
+      rent:
+        material: paper
+        display_name: '&a租借市場'
+        lore:
+          - ''
+          - '&7你可以將領地'
+          - '&7上架至該市場'
+          - ''
+          - '&7點擊查看'
+          - ''
+      sell:
+        material: gold_ingot
+        display_name: '&a銷售市場'
+        lore:
+          - ''
+          - '&7你可以將領地'
+          - '&7上架至該市場'
+          - ''
+          - '&7點擊查看'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+  area-list:
+    title: '公司領地列表'
+    actions:
+      list:
+        left: '左鍵點擊傳送'
+        right: '右鍵點擊設置傳送點'
+      delete:
+        left: '點擊刪除'
+        right: '#remove#'
+      rent:
+        left: '點擊上架至租借市場'
+        right: '#remove#'
+      sell:
+        left: '點擊上架至銷售市場'
+        right: '#remove#'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&a公司領地'
+        lore:
+          - ''
+          - '&7點擊領地查看資訊'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area% &b[公司擁有]'
+        lore:
+          - ''
+          - '&7世界: &f%world%'
+          - '&7首格方塊: &f[%x1%,%y1%,%z1%]'
+          - '&7次格方塊: &f[%x2%,%y2%,%z2%]'
+          - ''
+          - '&7%left_click%'
+          - '&7%right_click%'
+          - ''
+      area-rent:
+        material: paper
+        display_name: '&a%area% &d[公司租借]'
+        lore:
+          - ''
+          - '&7擁有者: &b%company%'
+          - '&7世界: &f%world%'
+          - '&7首格方塊: &f[%x1%,%y1%,%z1%]'
+          - '&7次格方塊: &f[%x2%,%y2%,%z2%]'
+          - ''
+          - '&7到期時間: &d%end_time%'
+          - ''
+          - '&7%left_click%'
+          - '&7%right_click%'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&a下一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&a上一頁'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&a返回主選單'
+        lore:
+          - ''
+          - '&7點擊切換'
+          - ''
 
 
 position-permission:
-  ALL: '所有權限'
-  EMPLOY: '聘用'
-  FIRE: '解雇'
-  CHESTSHOP_CREATE: '建立箱子商店'
-  CHESTSHOP_DELETE: '刪除箱子商店'
-  AREA_CREATE: '創建公司領地'
-  AREA_DELETE: '刪除公司領地'
-  AREA_SETLOC: '設置公司領地的傳送點'
+  ALL: 所有權限
+  EMPLOY: 聘用
+  FIRE: 解雇
+  CHESTSHOP_CREATE: 建立箱子商店
+  CHESTSHOP_DELETE: 刪除箱子商店
+  AREA_CREATE: 創建公司領地
+  AREA_DELETE: 刪除公司領地
+  AREA_SETLOC: 設置公司領地的傳送點
+  AREA_MARKET_RENT: 上架領地至租借市場
+  AREA_MARKET_SELL: 上架領地至銷售市場
+  AREA_RENT: 領地租借
+  AREA_SELL: 領地購買
 
-none: '無'
-unemployment: '待業中'
-yourself: '你'
-true: '是'
-false: '否'
+none: 無
+unemployment: 待業中
+yourself: 你
+'true': 是
+'false': 否
 
 quest-progress: '%action_description% %target% - %progress_value%/%target_value%'
 order-finished: '&a訂單已完成'
 order-reward: '%reward%'
 rewards:
   item: '%item% x%amount%'
-  company_income: '公司收入 +%income%'
-  money: '金錢 %money%'
-  experience: '經驗 %exp%'
+  company_income: 公司收入 +%income%
+  money: 金錢 %money%
+  experience: 經驗 %exp%
 action-description:
-  break_block: '破壞方塊'
-  place_block: '放置方塊'
+  break_block: 破壞方塊
+  place_block: 放置方塊
 
 check-update:
   invalid: '無法檢查更新: '
-  latest: '目前已是最新版本'
-  outdate: '有可用的新版本更新'
+  latest: 目前已是最新版本
+  outdate: 有可用的新版本更新
+

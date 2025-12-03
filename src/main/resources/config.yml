@@ -48,6 +48,7 @@ company-settings:
     enable: true
     # If there are multiple supporting plugins enabled,
     # MyCompany would select the first one.
+    # If no plugins are selected, MyCompany would use the built-in CompanyArea
     supported-plugins:
       Residence: false
       Dominion: false
@@ -151,6 +152,23 @@ company-area:
       maxY: 128
       minZ: 16
       maxZ: 128
+  trade-market:
+    rent:
+      # Default rent time
+      # Day(s)
+      default-rent-time: 1
+  # Protection for every company area
+  # TRUE = Protect
+  # FALSE = No Protect
+  protection:
+    enable: true
+    module:
+      destroy: true
+      place: true
+      mob-damage: true
+      pvp: true
+      container: true
+    bypass-permission: 'mycompany.area.protection.bypass'
 
 backup-creator:
   # How many minutes should the plugin to start creating backup after starting the server.

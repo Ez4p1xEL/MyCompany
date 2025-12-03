@@ -30,11 +30,12 @@ commands:
   area-tp: '&e/myc area tp <CompanyId> <area> &7Teleport to the area.'
   area-info: '&e/myc area info &7View the company area in the current location.'
   area-list: '&e/myc area list &7View the areas of the company.'
+  area-market: '&e/myc area market [buy/rent] &7View the market of company areas.'
   admin:
     money-give: '&e/myc money give <CompanyId> <amount> &7Give money to the company.'
     money-take: '&e/myc money take <CompanyId> <amount> &7Take money from the company.'
     order-give: '&e/myc order forcegive <player> <order> &7Forcing the player to accept the order.'
-    givetool: '&e/myc givetool <player> &7Give selection tool to the player.'
+    givetool: '&e/myc givetool <player> &7Give area selection tool to the player.'
     reload: '&e/myc reload &7Reload the configuration and cache.'
   space-2: '&f'
   bottom-bar: '&e&m================&8&l[ &6&lMyCompany &8&l]&e&m================'
@@ -49,6 +50,7 @@ out-of-length: '&7[&6%prefix%&7] &cThe name is out of length. It Should be the m
 not-enough-money: '&7[&6%prefix%&7] &cYou do not have enough money. You need total &e%money%&c!'
 wrong-argument: '&7[&6%prefix%&7] &cIncorrect arguments.'
 something-went-wrong: '&7[&6%prefix%&7] &cSomething went wrong, please try again!'
+invalid-amount: '&7[&6%prefix%&7] &cInvalid amount.'
 
 # Company
 found-success: '&7[&6%prefix%&7] &aYou successfully found a new company &e%company%&a!'
@@ -98,6 +100,7 @@ money-take-success: '&7[&6%prefix%&7] &aYou take &e$%money% &afrom &e%company%&a
 salary-received: '&7[&b%company%&7] &aYou received the salary &e$%money%&a.'
 salary-set: '&7[&b%prefix%&7] &aSalary of &e%position% &ahas been set to &e$%money%&a.'
 salary-invalid: '&7[&b%prefix%&7] &cInvalid input amount.'
+salary-cancel-due-to-break: '&7[&b%prefix%&7] &cYou don''t receive any salary due to bankrupt of your company!'
 
 # Position label and Permission
 position-already-existed: '&7[&6%prefix%&7] &cPosition id &e%position% &cis already existed!'
@@ -148,6 +151,27 @@ area-loc-not-set: '&7[&6%prefix%&7] &cThe location of area &e%name% &chas not be
 area-tp-success: '&7[&6%prefix%&7] &aTeleporting to area &e%name% &aof company &b%company%&a...'
 area-list-empty: '&7[&6%prefix%&7] &cYour company does not have any area!'
 area-list-success: '&7[&6%prefix%7] &aArea list: &e%list%'
+cant-delete-other-area: '&7[&6%prefix%&7] &cYou cannot delete an area that is not yours!'
+area-overlap: '&7[&6%prefix%&7] &cThere is already an area existed nearby!'
+area-enter: '&aYou entered &e%area% &aof &b%company%&a.'
+area-left: '&aYou left &e%area% &aof &b%company%&a.'
+area-protected: '&7[&b%company%&7] &cNo permission to access the area!'
+
+# Company Area Trade Market
+on-market-already: '&7[&6%prefix%&7] &e%area% &cis already on market!'
+rented-already: '&7[&6%prefix%&7] &e%area% &cis already being rented!'
+not-your-area: '&7[&6%prefix%&7] &cThis is not your area!'
+area-rent-success: '&7[&6%prefix%&7] &aYou spent &e$money% &ato rent &e%area% &afrom &b%company% &afor &e%time% &aday(s)!'
+area-buy-success: '&7[&6%prefix%&7] &aYou spent &e$%money% &ato buy &e%area% &afrom &b%company%&a!'
+area-rented: '&7[&6%prefix%&7] &aYour area &e%area% &ahas been rented out for &b%company% &afor &e%time% &aday(s)! Your company earned &e$%money%&a!'
+area-bought: '&7[&6%prefix%&7] &aYour area &e%area% &ahas been sold to &b%company%! Your company earned &e$%money%&a!'
+cant-rent-your-own-area: '&7[&6%prefix%&7] &cYou can''t rent your own area.'
+cant-buy-your-own-area: '&7[&6%prefix%&7] &cYou can''t buy your own area.'
+area-rent-expired-renter: '&7[&6%prefix%&7] &cRented area &e%area% &cof &b%company% &cis expired!'
+area-rent-expired: '&7[&6%prefix%&7] &cArea rent out for &e%area% &cis expired!'
+market-remove-success: '&7[&6%prefix%&7] &cYou removed &e%area% &cfrom the market!'
+company-not-enough-money: '&7[&6%prefix%&7] &cYour company does not have enough money! Current balance: &e$%money%&c.'
+area-not-on-market: '&7[&6%prefix%&7] &e%area% &cis not on market!'
 
 # Broadcast
 broadcast:
@@ -406,6 +430,15 @@ menu:
           - '&7every day.'
           - ''
           - '&7Click to view'
+      area:
+        material: golden_hoe
+        display_name: '&aCompany Area'
+        lore:
+          - ''
+          - '&7Your company can own some'
+          - '&7areas to sell or rent.'
+          - ''
+          - '&7Click to view'
   employee-list:
     title: '&aEmployee list of &b%company%'
     items:
@@ -523,7 +556,13 @@ menu:
           - '&7Click to switch'
           - ''
   text-input:
-    title: 'Text Input'
+    title:
+      found: 'Enter the name of company'
+      position_setlabel: 'Enter the new label of the position'
+      set_position: 'Enter the position'
+      position_add: 'Enter the name of new position'
+      area-create: 'Enter the name of area'
+      area-rent-set-price: 'Enter the price for rent'
     items:
       first_item:
         material: paper
@@ -594,6 +633,268 @@ menu:
           - ''
           - '&7Click to switch'
           - ''
+  area-rent-market:
+    title: 'Company Area Rent Market'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&aCompany Area'
+        lore:
+          - ''
+          - '&7Click the area and look for details.'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area%'
+        lore:
+          - ''
+          - '&7Owner: &b%company%'
+          - ''
+          - '&7Status: &dFor Rent'
+          - '&7Rent Time: &d1 day(s)'
+          - '&7Price: &e%price%'
+          - ''
+          - '&7Left click to purchase/remove'
+          - '&7Right click to teleport'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  area-sale-market:
+    title: 'Company Area Sale Market'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&aCompany Area'
+        lore:
+          - ''
+          - '&7Click the area and look for details.'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area%'
+        lore:
+          - ''
+          - '&7Owner: &b%company%'
+          - ''
+          - '&7Status: &dFor Sale'
+          - '&7Price: &e%price%'
+          - ''
+          - '&7Left click to purchase/remove'
+          - '&7Right click to teleport'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  company-area:
+    title: 'Company Area'
+    items:
+      create:
+        material: golden_hoe
+        display_name: '&aCreate area'
+        lore:
+          - ''
+          - '&7Use a &6&lArea Selection Tool'
+          - '&7to select two corners'
+          - '&7of the area.'
+          - '&7Then execute command below'
+          - '&7/mycompany area create <name>'
+          - '&7to get area created.'
+          - ''
+      list:
+        material: item_frame
+        display_name: '&aView the list of areas'
+        lore:
+          - ''
+          - '&7See all the areas'
+          - '&7that your company owns'
+          - ''
+          - '&7Click to view'
+          - ''
+      delete:
+        material: red_dye
+        display_name: '&aDelete an area'
+        lore:
+          - ''
+          - '&7Delete one of the areas'
+          - '&7in your company areas'
+          - ''
+          - '&7Click to delete'
+          - ''
+      rent:
+        material: gold_ingot
+        display_name: '&aRent out an area'
+        lore:
+          - ''
+          - '&7Rent out an area'
+          - '&7which will be showed in market.'
+          - ''
+          - '&7Click to rent out'
+          - ''
+      sell:
+        material: diamond
+        display_name: '&aSell an area'
+        lore:
+          - ''
+          - '&7Sell an area'
+          - '&7which will be showed in market.'
+          - ''
+          - '&7Click to sell'
+          - ''
+      market:
+        material: chest
+        display_name: '&aArea Trade Market'
+        lore:
+          - ''
+          - '&7You can buy and rent areas'
+          - '&7in the trade market.'
+          - ''
+          - '&7Click to view'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  area-trade-market:
+    title: 'Area Trade Market'
+    items:
+      rent:
+        material: paper
+        display_name: '&aRent Market'
+        lore:
+          - ''
+          - '&7You can rent area'
+          - '&7in this market'
+          - ''
+          - '&7Click to view'
+          - ''
+      sell:
+        material: gold_ingot
+        display_name: '&aSale Market'
+        lore:
+          - ''
+          - '&7You can buy area'
+          - '&7in this market'
+          - ''
+          - '&7Click to view'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  area-list:
+    title: 'Company Area List'
+    actions:
+      list:
+        left: 'Left click to teleport'
+        right: 'Right click to set location'
+      delete:
+        left: 'Click to delete'
+        right: '#remove#'
+      rent:
+        left: 'Click to rent out the area'
+        right: '#remove#'
+      sell:
+        left: 'Click to sell the area'
+        right: '#remove#'
+    items:
+      area_info:
+        material: writable_book
+        display_name: '&aCompany Area'
+        lore:
+          - ''
+          - '&7Click the area and look for details.'
+          - ''
+      area:
+        material: paper
+        display_name: '&a%area% &b[OWN]'
+        lore:
+          - ''
+          - '&7World: &f%world%'
+          - '&7First Block: &f[%x1%,%y1%,%z1%]'
+          - '&7Second Block: &f[%x2%,%y2%,%z2%]'
+          - ''
+          - '&7%left_click%'
+          - '&7%right_click%'
+          - ''
+      area-rent:
+        material: paper
+        display_name: '&a%area% &d[RENT]'
+        lore:
+          - ''
+          - '&7Owner: &b%company%'
+          - '&7World: &f%world%'
+          - '&7First Block: &f[%x1%,%y1%,%z1%]'
+          - '&7Second Block: &f[%x2%,%y2%,%z2%]'
+          - ''
+          - '&7Expire Time: &d%end_time%'
+          - ''
+          - '&7%left_click%'
+          - '&7%right_click%'
+          - ''
+      next_page:
+        material: lime_stained_glass_pane
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        material: red_stained_glass_pane
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        material: feather
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
 
 position-permission:
   ALL: 'All permissions'
@@ -604,12 +905,19 @@ position-permission:
   AREA_CREATE: 'Company Area Creation'
   AREA_DELETE: 'Company Area Deleting'
   AREA_SETLOC: 'Location Set of Company Area'
+  AREA_MARKET_RENT: 'Pushing Area to Rent Market'
+  AREA_MARKET_SELL: 'Pushing Area to Sale Market'
+  AREA_RENT: 'Area Rent'
+  AREA_SELL: 'Area Purchase'
 
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'
 yourself: 'YOURSELF'
 true: 'YES'
 false: 'NO'
+#area-status:
+  #sell: 'On Sale'
+  #rent: 'For Rent'
 
 quest-progress: '%action_description% %target% - %progress_value%/%target_value%'
 order-finished: '&aThis order has been completed.'

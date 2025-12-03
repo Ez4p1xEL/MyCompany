@@ -12,6 +12,7 @@ public abstract class GUIAbstract {
     protected final CompanyManager companyManager = cache.getCompanyManager();
     protected final ShopManager shopManager = cache.getShopManager();
     protected final BuildingManager buildingManager = cache.getBuildingManager();
+    protected final AreaManager areaManager = cache.getAreaManager();
     protected NamespacedKey menu_id_key = new NamespacedKey("mycompany", "menu_id");
     public abstract void init();
     public abstract Inventory getInventory();
