@@ -120,7 +120,8 @@ public class TaxCollector {
                 }
 
                 // Cancel if company has no money
-                if (manager.getCash(uniqueId) <= 0) {
+                double balance = manager.getCash(uniqueId);
+                if (balance <= 0) {
                     for (String position : manager.getPositions(uniqueId)) {
                         // employer
                         if (position.equals("employer")) {
@@ -150,8 +151,11 @@ public class TaxCollector {
                 UUID employerUniqueId = manager.getEmployer(uniqueId);
                 OfflinePlayer employer = Bukkit.getOfflinePlayer(employerUniqueId);
                 double rawEmployerSalary = manager.getSalary(uniqueId, "employer");
-                double employerSalary =  + Config.getDouble("company-funds.salaries.employer");
-                MyCompany.getEconomy().depositPlayer(employer,  employerSalary);
+                if (balance - outcome < rawEmployerSalary) {
+                    rawEmployerSalary = Math.max(balance-outcome, 0);
+                }
+                double employerSalary =  rawEmployerSalary + Config.getDouble("company-funds.salaries.employer");
+                MyCompany.getEconomy().depositPlayer(employer, employerSalary);
                 outcome += rawEmployerSalary;
                 if (employer.isOnline()) {
                     Player player = (Player) employer;
@@ -163,16 +167,16 @@ public class TaxCollector {
                 for (String position : manager.getPositions(uniqueId)) {
 
                     double plus = 0.0;
-                    // Check if there is the sponsorship
-                    if (MyCompany.getInstance().getConfig().isSet("company-funds.salaries." + position)) {
-                        plus = Config.getDouble("company-funds.salaries.employee");
-                    }
+                    plus = Config.getDouble("company-funds.salaries.employee");
 
                     for (UUID employeeUniqueId : manager.getEmployeeList(uniqueId, position)) {
 
                         OfflinePlayer employee = Bukkit.getOfflinePlayer(employeeUniqueId);
                         double rawEmployeeSalary = manager.getSalary(uniqueId, position);
-                        double employeeSalary =  rawEmployeeSalary + plus;
+                        if (balance - outcome < rawEmployeeSalary) {
+                            rawEmployeeSalary = Math.max(balance-outcome, 0);
+                        }
+                        double employeeSalary = rawEmployeeSalary + plus;
                         MyCompany.getEconomy().depositPlayer(employee, employeeSalary);
                         outcome += rawEmployeeSalary;
                         if (employee.isOnline()) {
