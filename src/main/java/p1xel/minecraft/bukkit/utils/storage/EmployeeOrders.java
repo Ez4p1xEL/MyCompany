@@ -177,18 +177,28 @@ public class EmployeeOrders {
         String target = "";
         String progress_value = "";
         String target_value = "";
-        if (type.equalsIgnoreCase("break_block")) {
-            description = Locale.getMessage("action-description.break_block");
-            target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
-            progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":break_block"));
-            target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
-        }
 
-        if (type.equalsIgnoreCase("place_block")) {
-            description = Locale.getMessage("action-description.place_block");
-            target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
-            progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":place_block"));
-            target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
+        switch (type) {
+            case "break_block":
+                description = Locale.getMessage("action-description.break_block");
+                target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
+                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":break_block"));
+                target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
+                break;
+
+            case "place_block":
+                description = Locale.getMessage("action-description.place_block");
+                target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
+                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":place_block"));
+                target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
+                break;
+
+            case "mob_kill":
+                description = Locale.getMessage("action-description.mob_kill");
+                target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".mob").toUpperCase();
+                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":mob_kill"));
+                target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
+                break;
         }
         progressMessage = progressMessage.replaceAll("%action_description%", description)
                 .replaceAll("%target%", target)

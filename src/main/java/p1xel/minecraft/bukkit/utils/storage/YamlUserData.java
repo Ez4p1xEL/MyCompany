@@ -67,13 +67,8 @@ public class YamlUserData extends UserData{
 
         }
 
-        if (files.get(uniqueId) == null) {
-            files.put(uniqueId, file);
-            yamls.put(uniqueId, YamlConfiguration.loadConfiguration(file));
-        } else {
-            files.replace(uniqueId, file);
-            yamls.replace(uniqueId, YamlConfiguration.loadConfiguration(file));
-        }
+        files.put(uniqueId, file);
+        yamls.put(uniqueId, YamlConfiguration.loadConfiguration(file));
 
     }
 
@@ -227,11 +222,11 @@ public class YamlUserData extends UserData{
         File file = files.get(uniqueId);
         FileConfiguration yaml = yamls.get(uniqueId);
         //for (String order : yaml.getConfigurationSection(uniqueId.toString()+ ".orders.progress").getKeys(false)) {
-        yaml.set(uniqueId.toString() + ".orders.progress", null);
+        yaml.set(uniqueId + ".orders.progress", null);
         List<String> orderList = new ArrayList<>(EmployeeOrders.getOrderList().stream().toList());
         Collections.shuffle(orderList);
         List<String> randomList = orderList.subList(0, Math.min(orderList.size(), 5));
-        yaml.set(uniqueId.toString() + ".orders.daily", randomList);
+        yaml.set(uniqueId + ".orders.daily", randomList);
         try {
             yaml.save(file);
         } catch (IOException e) {

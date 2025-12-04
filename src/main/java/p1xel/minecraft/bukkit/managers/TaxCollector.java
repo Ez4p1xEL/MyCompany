@@ -21,6 +21,8 @@ import java.util.UUID;
 public class TaxCollector {
 
     private BukkitTask task;
+    private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
+    private final CompanyManager manager = MyCompany.getCacheManager().getCompanyManager();
 
     private Duration durationUntilNextTime() {
         LocalDateTime now = LocalDateTime.now();
@@ -53,23 +55,22 @@ public class TaxCollector {
         // between, every 24hrs
         task = Bukkit.getScheduler().runTaskTimer(MyCompany.getInstance(), () -> {
 
-            CompanyManager manager = MyCompany.getCacheManager().getCompanyManager();
-            List<UUID> companies = MyCompany.getCacheManager().getCompanyManager().getAllCompanies();
+            List<UUID> companies = manager.getAllCompanies();
             TaxCollectEvent event = new TaxCollectEvent(companies);
             Bukkit.getPluginManager().callEvent(event);
 
-            if (event.isCancelled()) {
-                task.cancel();
-                return;
-            }
-
             for (UUID uniqueId : companies) {
+
+                if (event.isCancelled()) {
+                    task.cancel();
+                    break;
+                }
 
                 // Priority: Income Tax > Property Tax > Management Fee
 
                 // Cancel if company has no money
                 if (manager.getCash(uniqueId) <= 0) {
-                    return;
+                    break;
                 }
 
                 // Income Tax
@@ -116,7 +117,7 @@ public class TaxCollector {
 
                 if (salaryEvent.isCancelled()) {
                     task.cancel();
-                    return;
+                    break;
                 }
 
                 // Cancel if company has no money
@@ -142,7 +143,7 @@ public class TaxCollector {
                             continue;
                         }
                     }
-                    return;
+                    break;
                 }
 
                 String companyName = manager.getName(uniqueId);
@@ -191,16 +192,21 @@ public class TaxCollector {
                 manager.setCash(uniqueId, manager.getCash(uniqueId) - outcome);
             }
 
-            UserManager userManager = MyCompany.getCacheManager().getUserManager();
             // Refresh employees' daily orders
-            for (UUID uuid : companies) {
-                List<String> positions = manager.getPositions(uuid);
+            for (UUID uniqueId : companies) {
+                List<String> positions = manager.getPositions(uniqueId);
                 for (String position : positions) {
-                    for (UUID employeeUniqueId : manager.getEmployeeList(uuid, position)) {
+//                    if (position.equals("employer")) {
+//                        continue;
+//                    }
+                    for (UUID employeeUniqueId : manager.getEmployeeList(uniqueId, position)) {
+                        userManager.createUser(employeeUniqueId);
                         userManager.randomizeDailyOrder(employeeUniqueId);
                     }
                 }
-                userManager.randomizeDailyOrder(manager.getEmployer(uuid));
+                UUID employerUniqueId = manager.getEmployer(uniqueId);
+                userManager.createUser(employerUniqueId);
+                userManager.randomizeDailyOrder(employerUniqueId);
             }
 
         }, initialDelay, period );

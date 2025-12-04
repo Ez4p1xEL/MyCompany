@@ -32,7 +32,7 @@ miner:
       amount: 4
   reward:
     - 'item;nether_star;1'
-    - 'company_income;3000'
+    - 'company_income;3000.0'
 diamond_finder:
   label: 'Diamond Finder'
   description:
@@ -43,7 +43,7 @@ diamond_finder:
       item: diamond_ore
       amount: 8
   reward:
-    - 'company_income;1000'
+    - 'company_income;1000.0'
 lumberjack:
   label: 'Lumberjack'
   description:
@@ -54,7 +54,7 @@ lumberjack:
       item: oak_log
       amount: 4
   reward:
-    - 'company_income;1000'
+    - 'company_income;1000.0'
 cobblestone_lover:
   label: 'Cobblestone Lover'
   description:
@@ -65,7 +65,7 @@ cobblestone_lover:
       item: cobblestone
       amount: 8
   reward:
-    - 'company_income;1000'
+    - 'company_income;1000.0'
 grass_eater:
   label: 'Grass Eater'
   description:
@@ -76,7 +76,7 @@ grass_eater:
       item: grass_block
       amount: 8
   reward:
-    - 'company_income;1000'
+    - 'company_income;1000.0'
 example_place_block:
   label: 'Placer Example'
   description:
@@ -87,4 +87,30 @@ example_place_block:
       item: dirt
       amount: 4
   reward:
-    - 'company_income;500'
+    - 'company_income;500.0'
+mob_hunter:
+  label: 'Mob Hunter'
+  description:
+    - '&7hunt some mobs'
+    - '&7better in nighttime...'
+  quest:
+    zombie:
+      type: mob_kill
+      mob: zombie
+      amount: 3
+    skeleton:
+      type: mob_kill
+      mob: skeleton
+      amount: 2
+    creeper:
+      type: mob_kill
+      mob: creeper
+      amount: 2
+    spider:
+      type: mob_kill
+      mob: spider
+      amount: 2
+  reward:
+    - 'company_income;650.0'
+    - 'money;1300.0'
+    - 'experience;20'

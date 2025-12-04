@@ -930,6 +930,7 @@ rewards:
 action-description:
   break_block: 'Break block(s)'
   place_block: 'Place block(s)'
+  mob_kill: 'Kill Mob(s)'
 
 check-update:
   invalid: 'Unable to check for updates: '
