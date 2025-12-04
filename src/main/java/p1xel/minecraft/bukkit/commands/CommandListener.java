@@ -1464,7 +1464,7 @@ public class CommandListener implements CommandExecutor {
             sender.sendMessage(Locale.getMessage("commands.top-bar"));
             sender.sendMessage(Locale.getMessage("commands.page").replaceAll("%page%", String.valueOf(helpPage)));
             sender.sendMessage(Locale.getMessage("commands.space-1"));
-            for (String arg : Locale.yaml.getConfigurationSection("commands.").getKeys(false)) {
+            for (String arg : Locale.yaml.getConfigurationSection("commands").getKeys(false)) {
 
                 if (arg.equals("top-bar") || arg.equals("space-1") || arg.equals("space-2") || arg.equals("bottom-bar") || arg.equals("page")) {
                     // sender.sendMessage(Locale.getMessage("commands." + arg));
@@ -1489,18 +1489,19 @@ public class CommandListener implements CommandExecutor {
                     continue;
                 }
 
+            }
+
+            for (String admin : Locale.yaml.getConfigurationSection("commands.admin").getKeys(false)) {
+
                 if (!isAdmin) {
-                    continue;
+                    break;
                 }
 
-                for (String admin : Locale.yaml.getConfigurationSection("commands.admin").getKeys(false)) {
-                    if (show > max_arg) {
-                        break;
-                    }
-                    sender.sendMessage(Locale.getMessage("commands.admin." + admin));
-                    show++;
+                if (show > max_arg) {
+                    break;
                 }
-
+                sender.sendMessage(Locale.getMessage("commands.admin." + admin));
+                show++;
             }
 
             sender.sendMessage(Locale.getMessage("commands.space-2"));

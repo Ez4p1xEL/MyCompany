@@ -6,6 +6,8 @@
 [![SpigotMC](https://img.shields.io/badge/To-SpigotMC-yellow)](https://www.spigotmc.org/resources/mycompany.127007/)
 [![Modrinth](https://img.shields.io/badge/To-Modrinth-darkgreen)](https://modrinth.com/plugin/mycompany)
 
+[English](https://github.com/Ez4p1xEL/MyCompany) [简体中文](https://github.com/Ez4p1xEL/MyCompany/blob/master/README_zh_CN.md)
+
 ## 关于 MyCompany
 
 ## 简介

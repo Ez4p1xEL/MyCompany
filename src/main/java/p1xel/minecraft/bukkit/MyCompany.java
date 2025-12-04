@@ -10,6 +10,7 @@ import p1xel.minecraft.bukkit.listeners.*;
 import p1xel.minecraft.bukkit.managers.*;
 import p1xel.minecraft.bukkit.managers.areas.AreaSelectionMode;
 import p1xel.minecraft.bukkit.managers.buildings.DefaultBuildingArea;
+import p1xel.minecraft.bukkit.managers.buildings.DisabledBuildingArea;
 import p1xel.minecraft.bukkit.managers.buildings.DominionBuildingArea;
 import p1xel.minecraft.bukkit.managers.buildings.ResidenceBuildingArea;
 import p1xel.minecraft.bukkit.tools.bstats.Metrics;
@@ -97,25 +98,38 @@ public class MyCompany extends JavaPlugin {
         }
 
         if (getConfig().getBoolean("company-settings.dedicated-company-building.enable")) {
+            boolean useDefault = true;
             for (String plugin : getConfig().getConfigurationSection("company-settings.dedicated-company-building.supported-plugins").getKeys(false)) {
 
                 if (plugin.equalsIgnoreCase("Residence")) {
-                    if (getServer().getPluginManager().getPlugin("Residence") != null) {
-                        cache.getBuildingManager().setModule(new ResidenceBuildingArea());
-                        break;
+                    boolean enable = getConfig().getBoolean("company-settings.dedicated-company-building.supported-plugins." + plugin);
+                    if (enable) {
+                        if (getServer().getPluginManager().getPlugin("Residence") != null) {
+                            cache.getBuildingManager().setModule(new ResidenceBuildingArea());
+                            useDefault = false;
+                            break;
+                        }
                     }
                 }
 
                 if (plugin.equalsIgnoreCase("Dominion")) {
-                    if (getServer().getPluginManager().getPlugin("Dominion") != null) {
-                        cache.getBuildingManager().setModule(new DominionBuildingArea());
-                        break;
+                    boolean enable = getConfig().getBoolean("company-settings.dedicated-company-building.supported-plugins." + plugin);
+                    if (enable) {
+                        if (getServer().getPluginManager().getPlugin("Dominion") != null) {
+                            cache.getBuildingManager().setModule(new DominionBuildingArea());
+                            useDefault = false;
+                            break;
+                        }
                     }
                 }
 
             }
+
+            if (useDefault) {
+                cache.getBuildingManager().setModule(new DefaultBuildingArea());
+            }
         } else {
-            cache.getBuildingManager().setModule(new DefaultBuildingArea());
+            cache.getBuildingManager().setModule(new DisabledBuildingArea());
         }
 
         // After all managers are ready

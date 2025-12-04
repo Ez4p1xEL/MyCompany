@@ -45,6 +45,7 @@ company-settings:
   # to the waypoint and the area of the company building.
   # This should be used with chestshop-create-in-building below.
   dedicated-company-building:
+    # You need to restart the server if you change this option
     enable: true
     # If there are multiple supporting plugins enabled,
     # MyCompany would select the first one.

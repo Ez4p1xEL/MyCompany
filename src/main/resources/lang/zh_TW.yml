@@ -398,6 +398,15 @@ menu:
           - '&7這些訂單每天都會刷新'
           - ''
           - '&7點擊查看'
+      area:
+        material: golden_hoe
+        display_name: '&a公司領地'
+        lore:
+          - ''
+          - '&7你的公司可擁有一些領地'
+          - '&7而且還可以出售或出租'
+          - ''
+          - '&7點擊查看'
   employee-list:
     title: '&b%company% &a員工列表'
     items:

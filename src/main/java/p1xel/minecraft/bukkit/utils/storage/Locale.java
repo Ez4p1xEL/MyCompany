@@ -72,6 +72,7 @@ public class Locale {
         try {
             return ChatColor.translateAlternateColorCodes('&', yaml.getString(path).replaceAll("%prefix%", yaml.getString("prefix")).replaceAll("%version%", Config.getVersion()));
         } catch (NullPointerException event){
+            MyCompany.getInstance().getLogger().log(Level.WARNING, path + " is not found in your lang file!");
             MyCompany.getInstance().getLogger().log(Level.WARNING, "Your language file is not updated to the latest. Please delete it and let it to be re-generated.");
             return "Please update the language file.";
         }

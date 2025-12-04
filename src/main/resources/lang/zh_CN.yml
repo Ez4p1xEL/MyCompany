@@ -187,7 +187,7 @@ info:
     - '&7成立时间: &d%date%'
     - '&7成员数量: &b%amount%'
     - ''
-    - '&b%employer_label%&8(雇主)&b: &e%employer%'
+    - '&b%employer_label%&8(employer)&b: &e%employer%'
     - '%employee%'
     - ''
     - '&c这里应该有更多资讯,'
@@ -416,6 +416,15 @@ menu:
           - '&7这些订单每天都会刷新'
           - ''
           - '&7点击查看'
+      area:
+        material: golden_hoe
+        display_name: '&a公司领地'
+        lore:
+          - ''
+          - '&7你的公司可拥有一些领地'
+          - '&7并且可以出售或出租'
+          - ''
+          - '&7点击查看'
   employee-list:
     title: '&b%company% &a员工列表'
     items:
@@ -576,10 +585,10 @@ menu:
           - ''
           - '&7%description%'
           - ''
-          - '&进度:'
+          - '&7进度:'
           - ' &7%quest_progress%'
           - ''
-          - '&奖励:'
+          - '&7奖励:'
           - ' &f%order_reward%'
           - ''
       next_page:
