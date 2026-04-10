@@ -931,6 +931,8 @@ action-description:
   break_block: 'Break block(s)'
   place_block: 'Place block(s)'
   mob_kill: 'Kill Mob(s)'
+  fish: 'Fish'
+  feed: 'Feed'
 
 check-update:
   invalid: 'Unable to check for updates: '

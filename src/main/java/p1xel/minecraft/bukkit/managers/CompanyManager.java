@@ -63,8 +63,8 @@ public class CompanyManager {
     }
 
     public void disbandCompany(UUID uniqueId) {
-        this.data.disbandCompany(uniqueId);
         MyCompany.getCacheManager().getAreaManager().clearCompanyCache(uniqueId);
+        this.data.disbandCompany(uniqueId);
     }
 
     public UUID getEmployer(UUID uniqueId) {

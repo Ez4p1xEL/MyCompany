@@ -114,3 +114,44 @@ mob_hunter:
     - 'company_income;650.0'
     - 'money;1300.0'
     - 'experience;20'
+fisherman:
+  label: 'Fisherman'
+  description:
+    - '&7catch some fishes'
+    - '&7better near water...'
+  quest:
+    fish:
+      type: fish
+      item: cod
+      amount: 1
+  reward:
+    - 'company_income;700.0'
+    - 'money;1200.0'
+    - 'experience;25'
+feeder:
+  label: 'Feeder'
+  description:
+    - '&7feed some animals'
+    - '&7better near animals...'
+  quest:
+    cow:
+      type: feed
+      mob: cow
+      amount: 1
+    pig:
+      type: feed
+      mob: pig
+      amount: 1
+    chicken:
+      type: feed
+      mob: chicken
+      amount: 1
+    sheep:
+      type: feed
+      mob: sheep
+      amount: 1
+  reward:
+    - 'company_income;1300.0'
+    - 'money;1200.0'
+    - 'experience;15'
+    - 'console_command;say %player% has completed the feeder order!'

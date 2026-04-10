@@ -6,10 +6,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import p1xel.minecraft.bukkit.EmployeeOrder;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.UserManager;
+import p1xel.minecraft.bukkit.utils.Logger;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class EmployeeOrders {
@@ -179,32 +181,36 @@ public class EmployeeOrders {
         String target_value = "";
 
         switch (type) {
-            case "break_block":
-                description = Locale.getMessage("action-description.break_block");
+
+            case "break_block", "place_block", "fish": {
+                description = Locale.getMessage("action-description." + type);
                 target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
-                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":break_block"));
+                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":" + type));
                 target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
                 break;
+            }
 
-            case "place_block":
-                description = Locale.getMessage("action-description.place_block");
-                target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
-                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":place_block"));
-                target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
-                break;
-
-            case "mob_kill":
-                description = Locale.getMessage("action-description.mob_kill");
+            case "mob_kill", "feed": {
+                description = Locale.getMessage("action-description." + type);
                 target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".mob").toUpperCase();
-                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":mob_kill"));
+                progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":" + type));
                 target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
                 break;
+            }
+
         }
+
         progressMessage = progressMessage.replaceAll("%action_description%", description)
                 .replaceAll("%target%", target)
                 .replaceAll("%progress_value%", progress_value)
                 .replaceAll("%target_value%", target_value);
+
         return progressMessage;
+    }
+
+    public static void addProgressValue(UUID playerUniqueId, String orderName, String questAndAction, int amount) {
+        EmployeeOrder order = orders.get(playerUniqueId).get(orderName);
+        order.addProgressValue(questAndAction, amount);
     }
 
 

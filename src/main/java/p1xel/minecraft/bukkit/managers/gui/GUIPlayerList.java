@@ -66,7 +66,7 @@ public class GUIPlayerList extends GUIAbstract implements InventoryHolder {
         if (uuids.size() >= page*14) {
             hasNextPage = true;
         }
-        uuids.subList(14 * (page-1), Math.min((page) * 14, uuids.size()));
+        uuids = uuids.subList(14 * (page-1), Math.min((page) * 14, uuids.size()));
 
         ItemStack company_info = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.player-list.items.company_info.material")), 1);
         ItemMeta company_info_meta = company_info.getItemMeta();

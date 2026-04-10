@@ -120,6 +120,7 @@ public class EmployeeOrder {
         finished = true;
         // rewards
         Player player = Bukkit.getPlayer(playerUniqueId);
+        this.companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
         Logger.debug(Level.INFO, "The order " + order + " has been completed by player " + player.getName());
 
         for (String reward : EmployeeOrders.getRewards(order)) {
@@ -189,6 +190,14 @@ public class EmployeeOrder {
                     continue;
                 }
                 player.giveExp(amount);
+                continue;
+
+            }
+
+            if (type.equalsIgnoreCase("console_command")) {
+
+                String command = split[1].replaceAll("%player%", player.getName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 continue;
 
             }

@@ -906,6 +906,8 @@ action-description:
   break_block: '破坏方块'
   place_block: '放置方块'
   mob_kill: '击杀生物'
+  fish: '钓鱼'
+  feed: '喂食生物'
 
 check-update:
   invalid: '无法查询更新: '

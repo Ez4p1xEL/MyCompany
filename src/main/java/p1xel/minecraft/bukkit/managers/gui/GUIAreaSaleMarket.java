@@ -57,7 +57,7 @@ public class GUIAreaSaleMarket extends GUIAbstract implements InventoryHolder {
         if (areas.size() >= page*14) {
             hasNextPage = true;
         }
-        areas.subList(14 * (page-1), Math.min((page) * 14, areas.size()));
+        areas = areas.subList(14 * (page-1), Math.min((page) * 14, areas.size()));
 
         ItemStack area_info = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.area-sale-market.items.area_info.material")), 1);
         ItemMeta area_info_meta = area_info.getItemMeta();

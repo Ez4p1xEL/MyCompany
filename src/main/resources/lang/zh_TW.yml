@@ -901,6 +901,8 @@ action-description:
   break_block: 破壞方塊
   place_block: 放置方塊
   mob_kill: 擊殺生物
+  fish: 釣魚
+  feed: 餵食
 
 check-update:
   invalid: '無法檢查更新: '

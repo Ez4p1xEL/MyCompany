@@ -273,6 +273,7 @@ public class YamlCompanyData extends CompanyData{
 
     @Override
     public Object get(UUID uniqueId, String type, String path) {
+        Logger.debug(Level.INFO, "Getting data from company " + uniqueId + ", type: " + type + ", path: " + path);
         FileConfiguration yaml = com_yamls.get(uniqueId).get(type);
         return yaml.get(uniqueId + "." + path);
     }

@@ -57,7 +57,7 @@ public class GUIPositionList extends GUIAbstract implements InventoryHolder {
         if (positions.size() >= page*14) {
             hasNextPage = true;
         }
-        positions.subList(14 * (page-1), Math.min((page) * 14, positions.size()));
+        positions = positions.subList(14 * (page-1), Math.min((page) * 14, positions.size()));
 
         ItemStack company_info = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.position-list.items.company_info.material")), 1);
         ItemMeta company_info_meta = company_info.getItemMeta();

@@ -53,7 +53,7 @@ public class GUIDailyOrder extends GUIAbstract implements InventoryHolder {
         if (orders.size() >= page*14) {
             hasNextPage = true;
         }
-        orders.subList(14 * (page-1), Math.min((page) * 14, orders.size()));
+        orders = orders.subList(14 * (page-1), Math.min((page) * 14, orders.size()));
 
         ItemStack orders_info = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.orders.items.orders_info.material")), 1);
         ItemMeta orders_info_meta = orders_info.getItemMeta();
