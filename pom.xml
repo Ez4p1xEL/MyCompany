@@ -6,11 +6,11 @@
 
     <groupId>p1xel.minecraft.bukkit</groupId>
     <artifactId>MyCompany</artifactId>
-    <version>0.7.60</version>
+    <version>0.7.70</version>
 
     <properties>
-        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <build>
@@ -18,7 +18,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.3</version> <!-- The version must be at least 3.5.0 -->
+                <version>3.6.2</version> <!-- The version must be at least 3.5.0 -->
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -75,8 +75,8 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>codemc-snapshots</id>
-            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+            <id>mvn-wesjd-net</id>
+            <url>https://mvn.wesjd.net/</url>
         </repository>
     </repositories>
 
@@ -120,10 +120,12 @@
             <version>4.5.0</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>net.wesjd</groupId>
             <artifactId>anvilgui</artifactId>
-            <version>1.10.8-SNAPSHOT</version>
+            <version>1.10.13-SNAPSHOT</version>
+            <scope>compile</scope> <!-- Include the library in your JAR -->
         </dependency>
     </dependencies>
 
