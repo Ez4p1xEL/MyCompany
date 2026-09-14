@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Inventory;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.*;
+import p1xel.minecraft.bukkit.utils.prices.InternalStore;
 
 public abstract class GUIAbstract {
 
@@ -13,6 +14,7 @@ public abstract class GUIAbstract {
     protected final ShopManager shopManager = cache.getShopManager();
     protected final BuildingManager buildingManager = cache.getBuildingManager();
     protected final AreaManager areaManager = cache.getAreaManager();
+    protected final InternalStore internalStore = cache.getInternalStore();
     protected NamespacedKey menu_id_key = new NamespacedKey("mycompany", "menu_id");
     public abstract void init();
     public abstract Inventory getInventory();

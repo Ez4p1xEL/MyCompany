@@ -40,8 +40,8 @@ public class MysqlCompanyData extends CompanyData{
     }
 
     @Override
-    public void createCompany(String companyName, UUID playerUniqueId) {
-
+    public UUID createCompany(String companyName, UUID playerUniqueId) {
+        return null;
     }
 
     @Override

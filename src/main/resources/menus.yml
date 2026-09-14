@@ -1,0 +1,6 @@
+# This is not language setting, please refer to lang/your_language.yml
+global:
+  back-to-main: NETHER_STAR
+  next-page: ENDER_EYE
+  previous-page: ENDER_PEARL
+  empty-slot: BLACK_STAINED_GLASS_PANE

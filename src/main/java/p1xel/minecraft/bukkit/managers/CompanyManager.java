@@ -1,8 +1,10 @@
 package p1xel.minecraft.bukkit.managers;
 
+import p1xel.minecraft.bukkit.Company;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.permissions.Permission;
+import p1xel.minecraft.bukkit.utils.prices.PriceGroup;
 import p1xel.minecraft.bukkit.utils.storage.CompanyData;
 
 import javax.annotation.Nullable;
@@ -11,8 +13,9 @@ import java.util.stream.Collectors;
 
 public class CompanyManager {
 
-    private CompanyData data;
-    private HashMap<Integer, UUID> cids = new HashMap<>();
+    private final CompanyData data;
+    private final HashMap<Integer, UUID> cids = new HashMap<>();
+    private final CacheManager cacheManager = MyCompany.getCacheManager();
 
     public CompanyManager(CompanyData data) {
         this.data = data;
@@ -40,8 +43,10 @@ public class CompanyManager {
         return this.data.getCompaniesName();
     }
 
-    public void createCompany(String companyName, UUID playerUniqueId) {
-        this.data.createCompany(companyName, playerUniqueId);
+    public UUID createCompany(String companyName, UUID playerUniqueId) {
+        UUID uuid = this.data.createCompany(companyName, playerUniqueId);
+        cacheManager.createCompanyCache(uuid);
+        return uuid;
     }
 
     public String getName(UUID uniqueId) {
@@ -65,6 +70,7 @@ public class CompanyManager {
     public void disbandCompany(UUID uniqueId) {
         MyCompany.getCacheManager().getAreaManager().clearCompanyCache(uniqueId);
         this.data.disbandCompany(uniqueId);
+        cacheManager.removeCompanyCache(uniqueId);
     }
 
     public UUID getEmployer(UUID uniqueId) {
@@ -176,6 +182,8 @@ public class CompanyManager {
         this.data.set(uniqueId, "settings", "salary." + position, 500.0);
         this.data.set(uniqueId, "settings", "position.custom." + position + ".label", position);
         this.data.set(uniqueId, "settings","position.custom." + position + ".permission", Config.getStringList("company-settings.employee-default-permission"));
+        Company company = cacheManager.getCompany(uniqueId);
+        company.getPositions().add(position);
     }
 
     // Member of the position will be moved to employee's list
@@ -190,6 +198,8 @@ public class CompanyManager {
                 .collect(Collectors.toList());
         this.data.set(uniqueId, "info", "members.employee", stringList);
         this.data.set(uniqueId, "info", "members." + position, null);
+        Company company = cacheManager.getCompany(uniqueId);
+        company.getPositions().remove(position);
     }
 
     public List<Permission> getPositionPermission(UUID uniqueId, String position) {
@@ -270,6 +280,12 @@ public class CompanyManager {
 
     }
 
+    public String getPriceGroup(UUID uniqueId) {
+        return (String) this.data.get(uniqueId, "info", "price-group");
+    }
 
+    public void setPriceGroup(UUID uniqueId, PriceGroup priceGroup) {
+        this.data.set(uniqueId, "info", "price-group", priceGroup.getName());
+    }
 
 }

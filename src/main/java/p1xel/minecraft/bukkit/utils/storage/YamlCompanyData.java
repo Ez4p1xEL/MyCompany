@@ -13,6 +13,7 @@ import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.managers.areas.CompanyArea;
 import p1xel.minecraft.bukkit.utils.Config;
 import p1xel.minecraft.bukkit.utils.Logger;
+import p1xel.minecraft.bukkit.utils.prices.PriceGroup;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
 
 import javax.annotation.Nullable;
@@ -167,9 +168,8 @@ public class YamlCompanyData extends CompanyData{
         }
     }
 
-    // 備注: 先從 CreateCompany 將 cache 丟入 Company, Company 如有改動再從内部調用 CompanyManager 修改, 再從上方 set() 存入 Company 以更改緩存
     @Override
-    public void createCompany(String companyName, UUID playerUniqueId) {
+    public UUID createCompany(String companyName, UUID playerUniqueId) {
         UUID uuid = UUID.randomUUID();
         File folder = new File(MyCompany.getInstance().getDataFolder() + "/companies", uuid.toString());
         if (!folder.exists()) {
@@ -204,6 +204,7 @@ public class YamlCompanyData extends CompanyData{
                 yaml.set(uuid + ".founder.name", player.getName());
                 yaml.set(uuid + ".members.employer", String.valueOf(playerUniqueId));
                 //yaml.set(uuid + ".members.employee", null);
+                yaml.set(uuid + ".price-group", PriceGroup.NORMAL.getName());
 
                 try {
                     yaml.save(file);
@@ -268,6 +269,8 @@ public class YamlCompanyData extends CompanyData{
         MyCompany.getCacheManager().getUserManager().createUser(playerUniqueId);
         MyCompany.getCacheManager().getUserManager().setCompany(playerUniqueId, uuid);
         MyCompany.getCacheManager().getUserManager().setPosition(playerUniqueId, "employer");
+
+        return uuid;
 
     }
 

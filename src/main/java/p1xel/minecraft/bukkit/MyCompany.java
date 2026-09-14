@@ -20,6 +20,7 @@ import p1xel.minecraft.bukkit.utils.extensions.Placeholders;
 import p1xel.minecraft.bukkit.utils.storage.*;
 import p1xel.minecraft.bukkit.utils.storage.backups.BackupCreator;
 import p1xel.minecraft.bukkit.utils.storage.cidstorage.CIdData;
+import p1xel.minecraft.bukkit.utils.storage.menu.MenuConfig;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -32,6 +33,7 @@ public class MyCompany extends JavaPlugin {
     private static Economy econ = null;
     private static TaxCollector tax;
     private AreaProtector areaProtector;
+    private static int[] version;
 
     public static MyCompany getInstance() { return instance;}
     public static CacheManager getCacheManager() { return cache;}
@@ -43,6 +45,23 @@ public class MyCompany extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+
+        String[] stringVersion = getServer().getBukkitVersion().split("-")[0].split("\\.");
+
+        // --- 修复版本号解析越界问题 ---
+        int major = Integer.parseInt(stringVersion[0]);
+        int minor = Integer.parseInt(stringVersion[1]);
+        // 兼容新版 Paper 的 26.2.build.84-stable 格式，非数字补丁版本默认为 0
+        int patch = stringVersion.length > 2 && stringVersion[2].matches("\\d+") ? Integer.parseInt(stringVersion[2]) : 0;
+        version = new int[]{major, minor, patch};
+        // ------------------------------
+
+        // 加载 ColorUtil (Hex color support for 1.16.1+)
+        //if (((version[0] == 1 && version[1] > 16) || (version[0] == 1 && version[1] == 16 && version[2] >= 1)) || version[0] >= 26) {
+        ColorUtil.hexColorEnabled = true;
+        //}
+
+        MenuConfig.initialization();
         Locale.createLocaleFile();
         CIdData.init();
 

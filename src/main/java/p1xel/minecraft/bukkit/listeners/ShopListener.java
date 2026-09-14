@@ -540,6 +540,8 @@ public class ShopListener implements Listener {
             purchase.remove(playerUniqueId);
         });
 
+        event.setCancelled(true);
+
     }
 
 

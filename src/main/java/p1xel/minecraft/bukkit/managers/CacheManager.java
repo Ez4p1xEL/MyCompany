@@ -1,6 +1,10 @@
 package p1xel.minecraft.bukkit.managers;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import p1xel.minecraft.bukkit.Company;
+import p1xel.minecraft.bukkit.utils.prices.InternalStore;
+import p1xel.minecraft.bukkit.utils.prices.PriceGroup;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -13,11 +17,13 @@ public class CacheManager {
 //        return companies;
 //    }
 
-    private CompanyManager companies;
-    private UserManager users;
-    private ShopManager shops;
-    private BuildingManager buildings;
-    private AreaManager areas;
+    private final CompanyManager companies;
+    private final UserManager users;
+    private final ShopManager shops;
+    private final BuildingManager buildings;
+    private final AreaManager areas;
+    private final InternalStore internalStore;
+    private final HashMap<UUID, Company> companiesCache = new HashMap<>();
 
     public CacheManager(CompanyManager companies, UserManager users) {
         this.companies = companies;
@@ -25,6 +31,7 @@ public class CacheManager {
         this.shops = new ShopManager(companies.getData());
         this.buildings = new BuildingManager(companies.getData());
         this.areas = new AreaManager(companies.getData());
+        this.internalStore = new InternalStore();
     }
 
     public CompanyManager getCompanyManager() {
@@ -41,10 +48,48 @@ public class CacheManager {
 
     public AreaManager getAreaManager() { return areas; }
 
+    public InternalStore getInternalStore() { return internalStore; }
+
     public void init() {
         this.companies.init();
         this.users.init();
         this.areas.init();
+
+        /* init companies
+        初始化公司
+         */
+        for (UUID uuid : companies.getAllCompanies()) {
+            Company company = new Company(uuid);
+            company.setEmployer(companies.getEmployer(uuid));
+            company.setPositions(companies.getPositions(uuid));
+            for (String position : companies.getPositions(uuid)) {
+                company.setEmployeeList(position, companies.getEmployeeList(uuid, position));
+            }
+
+            if (companies.getPriceGroup(uuid) == null) {
+                companies.setPriceGroup(uuid, PriceGroup.NORMAL);
+            }
+            companiesCache.put(uuid, company);
+        }
+    }
+
+    @NotNull
+    public Company getCompany(@NotNull UUID uuid) {
+        return companiesCache.get(uuid);
+    }
+
+    public boolean isCompanyCached(@NotNull UUID uuid) {
+        return companiesCache.containsKey(uuid);
+    }
+
+    public Company createCompanyCache(@NotNull UUID uuid) {
+        Company company = new Company(uuid);
+        companiesCache.put(uuid, company);
+        return company;
+    }
+
+    public void removeCompanyCache(@NotNull UUID uuid) {
+        companiesCache.remove(uuid);
     }
 
 

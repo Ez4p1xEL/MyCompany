@@ -193,6 +193,32 @@ public class CommandListener implements CommandExecutor {
                 return true;
 
             }
+
+            if (args[0].equalsIgnoreCase("store")) {
+
+                if (!(sender instanceof Player)) {
+                    sender.sendMessage(Locale.getMessage("must-be-player"));
+                    return true;
+                }
+
+                if (!sender.hasPermission("mycompany.commands.store")) {
+                    sender.sendMessage(Locale.getMessage("no-perm"));
+                    return true;
+                }
+
+                Player player = (Player) sender;
+                UUID uniqueId = player.getUniqueId();
+                UUID companyUniqueId = userManager.getCompanyUUID(uniqueId);
+                // Check if the sender has company
+                if (companyUniqueId == null) {
+                    sender.sendMessage(Locale.getMessage("no-company"));
+                    return true;
+                }
+
+                player.openInventory(new GUIInternalStore(player.getUniqueId()).getInventory());
+                return true;
+
+            }
         }
 
         if (args.length == 2) {

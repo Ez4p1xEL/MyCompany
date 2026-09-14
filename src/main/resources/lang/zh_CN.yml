@@ -6,6 +6,7 @@ commands:
   page: '&e/myc ? %page% &a第 %page% 页'
   space-1: '&f'
   open: '&e/myc open &7打开公司主菜单'
+  store: '&e/myc store &7打开公司专属内部商店.'
   found: '&e/myc found <名称> &7成立一间公司 (用_代替空格)'
   disband: '&e/myc disband &7解散你的公司'
   employ: '&e/myc employ <玩家> &7发送合同给玩家'
@@ -872,6 +873,20 @@ menu:
         lore:
           - ''
           - '&7点击切换'
+          - ''
+  internal-store:
+    title: '公司专属内部商店'
+    items:
+      submit:
+        material: emerald
+        display_name: '&a出售商品'
+        lore:
+          - ''
+          - '&7出售商品至内部商店'
+          - '&7你的公司会收到 &e%money%'
+          - '&7作为回收价格'
+          - '&7另外, 你会收到 &e%price%'
+          - '&7为个人分成'
           - ''
 
 position-permission:

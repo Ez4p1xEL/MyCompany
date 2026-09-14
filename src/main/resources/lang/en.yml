@@ -6,6 +6,7 @@ commands:
   page: '&e/myc ? %page% &aPage %page%'
   space-1: '&f'
   open: '&e/myc open &7Open menu.'
+  store: '&e/myc store &7Open the internal store menu.'
   found: '&e/myc found <company> &7Found a company. (Use _ instead of SPACE)'
   disband: '&e/myc disband &7Disband your company.'
   employ: '&e/myc employ <player> &7Send an employment contract to the player.'
@@ -894,6 +895,20 @@ menu:
         lore:
           - ''
           - '&7Click to switch'
+          - ''
+  internal-store:
+    title: 'Internal Store'
+    items:
+      submit:
+        material: emerald
+        display_name: '&aSubmit'
+        lore:
+          - ''
+          - '&7Submit the item to the internal store'
+          - '&7The company will receive &e%money%'
+          - '&7for the items.'
+          - '&7Additionally, you will receive &e%price%'
+          - '&7of the money as the share.'
           - ''
 
 position-permission:

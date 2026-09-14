@@ -26,7 +26,7 @@ public abstract class CompanyData {
 
     public abstract void set(UUID uniqueId, String type, String key, Object value);
 
-    public abstract void createCompany(String companyName, UUID playerUniqueId);
+    public abstract UUID createCompany(String companyName, UUID playerUniqueId);
 
     public abstract Object get(UUID uniqueId, String type, String path);
 
