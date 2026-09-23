@@ -142,7 +142,7 @@ area-created: '&7[&6%prefix%&7] &a領地 &e%name% &a已成功建立！'
 area-name-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c已存在！'
 area-name-not-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c似乎不存在！'
 selection-missing: '&7[&6%prefix%&7] &c你需要先使用選擇工具選定領地區域！'
-tool-item-null: 物品為空，請檢查配置檔。
+tool-item-null: '物品為空，請檢查配置檔。'
 givetool-target-success: '&7[&6%prefix%&7] &a你已獲得選擇工具物品。'
 first-block-selected: '&7[&6%prefix%&7] &a你已選擇第一個方塊，座標為 &e%x%&a,&e%y%&a,&e%z%&a。'
 second-block-selected: '&7[&6%prefix%&7] &a你已選擇第二個方塊，座標為 &e%x%&a,&e%y%&a,&e%z%&a。'
@@ -218,6 +218,7 @@ shop:
   invalid-buy-amount: '&7[&6%prefix%&7] &c購買數量錯誤'
   not-enough-stock: '&7[&6%prefix%&7] &c商店目前缺貨!'
   buy-success: '&7[&6%prefix%&7] &a你已購買 &b%company% &a的商品!'
+  reach-maximum: '&7[&6%prefix%&7] &c公司已達到最大箱子商店數量!'
 
 menu:
   main:

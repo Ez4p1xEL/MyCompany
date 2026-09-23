@@ -1,5 +1,6 @@
 package p1xel.minecraft.bukkit.listener;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Directional;
@@ -17,6 +18,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitTask;
@@ -25,6 +27,7 @@ import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.event.CompanyIncomeEvent;
 import p1xel.minecraft.bukkit.manager.*;
 import p1xel.minecraft.bukkit.manager.shop.ShopItemBuyMode;
+import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.Logger;
 import p1xel.minecraft.bukkit.util.permission.Permission;
@@ -37,14 +40,15 @@ import java.util.logging.Level;
 
 public class ShopListener implements Listener {
 
-    private final NamespacedKey shopKey = new NamespacedKey("mycompany", "is_company_shop");
-    private final NamespacedKey companyKey = new NamespacedKey("mycompany", "company");
-    private final NamespacedKey shopUUIDKey = new NamespacedKey("mycompany", "shop_uuid");
-    private final CompanyManager companyManager = MyCompany.getCacheManager().getCompanyManager();
-    private final UserManager userManager = MyCompany.getCacheManager().getUserManager();
-    private final ShopManager shopManager = MyCompany.getCacheManager().getShopManager();
-    private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
-    private HashMap<UUID, ShopItemBuyMode> purchase = new HashMap<>();
+    private final CacheManager cacheManager = MyCompany.getCacheManager();
+    private final CompanyManager companyManager = cacheManager.getCompanyManager();
+    private final UserManager userManager = cacheManager.getUserManager();
+    private final ShopManager shopManager = cacheManager.getShopManager();
+    private final BuildingManager buildingManager = cacheManager.getBuildingManager();
+    private final NamespacedKey shopKey = shopManager.getShopKey();
+    private final NamespacedKey companyKey = shopManager.getCompanyKey();
+    private final NamespacedKey shopUUIDKey = shopManager.getShopUUIDKey();
+    private final HashMap<UUID, ShopItemBuyMode> purchase = new HashMap<>();
 
     @EventHandler
     public void onShopCreated(SignChangeEvent event) {
@@ -110,6 +114,11 @@ public class ShopListener implements Listener {
             return;
         }
 
+        if (shopManager.getShops(companyUniqueId).size() >= Config.getInt("chest-shop.maximum-chestshop")) {
+            player.sendMessage(Locale.getMessage("shop.reach-maximum"));
+            return;
+        }
+
         Location location = chestBlock.getLocation();
         UUID shopUniqueId = shopManager.createShop(companyUniqueId, location, price, player.getName());
         chest.getPersistentDataContainer().set(shopKey, PersistentDataType.BOOLEAN, true);
@@ -119,6 +128,7 @@ public class ShopListener implements Listener {
         shop.setItem(specifyItem(chest));
         chest.update();
         updateSign((Sign) block.getState());
+
 
     }
 
@@ -171,14 +181,27 @@ public class ShopListener implements Listener {
             SignSide side = sign.getSide(Side.FRONT);
             for (String key : Locale.yaml.getConfigurationSection("shop.sign").getKeys(false)) {
                 String line = Locale.getMessage("shop.sign." + key);
-                line = line.replaceAll("%company%", companyManager.getName(companyUniqueId));
+                line = line.replace("%company%", companyManager.getName(companyUniqueId));
                 if (item != null) {
-                    line = line.replaceAll("%item%", item.getType().name());
+                    if (line.contains("%item%")) {
+                        if (item.hasItemMeta()) {
+                            ItemMeta meta = item.getItemMeta();
+                            if (meta.hasDisplayName()) {
+                                side.line(i, meta.displayName());
+                                i++;
+                                continue;
+                            }
+                        }
+
+                        side.line(i, Component.translatable(item.translationKey()));
+                        i++;
+                        continue;
+                    }
                 } else {
-                    line = line.replaceAll("%item%", "");
+                    line = line.replace("%item%", "");
                 }
-                line = line.replaceAll("%status%", Locale.getMessage("shop.status." + finalStatus));
-                line = line.replaceAll("%price%", String.valueOf(shop.getPrice()));
+                line = line.replace("%status%", Locale.getMessage("shop.status." + finalStatus));
+                line = line.replace("%price%", String.valueOf(shop.getPrice()));
                 side.setLine(i, line);
                 i++;
             }
@@ -297,15 +320,23 @@ public class ShopListener implements Listener {
                     return;
                 }
                 Chest chestState = (Chest) chestBlock.getState();
-                PersistentDataContainer container = chestState.getPersistentDataContainer();
-                if (Boolean.TRUE.equals(container.get(shopKey, PersistentDataType.BOOLEAN))) {
+//                PersistentDataContainer container = chestState.getPersistentDataContainer();
+//                if (Boolean.TRUE.equals(container.get(shopKey, PersistentDataType.BOOLEAN))) {
+//                    event.setCancelled(true);
+//                }
+                // 0.8.10 method
+                Shop shop = shopManager.getShop(chestState);
+                if (shop != null) {
                     event.setCancelled(true);
                 }
                 return;
             }
 
-            if (block.getState() instanceof Chest) {
-                Shop shop = shopManager.getShop(block.getLocation());
+            if (block.getState() instanceof Chest chest) {
+                //Shop shop = shopManager.getShop(block.getLocation()); //@Deprecated
+
+                // 0.8.10 method
+                Shop shop = shopManager.getShop(chest);
                 if (shop == null) {
                     return;
                 }
@@ -346,14 +377,21 @@ public class ShopListener implements Listener {
                 return;
             }
             Chest chestState = (Chest) chestBlock.getState();
-            PersistentDataContainer container = chestState.getPersistentDataContainer();
-            if (Boolean.TRUE.equals(container.get(shopKey, PersistentDataType.BOOLEAN))) {
-                updateSign(sign);
+//            PersistentDataContainer container = chestState.getPersistentDataContainer();
+//            if (Boolean.TRUE.equals(container.get(shopKey, PersistentDataType.BOOLEAN))) {
+//                updateSign(sign);
+//            }
+
+            // 0.8.10 method
+            Shop shop = shopManager.getShop(chestState);
+            if (shop == null) {
+                return;
             }
+
+            updateSign(sign);
 
             Player player = event.getPlayer();
             UUID playerUniqueId = player.getUniqueId();
-            Shop shop = shopManager.getShop(chestBlock.getLocation());
             if (shop.getItem() == null) {
                 return;
             }
@@ -391,8 +429,12 @@ public class ShopListener implements Listener {
         // If block is the chest
         Block block = event.getBlock();
         if (block.getType() == Material.CHEST) {
-            //Chest chest = (Chest) block.getState();
-            Shop shop = shopManager.getShop(block.getLocation());
+            Chest chest = (Chest) block.getState();
+//            Shop shop = shopManager.getShop(block.getLocation());
+
+            // 0.8.10 method
+            Shop shop = shopManager.getShop(chest);
+
             if (shop != null) {
 
                 Player player = event.getPlayer();
@@ -423,7 +465,12 @@ public class ShopListener implements Listener {
             Directional directional = (Directional) sign.getBlock().getBlockData();
             BlockFace attachedFace = directional.getFacing().getOppositeFace();
             Block chestBlock = sign.getBlock().getRelative(attachedFace);
-            Shop shop = shopManager.getShop(chestBlock.getLocation());
+//            Shop shop = shopManager.getShop(chestBlock.getLocation());
+            if (!(chestBlock.getState() instanceof Chest chest)) {
+                return;
+            }
+            // 0.8.10 method
+            Shop shop = shopManager.getShop(chest);
             if (shop != null) {
                 Player player = event.getPlayer();
                 player.sendMessage(Locale.getMessage("shop.break-chest-instead"));

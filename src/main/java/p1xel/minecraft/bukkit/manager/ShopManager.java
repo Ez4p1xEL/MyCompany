@@ -8,11 +8,13 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Nullable;
+import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.util.Logger;
 import p1xel.minecraft.bukkit.util.storage.CompanyData;
 import p1xel.minecraft.bukkit.object.Shop;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -20,7 +22,7 @@ import java.util.logging.Level;
 
 public class ShopManager {
 
-    private CompanyData data;
+    private final CompanyData data;
     private final NamespacedKey shopKey = new NamespacedKey("mycompany", "is_company_shop");
     private final NamespacedKey companyKey = new NamespacedKey("mycompany", "company");
     private final NamespacedKey shopUUIDKey = new NamespacedKey("mycompany", "shop_uuid");
@@ -50,7 +52,12 @@ public class ShopManager {
         return new Shop(companyUniqueId, shopUniqueId);
     }
 
-    public UUID createShop(UUID uniqueId, org.bukkit.Location location, double price, String creatorName) {return this.data.createShop(uniqueId, location, price, creatorName);}
+    public UUID createShop(UUID uniqueId, Location location, double price, String creatorName) {
+        UUID shopUniqueId = this.data.createShop(uniqueId, location, price, creatorName);
+        Company company = MyCompany.getCacheManager().getCompany(uniqueId);
+        company.addShop(shopUniqueId, getShop(uniqueId, shopUniqueId));
+        return shopUniqueId;
+    }
 
     @Nullable
     public ItemStack getItem(UUID companyUniqueId, UUID shopUniqueId) {
@@ -81,6 +88,8 @@ public class ShopManager {
 
     public void deleteShop(UUID companyUniqueId, UUID shopUniqueId) {
         this.data.set(companyUniqueId, "shop", shopUniqueId.toString(), null);
+        Company company = MyCompany.getCacheManager().getCompany(companyUniqueId);
+        company.removeShop(shopUniqueId);
     }
 
     public void deleteShop(Shop shop) {
@@ -99,6 +108,53 @@ public class ShopManager {
         return (String) this.data.get(companyUniqueId, "shop", shopUniqueId + ".creator");
     }
 
+    // In Game
+    public boolean isShop(Chest chest) {
+        PersistentDataContainer container = chest.getPersistentDataContainer();
+        return container.has(shopKey, PersistentDataType.BOOLEAN);
+    }
 
+    @Nullable
+    public UUID getShopUUID(Chest chest) {
+        PersistentDataContainer container = chest.getPersistentDataContainer();
+        if (!container.has(shopUUIDKey, PersistentDataType.STRING)) {
+            return null;
+        }
+
+        String string = container.get(shopUUIDKey, PersistentDataType.STRING);
+        if (string == null) { return null; }
+
+        return UUID.fromString(string);
+    }
+
+    @Nullable
+    public UUID getCompanyUUID(Chest chest) {
+        PersistentDataContainer container = chest.getPersistentDataContainer();
+        if (!container.has(companyKey, PersistentDataType.STRING)) {
+            return null;
+        }
+
+        String string = container.get(companyKey, PersistentDataType.STRING);
+        if (string == null) { return null; }
+
+        return UUID.fromString(string);
+    }
+
+    @Nullable
+    public Shop getShop(Chest chest) {
+        UUID companyUniqueId = getCompanyUUID(chest);
+        UUID shopUniqueId = getShopUUID(chest);
+        if (companyUniqueId == null || shopUniqueId == null) {
+            return null;
+        }
+
+        Company company = MyCompany.getCacheManager().getCompany(companyUniqueId);
+        return company.getShop(shopUniqueId, true);
+
+    }
+
+    public NamespacedKey getShopKey() { return this.shopKey; }
+    public NamespacedKey getCompanyKey() { return this.companyKey; }
+    public NamespacedKey getShopUUIDKey() { return this.shopUUIDKey; }
 
 }

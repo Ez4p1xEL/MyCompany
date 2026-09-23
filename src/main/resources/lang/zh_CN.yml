@@ -236,6 +236,7 @@ shop:
   invalid-buy-amount: '&7[&6%prefix%&7] &c错误的数量'
   not-enough-stock: '&7[&6%prefix%&7] &c该商店缺货中!'
   buy-success: '&7[&6%prefix%&7] &a你购买了 &b%company% &a的商品!'
+  reach-maximum: '&7[&6%prefix%&7] &c你的公司已达到箱子商店的上限!'
 
 menu:
   main:

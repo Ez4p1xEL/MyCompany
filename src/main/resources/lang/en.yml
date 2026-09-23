@@ -246,6 +246,7 @@ shop:
   invalid-buy-amount: '&7[&6%prefix%&7] &cInvalid amount.'
   not-enough-stock: '&7[&6%prefix%&7] &cThe shop does not have enough stock!'
   buy-success: '&7[&6%prefix%&7] &aYou bought products from &b%company%&a!'
+  reach-maximum: '&7[&6%prefix%&7] &cYour company has reached the maximum amount of chest shops!'
 
 menu:
   main:

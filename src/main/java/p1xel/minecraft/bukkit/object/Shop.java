@@ -6,25 +6,33 @@ import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.ShopManager;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class Shop{
 
     private final UUID companyUniqueId;
     private final UUID shopUniqueId;
-    private ItemStack itemStack;
+    private @Nullable ItemStack itemStack;
     private final double price;
     private final Location location;
     private final Block block;
+    private final String creator;
+    private long lastAccess = 0;
     private final ShopManager shopManager = MyCompany.getCacheManager().getShopManager();
 
     public Shop(UUID companyUniqueId, UUID shopUniqueId) {
         this.companyUniqueId = companyUniqueId;
         this.shopUniqueId = shopUniqueId;
-        itemStack = shopManager.getItem(companyUniqueId, shopUniqueId);
+        try {
+            itemStack = shopManager.getItem(companyUniqueId, shopUniqueId);
+        } catch (NullPointerException exception) {
+            itemStack = null;
+        }
         price = shopManager.getPrice(companyUniqueId, shopUniqueId);
         location = shopManager.getLocation(companyUniqueId, shopUniqueId);
         block = shopManager.getChestBlock(companyUniqueId, shopUniqueId);
+        creator = shopManager.getCreator(companyUniqueId, shopUniqueId);
     }
 
     public UUID getCompanyUUID() {
@@ -36,11 +44,11 @@ public class Shop{
     }
 
     public ItemStack getItem() {
-        return shopManager.getItem(companyUniqueId, shopUniqueId);
+        return this.itemStack;
     }
 
     public double getPrice() {
-        return shopManager.getPrice(companyUniqueId, shopUniqueId);
+        return price;
     }
 
     public void setItem(ItemStack item) {
@@ -52,11 +60,11 @@ public class Shop{
     }
 
     public Location getLocation() {
-        return shopManager.getLocation(companyUniqueId, shopUniqueId);
+        return this.location;
     }
 
     public Block getChestBlock() {
-        return shopManager.getChestBlock(companyUniqueId, shopUniqueId);
+        return this.block;
     }
 
     public String getStatus(int amount) {
@@ -65,6 +73,10 @@ public class Shop{
             return "out-of-stock";
         }
         return "selling";
+    }
+
+    public long getLastAccess() {
+        return lastAccess;
     }
 
 //    public void takeStock(int amount) {
@@ -100,7 +112,11 @@ public class Shop{
 //    }
 
     public String getCreator() {
-        return shopManager.getCreator(companyUniqueId, shopUniqueId);
+        return this.creator;
+    }
+
+    public void updateLastAccess() {
+        this.lastAccess = System.currentTimeMillis();
     }
 
 

@@ -56,7 +56,7 @@ company-settings:
   # Should the chestshop be created in company's building?
   # Set to false if you allow the employee to create
   # chestshops anywhere.
-  chestshop-create-in-building: true
+  chestshop-create-in-building: false
   # The maximum amount of custom position that
   # the company can have.
   # The value is excluding employer and employee.
@@ -130,6 +130,8 @@ chest-shop:
     identifier: '[COMPANYSHOP]'
   # how many seconds that the player can enter the amount to buy item
   buy-time: 10
+  # Maximum amount of chest shops for each company
+  maximum-chestshop: 10
 
 # Company Areas
 company-area:
