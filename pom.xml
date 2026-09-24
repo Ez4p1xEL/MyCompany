@@ -6,68 +6,34 @@
 
     <groupId>p1xel.minecraft.bukkit</groupId>
     <artifactId>MyCompany</artifactId>
-    <version>0.8.11</version>
-    <packaging>jar</packaging>
+    <version>0.8.20</version>
+    <packaging>pom</packaging>
 
     <name>MyCompany</name>
 
+    <modules>
+        <module>mycompany-core</module>
+        <module>mycompany-pro</module>
+    </modules>
+
     <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- 統一依賴版本管理 -->
+        <paper.version>1.21.1-R0.1-SNAPSHOT</paper.version>
+        <vault.version>1.7.1</vault.version>
+        <papi.version>2.11.6</papi.version>
+        <dominion.version>4.5.0</dominion.version>
+        <anvilgui.version>1.10.13-SNAPSHOT</anvilgui.version>
+        <hikari.version>5.1.0</hikari.version>
+
+        <main.basedir>${project.basedir}</main.basedir>
     </properties>
 
-    <build>
-        <defaultGoal>clean package</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.2</version> <!-- The version must be at least 3.5.0 -->
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <relocations>
-                                <relocation>
-                                    <pattern>net.wesjd.anvilgui</pattern>
-                                    <shadedPattern>p1xel.minecraft.bukkit.anvilgui</shadedPattern> <!-- Replace [YOUR_PLUGIN_PACKAGE] with your namespace -->
-                                </relocation>
-                            </relocations>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludeDefaults>false</excludeDefaults>
-                                    <includes>
-                                        <include>net/wesjd/anvilgui/**</include>
-                                    </includes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
     <repositories>
-
         <repository>
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
@@ -90,53 +56,108 @@
         </repository>
     </repositories>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.papermc.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.21.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
+    <!-- 依賴版本統籌：子模組需要用到時，只需寫 groupId + artifactId，版本自動繼承此處 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 本專案子模組相互引用 -->
+            <dependency>
+                <groupId>p1xel.minecraft.bukkit</groupId>
+                <artifactId>mycompany-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
-        <!-- Vault -->
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- PlaceholderAPI -->
-        <!-- https://mvnrepository.com/artifact/com.github.placeholderapi/placeholderapi -->
-        <dependency>
-            <groupId>com.github.placeholderapi</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.11.6</version>
-            <scope>provided</scope>
-        </dependency>
+            <!-- Paper API -->
+            <dependency>
+                <groupId>io.papermc.paper</groupId>
+                <artifactId>paper-api</artifactId>
+                <version>${paper.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
-        <!-- Residence -->
-        <dependency>
-            <groupId>com.bekvon</groupId>
-            <artifactId>residence-api</artifactId>
-            <version>5.1.6.4</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Residence5.1.6.4.jar</systemPath>
-        </dependency>
+            <!-- Vault API -->
+            <dependency>
+                <groupId>com.github.MilkBowl</groupId>
+                <artifactId>VaultAPI</artifactId>
+                <version>${vault.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
-        <!-- Dominion -->
-        <dependency>
-            <groupId>cn.lunadeer</groupId>
-            <artifactId>DominionAPI</artifactId>
-            <version>4.5.0</version>
-            <scope>provided</scope>
-        </dependency>
+            <!-- PlaceholderAPI -->
+            <dependency>
+                <groupId>com.github.placeholderapi</groupId>
+                <artifactId>placeholderapi</artifactId>
+                <version>${papi.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
-        <dependency>
-            <groupId>net.wesjd</groupId>
-            <artifactId>anvilgui</artifactId>
-            <version>1.10.13-SNAPSHOT</version>
-            <scope>compile</scope> <!-- Include the library in your JAR -->
-        </dependency>
-    </dependencies>
+            <!-- Dominion API -->
+            <dependency>
+                <groupId>cn.lunadeer</groupId>
+                <artifactId>DominionAPI</artifactId>
+                <version>${dominion.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
+            <!-- Residence API（使用多模組根目錄定位 lib） -->
+            <dependency>
+                <groupId>com.bekvon</groupId>
+                <artifactId>residence-api</artifactId>
+                <version>5.1.6.4</version>
+                <scope>system</scope>
+                <systemPath>${main.basedir}/lib/Residence5.1.6.4.jar</systemPath>
+            </dependency>
+
+            <!-- AnvilGUI -->
+            <dependency>
+                <groupId>net.wesjd</groupId>
+                <artifactId>anvilgui</artifactId>
+                <version>${anvilgui.version}</version>
+            </dependency>
+
+            <!-- Pro 模組專用依賴預留：HikariCP -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+
+        <pluginManagement>
+            <plugins>
+                <!-- 編譯器插件統一管理 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- Shade 插件規範統一管理（供 core/pro 繼承調用） -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <createDependencyReducedPom>false</createDependencyReducedPom>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- 確保所有子模組都使用指定編譯器 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
