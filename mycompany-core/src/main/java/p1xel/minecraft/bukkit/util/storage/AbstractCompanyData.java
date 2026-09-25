@@ -119,4 +119,10 @@ public abstract class AbstractCompanyData {
     public abstract Location getAreaLocation(UUID uniqueId, String area);
 
     public abstract HashMap<UUID, List<String>> getAreasRented(UUID uniqueId);
+
+    public abstract String getFocusInName(UUID uniqueId);
+
+    public abstract List<String> getExpertises(UUID uniqueId);
+
+    public abstract void setFocus(UUID uniqueId, String focusId);
 }

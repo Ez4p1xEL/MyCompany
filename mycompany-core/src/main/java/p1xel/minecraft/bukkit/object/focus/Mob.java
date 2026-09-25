@@ -5,16 +5,10 @@ import p1xel.minecraft.bukkit.object.focus.tree.Expertise;
 import java.util.HashMap;
 import java.util.Set;
 
-public class Mob implements Focus {
-
-    private final String id;
-    private final HashMap<String, Expertise> expertiseMap = new HashMap<>();
+public class Mob extends Focus {
 
     public Mob(String id, Set<Expertise> expertiseSet) {
-        this.id = id;
-        for (Expertise expertise : expertiseSet) {
-            expertiseMap.put(expertise.getId(), expertise);
-        }
+        super(id,expertiseSet);
     }
 
     @Override

@@ -2,6 +2,7 @@ package p1xel.minecraft.bukkit.manager;
 
 import org.jetbrains.annotations.NotNull;
 import p1xel.minecraft.bukkit.object.Company;
+import p1xel.minecraft.bukkit.object.focus.FocusManager;
 import p1xel.minecraft.bukkit.object.price.InternalStore;
 import p1xel.minecraft.bukkit.object.price.PriceGroup;
 
@@ -22,6 +23,7 @@ public class CacheManager {
     private final BuildingManager buildings;
     private final AreaManager areas;
     private final InternalStore internalStore;
+    private final FocusManager focus;
     private final HashMap<UUID, Company> companiesCache = new HashMap<>();
 
     public CacheManager(CompanyManager companies, UserManager users) {
@@ -31,23 +33,18 @@ public class CacheManager {
         this.buildings = new BuildingManager(companies.getData());
         this.areas = new AreaManager(companies.getData());
         this.internalStore = new InternalStore();
+        this.focus = new FocusManager(companies.getData());
     }
 
-    public CompanyManager getCompanyManager() {
-        return companies;
-    }
-    
+    public CompanyManager getCompanyManager() { return companies; }
     public UserManager getUserManager() {
         return users;
     }
-
     public ShopManager getShopManager() { return shops;}
-
     public BuildingManager getBuildingManager() { return buildings;}
-
     public AreaManager getAreaManager() { return areas; }
-
     public InternalStore getInternalStore() { return internalStore; }
+    public FocusManager getFocusManager() { return focus; }
 
     public void init() {
         this.companies.init();
@@ -70,6 +67,8 @@ public class CacheManager {
             }
             companiesCache.put(uuid, company);
         }
+
+        this.focus.init();
     }
 
     @NotNull

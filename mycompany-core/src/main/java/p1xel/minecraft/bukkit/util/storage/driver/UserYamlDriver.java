@@ -124,7 +124,6 @@ public class UserYamlDriver implements UserStorageDriver {
             yaml.save(file);
         } catch (Exception e) {
             Logger.debug(Level.SEVERE, "Failed to save file: " + file.getAbsolutePath());
-            e.printStackTrace();
         }
     }
 
@@ -201,7 +200,6 @@ public class UserYamlDriver implements UserStorageDriver {
                 Logger.debug(Level.INFO, "Created new user file: " + file.getAbsolutePath());
             } catch (Exception e) {
                 Logger.debug(Level.SEVERE, "Failed to create user file: " + file.getAbsolutePath());
-                e.printStackTrace();
             }
 
         }

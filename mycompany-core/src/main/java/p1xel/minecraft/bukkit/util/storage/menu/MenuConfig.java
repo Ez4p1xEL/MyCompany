@@ -33,9 +33,7 @@ public class MenuConfig {
 
             try {
                 exist_file.save(file);
-            } catch (IOException io) {
-                io.printStackTrace();
-            }
+            } catch (IOException ignored) {}
         }
 
         FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);

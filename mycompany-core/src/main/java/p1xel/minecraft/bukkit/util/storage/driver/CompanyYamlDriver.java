@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 public class CompanyYamlDriver implements CompanyStorageDriver {
 
-    private final String[] types = new String[]{"info", "settings", "inventory", "shop", "asset", "area"};
+    private final String[] types = new String[]{"info", "settings", "inventory", "shop", "asset", "area", "focus"};
     private final JavaPlugin plugin;
 
     private final HashMap<UUID, HashMap<String, File>> files = new HashMap<>();
@@ -47,7 +47,7 @@ public class CompanyYamlDriver implements CompanyStorageDriver {
                                 Logger.debug(Level.INFO, "Created new file: " + type_file.getAbsolutePath());
                             } catch (Exception e) {
                                 Logger.debug(Level.SEVERE, "Failed to create file: " + type_file.getAbsolutePath());
-                                e.printStackTrace();
+                                continue;
                             }
                         }
 
@@ -100,7 +100,6 @@ public class CompanyYamlDriver implements CompanyStorageDriver {
             yaml.save(file);
         } catch (Exception e) {
             Logger.debug(Level.SEVERE, "Failed to save file: " + file.getAbsolutePath());
-            e.printStackTrace();
         }
     }
 
@@ -161,6 +160,9 @@ public class CompanyYamlDriver implements CompanyStorageDriver {
             Logger.debug(Level.INFO, "Created new company folder: " + folder.getAbsolutePath());
         }
 
+        this.files.put(uniqueId, new HashMap<>());
+        this.yamls.put(uniqueId, new HashMap<>());
+
         for (String type : types) {
             File type_file = new File(folder, type + ".yml");
             if (!type_file.exists()) {
@@ -169,7 +171,7 @@ public class CompanyYamlDriver implements CompanyStorageDriver {
                     Logger.debug(Level.INFO, "Created new file: " + type_file.getAbsolutePath());
                 } catch (Exception e) {
                     Logger.debug(Level.SEVERE, "Failed to create file: " + type_file.getAbsolutePath());
-                    e.printStackTrace();
+                    continue;
                 }
             }
 

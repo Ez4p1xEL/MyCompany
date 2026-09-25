@@ -6,7 +6,7 @@
 
     <groupId>p1xel.minecraft.bukkit</groupId>
     <artifactId>MyCompany</artifactId>
-    <version>0.8.20</version>
+    <version>0.8.21</version>
     <packaging>pom</packaging>
 
     <name>MyCompany</name>

@@ -8,6 +8,7 @@ import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.area.CompanyArea;
 import p1xel.minecraft.bukkit.object.Shop;
+import p1xel.minecraft.bukkit.object.focus.tree.Expertise;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.ItemSerializer;
 import p1xel.minecraft.bukkit.object.price.PriceGroup;
@@ -110,10 +111,16 @@ public class CompanyData extends AbstractCompanyData {
         set(uuid, "settings", "position.default.employee.permission", Config.getStringList("company-settings.employee-default-permission"));
         // END
 
+        // Type: focus
+        set(uuid, "focus", "focus", "none");
+        set(uuid, "focus", "expertises", Collections.singletonList(Expertise.empty.getString()));
+        // END
+
         // Save
         save(uuid, "info");
         save(uuid, "asset");
         save(uuid, "settings");
+        save(uuid, "focus");
 
         companyList.add(uuid);
         int cid = getId(uuid);
@@ -516,6 +523,7 @@ public class CompanyData extends AbstractCompanyData {
         return list;
     }
 
+
     @Override
     public void setAreaLocation(UUID uniqueId, String area, Location location) {
         set(uniqueId, "area", "areas." + area + ".tp-loc.world", location.getWorld().getName());
@@ -557,6 +565,27 @@ public class CompanyData extends AbstractCompanyData {
     }
 
     // area.yml - END
+
+    // focus.yml - BEGIN
+    @Override
+    public String getFocusInName(UUID uniqueId) {
+        return getString(uniqueId, "focus", "focus");
+    }
+
+    // expertise_id;value;unlocked boolean
+    @Override
+    public List<String> getExpertises(UUID uniqueId) {
+        return getStringList(uniqueId, "focus", "expertises");
+    }
+
+    @Override
+    public void setFocus(UUID uniqueId, String focus) {
+        set(uniqueId, "focus", "focus", focus);
+        set(uniqueId, "focus", "expertises", Collections.emptyList());
+        save(uniqueId, "focus");
+    }
+
+    // focus.yml - END
 
     // Others - BEGIN
 

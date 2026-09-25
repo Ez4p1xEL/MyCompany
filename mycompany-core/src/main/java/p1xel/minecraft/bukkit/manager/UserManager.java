@@ -20,7 +20,7 @@ public class UserManager {
 
     private final AbstractUserData data;
     private final HashMap<UUID, User> userCache = new HashMap<>();
-    private static final long EXPIRE_TIME_SECONDS = 10 * 60; // 10 分鐘
+    private static final long EXPIRE_TIME_SECONDS = 10L * 60L; // 10 分鐘
 
     public UserManager(AbstractUserData data) {
         this.data = data;
