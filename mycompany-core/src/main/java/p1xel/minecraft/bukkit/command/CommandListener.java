@@ -16,6 +16,11 @@ import p1xel.minecraft.bukkit.manager.CompanyManager;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.UserManager;
 import p1xel.minecraft.bukkit.manager.gui.*;
+import p1xel.minecraft.bukkit.manager.gui.area.GUIAreaRentMarket;
+import p1xel.minecraft.bukkit.manager.gui.area.GUIAreaSaleMarket;
+import p1xel.minecraft.bukkit.manager.gui.area.GUIAreaTradeMarket;
+import p1xel.minecraft.bukkit.manager.gui.store.GUIInternalStore;
+import p1xel.minecraft.bukkit.object.User;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.permission.Permission;
 import p1xel.minecraft.bukkit.util.storage.EmployeeOrders;
@@ -38,10 +43,20 @@ public class CommandListener implements CommandExecutor {
 
         boolean isAdmin = sender.hasPermission("mycompany.commands.admin");
 
+        if (args.length == 0) {
+            if (!(sender instanceof Player player)) {
+                sender.sendMessage(Locale.getMessage("must-be-player"));
+                return true;
+            }
+
+            openMenu(player);
+            return true;
+        }
+
         if (args.length == 1) {
 
             if (args[0].equalsIgnoreCase("open")) {
-                if (!(sender instanceof Player)) {
+                if (!(sender instanceof Player player)) {
                     sender.sendMessage(Locale.getMessage("must-be-player"));
                     return true;
                 }
@@ -51,18 +66,7 @@ public class CommandListener implements CommandExecutor {
                     return true;
                 }
 
-                Player player = (Player) sender;
-                UUID playerUniqueId = player.getUniqueId();
-                UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
-                // Check if the sender has company
-                if (companyUniqueId == null) {
-                    //sender.sendMessage(Locale.getMessage("no-company"));
-                    GUIFound found = new GUIFound(playerUniqueId);
-                    player.openInventory(found.getInventory());
-                    return true;
-                }
-                GUIMain main = new GUIMain(playerUniqueId);
-                player.openInventory(main.getInventory());
+                openMenu(player);
                 return true;
             }
 
@@ -1109,6 +1113,36 @@ public class CommandListener implements CommandExecutor {
 
             }
 
+            if (args[0].equalsIgnoreCase("focus")) {
+
+                if (args[1].equalsIgnoreCase("expertise")) {
+
+                    if (args[2].equalsIgnoreCase("unlock")) {
+
+                        if (!(sender instanceof Player player)) {
+                            sender.sendMessage(Locale.getMessage("must-be-player"));
+                            return true;
+                        }
+
+                        if (!sender.hasPermission("mycompany.commands.focus.expertise.unlock")) {
+                            sender.sendMessage(Locale.getMessage("no-perm"));
+                            return true;
+                        }
+
+                        UUID companyUniqueId = userManager.getCompanyUUID(player.getUniqueId());
+                        if (companyUniqueId == null) {
+                            sender.sendMessage(Locale.getMessage("no-company"));
+                            return true;
+                        }
+
+                        return new PersonalAPI(player.getUniqueId()).unlockExpertise(args[3]);
+
+                    }
+
+                }
+
+            }
+
 
         }
 
@@ -1538,6 +1572,18 @@ public class CommandListener implements CommandExecutor {
 
         sender.sendMessage(Locale.getMessage("wrong-argument"));
         return true;
+    }
+
+    private void openMenu(Player player) {
+        UUID playerUniqueId = player.getUniqueId();
+        User user = userManager.getUser(playerUniqueId);
+        UUID companyUniqueId = user.getCompanyUUID();
+        if (companyUniqueId == null) {
+            new GUIFound(playerUniqueId).open();
+            return;
+        }
+
+        new GUIMain(playerUniqueId).open();
     }
 
 

@@ -7,7 +7,10 @@ import org.bukkit.event.HandlerList;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.listener.AreaProtector;
 import p1xel.minecraft.bukkit.manager.area.AreaSelectionMode;
+import p1xel.minecraft.bukkit.util.permission.PermissionUtil;
 import p1xel.minecraft.bukkit.util.storage.Locale;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuConfig;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
 import java.util.List;
 
@@ -33,6 +36,8 @@ public class Config {
         //config = NoBuildPlus.getInstance().getConfig();
         MyCompany.getCacheManager().init();
         Locale.createLocaleFile();
+        PermissionUtil.savePermissionLocale();
+        MenuUtil.createFiles();
         AreaSelectionMode.initTool();
         MyCompany.getTaxCollector().cancelTask();
         MyCompany.getTaxCollector().startTask();

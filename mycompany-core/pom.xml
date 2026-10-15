@@ -7,8 +7,12 @@
     <parent>
         <groupId>p1xel.minecraft.bukkit</groupId>
         <artifactId>MyCompany</artifactId>
-        <version>0.8.21</version>
+        <version>0.8.30</version>
     </parent>
+
+    <properties>
+        <child.version>0.8.30</child.version>
+    </properties>
 
     <artifactId>mycompany-core</artifactId>
     <packaging>jar</packaging>
@@ -58,8 +62,8 @@
     </dependencies>
 
     <build>
-        <!-- 產出的 Lite 版 Jar 包名稱 -->
-        <finalName>MyCompany-${project.version}</finalName>
+        <!-- 產出的 Jar 包名稱 -->
+        <finalName>MyCompany-${child.version}</finalName>
 
         <resources>
             <resource>

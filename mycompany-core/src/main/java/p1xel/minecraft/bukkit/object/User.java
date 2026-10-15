@@ -1,6 +1,7 @@
 package p1xel.minecraft.bukkit.object;
 
 import org.jetbrains.annotations.Nullable;
+import p1xel.minecraft.bukkit.util.permission.Permission;
 
 import java.util.*;
 

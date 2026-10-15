@@ -8,6 +8,4 @@ public interface FocusInterface {
 
     Expertise getExpertise(String id);
 
-
-
 }

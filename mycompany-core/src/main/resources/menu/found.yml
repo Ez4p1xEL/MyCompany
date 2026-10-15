@@ -1,0 +1,14 @@
+size: 27
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  found:
+    material: CHEST
+    slot: 12
+
+  wait_for_employ:
+    material: LEATHER_CHESTPLATE
+    slot: 14

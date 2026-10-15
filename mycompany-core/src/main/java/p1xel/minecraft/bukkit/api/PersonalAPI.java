@@ -8,6 +8,12 @@ import p1xel.minecraft.bukkit.manager.*;
 import p1xel.minecraft.bukkit.manager.area.AreaSelectionMode;
 import p1xel.minecraft.bukkit.manager.area.AreaTradeMarket;
 import p1xel.minecraft.bukkit.manager.area.CompanyArea;
+import p1xel.minecraft.bukkit.object.focus.CompanyFocus;
+import p1xel.minecraft.bukkit.object.focus.Focus;
+import p1xel.minecraft.bukkit.object.focus.FocusManager;
+import p1xel.minecraft.bukkit.object.focus.tree.Expertise;
+import p1xel.minecraft.bukkit.object.focus.tree.config.ExpertiseCondition;
+import p1xel.minecraft.bukkit.object.focus.tree.config.ExpertiseConfig;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.Logger;
 import p1xel.minecraft.bukkit.util.permission.Permission;
@@ -29,6 +35,7 @@ public class PersonalAPI {
     private final BuildingManager buildingManager = MyCompany.getCacheManager().getBuildingManager();
     private final AreaManager areaManager = MyCompany.getCacheManager().getAreaManager();
     private final AreaTradeMarket areaMarket = areaManager.getMarketManager();
+    private final FocusManager focusManager = MyCompany.getCacheManager().getFocusManager();
 
     public PersonalAPI(UUID playerUniqueId) {
         this.playerUniqueId = playerUniqueId;
@@ -68,18 +75,18 @@ public class PersonalAPI {
         int max_length = Config.getInt("company-settings.max-length");
 
         if (length > max_length) {
-            player.sendMessage(Locale.getMessage("out-of-length").replaceAll("%length%", String.valueOf(max_length)));
+            player.sendMessage(Locale.getMessage("out-of-length").replace("%length%", String.valueOf(max_length)));
             return false;
         }
 
         if (MyCompany.getCacheManager().getCompanyManager().getCompaniesName().contains(name)) {
-            player.sendMessage(Locale.getMessage("company-exist").replaceAll("%company%", name));
+            player.sendMessage(Locale.getMessage("company-exist").replace("%company%", name));
             return false;
         }
 
         double money = Config.getDouble("company-settings.founding-cost.money");
         if (MyCompany.getEconomy().getBalance(player) < money) {
-            player.sendMessage(Locale.getMessage("not-enough-money").replaceAll("%money%", String.valueOf(money)));
+            player.sendMessage(Locale.getMessage("not-enough-money").replace("%money%", String.valueOf(money)));
             return false;
         }
 
@@ -87,11 +94,11 @@ public class PersonalAPI {
 
         MyCompany.getCacheManager().getCompanyManager().createCompany(labelled, playerUniqueId);
         MyCompany.getEconomy().withdrawPlayer(player, money);
-        player.sendMessage(Locale.getMessage("found-success").replaceAll("%company%", labelled));
+        player.sendMessage(Locale.getMessage("found-success").replace("%company%", labelled));
 
         // Broadcast
         for (Player p : Bukkit.getOnlinePlayers()) {
-            p.sendMessage(Locale.getMessage("broadcast.company-found").replaceAll("%company%", labelled).replaceAll("%player%", player.getName()));
+            p.sendMessage(Locale.getMessage("broadcast.company-found").replace("%company%", labelled).replace("%player%", player.getName()));
             p.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 3f, 3f);
         }
 
@@ -131,7 +138,7 @@ public class PersonalAPI {
 
         // args[2] = player name, args[3] = position id
 
-        OfflinePlayer off_target = Bukkit.getPlayer(targetUniqueId);
+        OfflinePlayer off_target = Bukkit.getOfflinePlayer(targetUniqueId);
         if (!off_target.hasPlayedBefore() || !userManager.isUserExist(targetUniqueId)) {
             player.sendMessage(Locale.getMessage("player-not-exist").replaceAll("%player%", name));
             return true;
@@ -551,6 +558,41 @@ public class PersonalAPI {
 
         areaMarket.removeFromMarket(areaCompanyUniqueId, areaName);
         player.sendMessage(Locale.getMessage("market-remove-success").replaceAll("%area%", areaName));
+        return true;
+
+    }
+
+    public boolean unlockExpertise(String expertiseId) {
+
+        String position = userManager.getPosition(playerUniqueId);
+        if (!position.equalsIgnoreCase("employer")) {
+            player.sendMessage(Locale.getMessage("setlabel-employer-only"));
+            return true;
+        }
+
+        CompanyFocus companyFocus = focusManager.getCompanyFocus(companyUniqueId);
+        Focus focus = companyFocus.getFocus();
+        Expertise expertise = focus.getExpertise(expertiseId);
+        if (expertise == null) {
+            player.sendMessage(Locale.getMessage("expertise-not-exist").replaceAll("%expertise%", expertiseId));
+            return true;
+        }
+
+        if (expertise.getUnlocked()) {
+            player.sendMessage(Locale.getMessage("expertise-already-unlocked").replaceAll("%expertise%", expertiseId));
+            return true;
+        }
+
+        ExpertiseConfig config = focusManager.getExpertiseConfig(expertiseId);
+        ExpertiseCondition condition = config.getCondition();
+        double money = condition.getMoney();
+        if (companyManager.getCash(companyUniqueId) < money) {
+            player.sendMessage(Locale.getMessage("company-not-enough-money").replaceAll("%money%", String.valueOf(money)));
+            return true;
+        }
+
+        companyManager.takeMoney(companyUniqueId, money);
+        focusManager.unlockExpertise(companyUniqueId, expertise, true);
         return true;
 
     }

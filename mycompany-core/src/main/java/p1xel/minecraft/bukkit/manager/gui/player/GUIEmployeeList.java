@@ -1,7 +1,8 @@
-package p1xel.minecraft.bukkit.manager.gui;
+package p1xel.minecraft.bukkit.manager.gui.player;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -10,6 +11,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.manager.gui.GUIAbstract;
+import p1xel.minecraft.bukkit.manager.gui.GUIMain;
+import p1xel.minecraft.bukkit.manager.gui.GUITextInput;
 import p1xel.minecraft.bukkit.util.storage.Locale;
 
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+// Deprecated temporarily
+@Deprecated
 public class GUIEmployeeList extends GUIAbstract implements InventoryHolder {
 
     private UUID playerUniqueId;
@@ -162,6 +168,11 @@ public class GUIEmployeeList extends GUIAbstract implements InventoryHolder {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean check(String name, ClickType clickType) {
+        return false;
     }
 
     public void update(List<UUID> uuids) {

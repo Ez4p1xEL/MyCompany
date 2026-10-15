@@ -4,32 +4,29 @@ import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.api.PersonalAPI;
+import p1xel.minecraft.bukkit.manager.gui.area.GUIAreaList;
+import p1xel.minecraft.bukkit.manager.gui.area.GUICompanyArea;
+import p1xel.minecraft.bukkit.manager.gui.position.GUIPosition;
 import p1xel.minecraft.bukkit.util.storage.Locale;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
-public class GUITextInput extends GUIAbstract {
+public class GUITextInput extends CompanyMenu {
 
-    private UUID playerUniqueId;
-    private String action;
-    private UUID companyUniqueId;
     private AnvilGUI.Builder inventory;
-    private boolean hasCompany;
 
     public GUITextInput(UUID playerUniqueId, String action) {
-        this.playerUniqueId = playerUniqueId;
+        super(playerUniqueId);
         this.action = action;
-        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
-        if (companyUniqueId != null) {
-            this.companyUniqueId = companyUniqueId;
-            hasCompany = true;
-        }
+        //this.menu = new Menu(MenuUtil.getMenu("text_input"));
         init();
     }
 
@@ -60,15 +57,32 @@ public class GUITextInput extends GUIAbstract {
         AnvilGUI.Builder anvil = new AnvilGUI.Builder();
         anvil.itemLeft(firstItem);
         anvil.plugin(MyCompany.getInstance());
+        anvil.onClose(stateSnapshot -> {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (previousMenu != null) {
+                        stateSnapshot.getPlayer().openInventory(previousMenu.getInventory());
+                    }
+                }
+            }.runTaskLater(MyCompany.getInstance(), 1L);
+        });
         anvil.title(title);
         anvil.onClick((slot, stateSnapshot) -> {
             if (slot != AnvilGUI.Slot.OUTPUT) {
                 return Collections.emptyList();
             }
             String text = stateSnapshot.getText();
-                return Arrays.asList(
-                        AnvilGUI.ResponseAction.close(),
-                        AnvilGUI.ResponseAction.run(() -> check(text)));
+            return Arrays.asList(
+                    AnvilGUI.ResponseAction.close(),
+                    AnvilGUI.ResponseAction.run(() -> {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                check(text);
+                            }
+                        }.runTaskLater(MyCompany.getInstance(), 1L);
+                    }));
         });
         anvil.open(Bukkit.getPlayer(playerUniqueId));
         this.inventory = anvil;
@@ -86,32 +100,34 @@ public class GUITextInput extends GUIAbstract {
     @Override
     public boolean check(String text) {
 
-        Player player = Bukkit.getPlayer(playerUniqueId);
-
         if (text.equalsIgnoreCase("cancel")) {
+            openPreviousInventory();
             return true;
         }
 
         //AnvilInventory inventory = view.getTopInventory();
         if (action.equalsIgnoreCase("found")) {
             new PersonalAPI(playerUniqueId).foundCompany(text);
+            player.openInventory(new GUIMain(playerUniqueId).getInventory());
             return true;
         }
 
         if (action.startsWith("position_setlabel:")) {
             String position = action.split(":")[1];
             new PersonalAPI(playerUniqueId).setPositionLabel(position, text);
+            player.openInventory(new GUIPosition(playerUniqueId, previousMenu.page).getInventory());
             return true;
         }
 
-        if (action.startsWith("set_position:")) {
-            UUID targetUniqueId = UUID.fromString(action.split(":")[1]);
-            new PersonalAPI(playerUniqueId).setEmployeePosition(targetUniqueId, Bukkit.getPlayer(targetUniqueId).getName(), text);
-            return true;
-        }
+//        if (action.startsWith("set_position:")) {
+//            UUID targetUniqueId = UUID.fromString(action.split(":")[1]);
+//            new PersonalAPI(playerUniqueId).setEmployeePosition(targetUniqueId, Bukkit.getPlayer(targetUniqueId).getName(), text);
+//            return true;
+//        }
 
         if (action.equalsIgnoreCase("position_add")) {
             new PersonalAPI(playerUniqueId).addPosition(text, null);
+            player.openInventory(new GUIPosition(playerUniqueId, previousMenu.page).getInventory());
             return true;
         }
 
@@ -150,6 +166,18 @@ public class GUITextInput extends GUIAbstract {
         }
 
         return true;
+    }
+
+    public void openPreviousInventory() {
+        Player player = Bukkit.getPlayer(playerUniqueId);
+        if (previousMenu != null) {
+            player.openInventory(previousMenu.getInventory());
+        }
+    }
+
+    @Override
+    public boolean check(String name, ClickType clickType) {
+        return false;
     }
 
 }

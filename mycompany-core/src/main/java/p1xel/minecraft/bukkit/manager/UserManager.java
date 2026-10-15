@@ -43,7 +43,6 @@ public class UserManager {
 
         // 如果緩存裏沒有User，則從資料庫中創建一個新的User對象
         User user = this.data.buildUser(uniqueId);
-
         addUserToCache(uniqueId, user);
         return user;
     }
@@ -56,6 +55,13 @@ public class UserManager {
             }
         }
         return user;
+    }
+
+    public User refreshUser(User user) {
+        UUID uniqueId = user.getUUID();
+        User refreshedUser = this.data.buildUser(uniqueId);
+        addUserToCache(uniqueId, refreshedUser);
+        return refreshedUser;
     }
 
     public void addUserToCache(UUID uniqueId, User user) {
@@ -103,6 +109,7 @@ public class UserManager {
 
     public void setCompany(UUID playerUniqueId, UUID companyUniqueId) {
         this.data.setCompany(playerUniqueId,companyUniqueId);
+        getUser(playerUniqueId).setCompanyUUID(companyUniqueId);
     }
 
     @Nullable
@@ -111,6 +118,7 @@ public class UserManager {
     }
 
     public void setPosition(UUID uniqueId, String position) {
+        getUser(uniqueId).setPosition(position);
         this.data.setPosition(uniqueId,position);
     }
 
@@ -132,6 +140,7 @@ public class UserManager {
 
     public void createOrderForPlayer(UUID uniqueId, String order) {
         this.data.createOrderForPlayer(uniqueId, order);
+        getUser(uniqueId).createOrder(order, EmployeeOrders.getAllOrders().get(uniqueId).get(order));
     }
 
     public void updateOrderValue(UUID uniqueId, String order, String quest, int value) {
@@ -140,6 +149,7 @@ public class UserManager {
 
     public void removeOrder(UUID uniqueId, String order) {
         this.data.removeOrder(uniqueId, order);
+        getUser(uniqueId).removeOrder(order);
     }
 
     public void removeAllOrders(UUID uniqueId) {

@@ -15,7 +15,17 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.gui.*;
-import p1xel.minecraft.bukkit.util.storage.Locale;
+import p1xel.minecraft.bukkit.manager.gui.area.*;
+import p1xel.minecraft.bukkit.manager.gui.order.GUIDailyOrder;
+import p1xel.minecraft.bukkit.manager.gui.player.GUIEmployeeList;
+import p1xel.minecraft.bukkit.manager.gui.player.GUIPersonnel;
+import p1xel.minecraft.bukkit.manager.gui.player.GUIPlayerList;
+import p1xel.minecraft.bukkit.manager.gui.position.GUIPermissionList;
+import p1xel.minecraft.bukkit.manager.gui.position.GUIPosition;
+import p1xel.minecraft.bukkit.manager.gui.position.GUIPositionList;
+import p1xel.minecraft.bukkit.manager.gui.shop.GUIChestShop;
+import p1xel.minecraft.bukkit.manager.gui.GUIConfirmation;
+import p1xel.minecraft.bukkit.manager.gui.store.GUIInternalStore;
 
 public class GUIListener implements Listener {
 
@@ -30,6 +40,10 @@ public class GUIListener implements Listener {
             return;
         }
 
+        if (!(holder instanceof CompanyMenu)) {
+            return;
+        }
+
         HumanEntity entity = event.getWhoClicked();
 
         if (!(entity instanceof Player)) {
@@ -39,156 +53,153 @@ public class GUIListener implements Listener {
 
         NamespacedKey menu_id_key = new NamespacedKey("mycompany", "menu_id");
 
-        if (holder instanceof GUIFound) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIFound gui = (GUIFound) holder;
-                gui.check(container.get(menu_id_key, PersistentDataType.STRING));
+        ItemStack item = inventory.getItem(event.getSlot());
+        if (!item.hasItemMeta()) {
+            return;
+        }
+        PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
+        if (!container.has(menu_id_key, PersistentDataType.STRING)) {
+            return;
+        }
+        String menuId = container.get(menu_id_key, PersistentDataType.STRING);
+        if (menuId == null || menuId.isEmpty()) {
+            return;
+        }
+        ClickType clickType = event.getClick();
+
+        if (holder instanceof GUIFound gui) {
+            if (!gui.check(menuId)) {
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIMain) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIMain gui = (GUIMain) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.sendMessage(Locale.getMessage("not-permitted").replaceAll("%permission%", container.get(menu_id_key, PersistentDataType.STRING)));
-                }
+        if (holder instanceof GUIMain gui) {
+            if (!gui.check(menuId, clickType)) {
+
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIEmployeeList) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIEmployeeList gui = (GUIEmployeeList) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.closeInventory();
-                }
+        // TODO: remaster GUIEmployeeList
+        if (holder instanceof GUIEmployeeList gui) {
+            if (!gui.check(menuId)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIPlayerList) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIPlayerList gui = (GUIPlayerList) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUIPlayerList gui) {
+            if (!gui.check(menuId)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIPositionList) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIPositionList gui = (GUIPositionList) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUIPositionList gui) {
+            if (!gui.check(menuId, clickType)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIDailyOrder) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIDailyOrder gui = (GUIDailyOrder) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUIDailyOrder gui) {
+            if (!gui.check(menuId)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUICompanyArea) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUICompanyArea gui = (GUICompanyArea) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUICompanyArea gui) {
+            if (!gui.check(menuId)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIAreaList) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIAreaList gui = (GUIAreaList) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING), event.getClick())) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUIAreaList gui) {
+            if (!gui.check(menuId, clickType)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIAreaTradeMarket) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIAreaTradeMarket gui = (GUIAreaTradeMarket) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING))) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUIAreaTradeMarket gui) {
+            if (!gui.check(menuId)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIAreaRentMarket) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIAreaRentMarket gui = (GUIAreaRentMarket) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING), event.getClick())) {
-                    player.closeInventory();
-                }
+        if (holder instanceof GUIAreaRentMarket gui) {
+            if (!gui.check(menuId, clickType)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIAreaSaleMarket) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIAreaSaleMarket gui = (GUIAreaSaleMarket) holder;
-                if (!gui.check(container.get(menu_id_key, PersistentDataType.STRING), event.getClick())) {
-                    player.closeInventory();
-                }
+
+        if (holder instanceof GUIAreaSaleMarket gui) {
+            if (!gui.check(menuId, clickType)) {
+                player.closeInventory();
             }
             event.setCancelled(true);
             return;
         }
 
-        if (holder instanceof GUIInternalStore) {
-            ItemStack item = inventory.getItem(event.getSlot());
-            PersistentDataContainer container = item.getItemMeta().getPersistentDataContainer();
-            if (container.has(menu_id_key, PersistentDataType.STRING)) {
-                GUIInternalStore gui = (GUIInternalStore) holder;
-                if (gui.check(player, container.get(menu_id_key, PersistentDataType.STRING))) {
-                    event.setCancelled(true);
-                }
+        if (holder instanceof GUIInternalStore gui) {
+            if (gui.check(player, menuId)) {
+                event.setCancelled(true);
             }
+            return;
+        }
+
+        if (holder instanceof GUIPersonnel gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIPosition gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIPermissionList gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIChestShop gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIConfirmation gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
             return;
         }
 

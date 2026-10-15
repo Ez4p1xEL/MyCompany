@@ -111,6 +111,7 @@ public class UserData extends AbstractUserData {
             uuid = null;
         }
         set(playerUniqueId, "company.uuid", uuid);
+        save(playerUniqueId);
     }
 
     @Override
@@ -126,6 +127,7 @@ public class UserData extends AbstractUserData {
     @Override
     public void setPosition(UUID uniqueId, String position) {
         set(uniqueId, "company.position", position);
+        save(uniqueId);
     }
 
     @Override

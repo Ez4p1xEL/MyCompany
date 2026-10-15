@@ -40,8 +40,6 @@ public class InternalStore {
         saveMultipliers(); // 保存PriceGroup的价格倍数到multipliers中
         savePrices(); // 保存商品价格到priceMap中
         this.playerShare = yaml.getDouble("player-share", 0.0); // 保存玩家分成比例
-
-        System.out.println(vanillaItemPriceMap);
     }
 
     public void saveMultipliers() {

@@ -1,0 +1,67 @@
+size: 45
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  user_info:
+    material: PLAYER_HEAD;%PLAYER%
+    slot: 3
+
+  company_info:
+    material: DIAMOND
+    slot: 4
+
+  balance:
+    material: GOLD_INGOT
+    slot: 5
+
+  salary:
+    material: EMERALD
+    slot: 9
+
+  tp:
+    material: COMPASS
+    slot: 17
+
+  work:
+    material: PAPER
+    slot: 18
+
+  order:
+    material: WRITABLE_BOOK
+    slot: 26
+
+  resign:
+    material: BARRIER
+    slot: 27
+
+  area:
+    material: GOLDEN_HOE
+    slot: 35
+
+  personnel:
+    material: IRON_CHESTPLATE
+    slot: 20
+
+  position:
+    material: NAME_TAG
+    slot: 21
+
+  chestshop:
+    material: CHEST
+    slot: 22
+
+  internal_store:
+    material: ENDER_CHEST
+    slot: 23
+
+  focus:
+    material: ENCHANTED_BOOK
+    slot: 24
+
+
+
+
+

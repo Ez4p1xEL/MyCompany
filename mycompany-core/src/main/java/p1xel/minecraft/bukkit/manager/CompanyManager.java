@@ -59,12 +59,18 @@ public class CompanyManager {
         return this.data.getEmployeeList(uniqueId, position);
     }
 
+    public Company getCompany(UUID uniqueId) {
+        return MyCompany.getCacheManager().getCompany(uniqueId);
+    }
+
     public void dismissEmployee(UUID companyUniqueId, UUID employeeUniqueId) {
         this.data.dismissEmployee(companyUniqueId, employeeUniqueId);
+        getCompany(companyUniqueId).removeEmployee(employeeUniqueId);
     }
 
     public void employPlayer(UUID companyUniqueId, UUID playerUniqueId, String position) {
         this.data.employPlayer(companyUniqueId, playerUniqueId, position);
+        getCompany(companyUniqueId).addEmployee(playerUniqueId, position);
         MyCompany.getCacheManager().getUserManager().randomizeDailyOrder(playerUniqueId);
     }
 
@@ -117,6 +123,7 @@ public class CompanyManager {
 
     public void setCash(UUID uniqueId, double amount) {
         this.data.setCash(uniqueId, amount);
+        MyCompany.getCacheManager().getCompany(uniqueId).setCash(amount);
     }
 
     public double getDailyIncome(UUID uniqueId) {
@@ -129,10 +136,12 @@ public class CompanyManager {
 
     public void giveMoney(UUID uniqueId, double amount) {
         this.data.giveMoney(uniqueId, amount);
+        getCompany(uniqueId).setCash(getCompany(uniqueId).getCash() + amount);
     }
 
     public void takeMoney(UUID uniqueId, double amount) {
         this.data.takeMoney(uniqueId, amount);
+        getCompany(uniqueId).setCash(getCompany(uniqueId).getCash() - amount);
     }
 
     public double getSalary(UUID uniqueId, String position) {
@@ -141,10 +150,12 @@ public class CompanyManager {
 
     public void setSalary(UUID uniqueId, String position, double amount) {
         this.data.setSalary(uniqueId, position, amount);
+        getCompany(uniqueId).setPositionSalary(position, amount);
     }
 
     public void resetDailyIncome(UUID uniqueId) {
         this.data.resetDailyIncome(uniqueId);
+        getCompany(uniqueId).setDailyIncome(0);
     }
 
     public String getEmployerLabel(UUID uniqueId) {
@@ -168,29 +179,45 @@ public class CompanyManager {
 
     public void setEmployerLabel(UUID uniqueId, String label) {
         this.data.set(uniqueId, "settings", "position.default.employer.label", label);
+        this.data.save(uniqueId, "settings");
+        getCompany(uniqueId).setPositionLabel("employer", label);
     }
 
     public void setEmployeeLabel(UUID uniqueId, String label) {
         this.data.set(uniqueId, "settings", "position.default.employee.label", label);
+        this.data.save(uniqueId, "settings");
+        getCompany(uniqueId).setPositionLabel("employee", label);
     }
 
     public void setPositionLabel(UUID uniqueId, String position, String label) {
         this.data.set(uniqueId, "settings", "position.custom." + position + ".label", label);
+        this.data.save(uniqueId, "settings");
+        getCompany(uniqueId).setPositionLabel(position, label);
     }
 
     public void addPosition(UUID uniqueId, String position) {
+        List<String> permissionList = Config.getStringList("company-settings.employee-default-permission");
         this.data.set(uniqueId, "info", "members." + position, Collections.emptyList());
         this.data.set(uniqueId, "settings", "salary." + position, 500.0);
         this.data.set(uniqueId, "settings", "position.custom." + position + ".label", position);
-        this.data.set(uniqueId, "settings","position.custom." + position + ".permission", Config.getStringList("company-settings.employee-default-permission"));
-        Company company = cacheManager.getCompany(uniqueId);
-        company.getPositions().add(position);
+        this.data.set(uniqueId, "settings","position.custom." + position + ".permission", permissionList);
+        this.data.save(uniqueId, "info");
+        this.data.save(uniqueId, "settings");
+        Company company = getCompany(uniqueId);
+        company.addPosition(position, position, 500.0);
+        for (String permissionString : permissionList) {
+            Permission permission = Permission.matchPermission(permissionString);
+            if (permission != null) {
+                company.getPositionPermission(position).add(permission);
+            }
+        }
     }
 
     // Member of the position will be moved to employee's list
     public void removePosition(UUID uniqueId, String position) {
         this.data.set(uniqueId, "settings", "position.custom." + position, null);
         this.data.set(uniqueId, "settings", "salary." + position, null);
+        this.data.save(uniqueId, "settings");
         List<UUID> origin = getEmployeeList(uniqueId, "employee");
         List<UUID> add = getEmployeeList(uniqueId, position);
         origin.addAll(add);
@@ -199,8 +226,9 @@ public class CompanyManager {
                 .collect(Collectors.toList());
         this.data.set(uniqueId, "info", "members.employee", stringList);
         this.data.set(uniqueId, "info", "members." + position, null);
-        Company company = cacheManager.getCompany(uniqueId);
-        company.getPositions().remove(position);
+        this.data.save(uniqueId, "info");
+        Company company = getCompany(uniqueId);
+        company.removePosition(position);
     }
 
     public List<Permission> getPositionPermission(UUID uniqueId, String position) {
@@ -240,6 +268,8 @@ public class CompanyManager {
                 this.data.set(uniqueId, "settings", "position.custom." + position + ".permission", list);
                 break;
         }
+        this.data.save(uniqueId, "settings");
+        getCompany(uniqueId).getPositionPermission(position).add(permission);
     }
 
     public void removePositionPermission(UUID uniqueId, String position, Permission permission) {
@@ -259,6 +289,8 @@ public class CompanyManager {
                 this.data.set(uniqueId, "settings", "position.custom." + position + ".permission", list);
                 break;
         }
+        this.data.save(uniqueId, "settings");
+        getCompany(uniqueId).getPositionPermission(position).remove(permission);
     }
 
     public void setEmployeePosition(UUID companyUniqueId, UUID employeeUniqueId, String position) {
@@ -266,18 +298,23 @@ public class CompanyManager {
         UserManager userManager = MyCompany.getCacheManager().getUserManager();
         String current = userManager.getPosition(employeeUniqueId);
         List<UUID> origin = getEmployeeList(companyUniqueId, current);
+        origin.remove(employeeUniqueId);
         List<String> origin_string = origin.stream()
                 .map(UUID::toString)
                 .collect(Collectors.toList());
-        origin_string.remove(employeeUniqueId.toString());
         this.data.set(companyUniqueId, "info", "members." + current, origin_string);
         List<UUID> latest = getEmployeeList(companyUniqueId, position);
+        latest.add(employeeUniqueId);
         List<String> latest_string = latest.stream()
                 .map(UUID::toString)
                 .collect(Collectors.toList());
-        latest_string.add(employeeUniqueId.toString());
         this.data.set(companyUniqueId, "info", "members." + position, latest_string);
         userManager.setPosition(employeeUniqueId, position);
+
+        this.data.save(companyUniqueId, "info");
+        Company company = getCompany(companyUniqueId);
+        company.setEmployeeList(current, origin);
+        company.setEmployeeList(position, latest);
 
     }
 
@@ -287,6 +324,7 @@ public class CompanyManager {
 
     public void setPriceGroup(UUID uniqueId, PriceGroup priceGroup) {
         this.data.set(uniqueId, "info", "price-group", priceGroup.getName());
+        this.data.save(uniqueId, "info");
     }
 
 }

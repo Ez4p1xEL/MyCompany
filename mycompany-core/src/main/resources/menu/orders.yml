@@ -1,0 +1,36 @@
+size: 45
+
+options:
+  # You need to make sure that the order-per-page is less than the number of slots available for orders, otherwise it will not work properly.
+  order-per-page: 5
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  orders_info:
+    material: WRITABLE_BOOK
+    slot: 4
+
+  order:
+    material: PAPER
+    # Must be the first item in the list of orders, otherwise it will not work properly.
+    slot: 20
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 36
+
+  previous_page:
+    material: RED_STAINED_GLASS_PANE
+    slot: 39
+
+  next_page:
+    material: LIME_STAINED_GLASS_PANE
+    slot: 41
+
+
+
+
+

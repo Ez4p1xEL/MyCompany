@@ -3,6 +3,7 @@ package p1xel.minecraft.bukkit.manager.gui;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -10,82 +11,45 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.storage.Locale;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class GUIFound extends GUIAbstract implements InventoryHolder {
+public class GUIFound extends CompanyMenu {
 
-    private UUID playerUniqueId;
-    private Inventory inventory;
+    /*
+    Some of the variables should be null, as player has no company yet.
+    只有没有公司的玩家才能打开这个界面，所以这些变量应该是null
+     */
 
     public GUIFound(UUID playerUniqueId) {
-        this.playerUniqueId = playerUniqueId;
-        init();
+        super(playerUniqueId);
+        this.menu = MenuUtil.getMenu("found");
+        if (!hasCompany) {
+            init();
+        }
     }
 
     @Override
     public void init() {
-        Inventory inventory = Bukkit.createInventory(this, 45, Locale.getMessage("menu.found.title"));
+        Inventory inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle());
 
-        for (String item_name : Locale.yaml.getConfigurationSection("menu.found.items").getKeys(false)) {
+        Map<String, String> placeholders = Map.ofEntries(
+                Map.entry("%player%", playerName)
+        );
 
-            String display_name = Locale.getMessage("menu.found.items." + item_name + ".display_name");
-            List<String> loreList = Locale.yaml.getStringList("menu.found.items." + item_name + ".lore").stream()
-                    .map(line -> ChatColor.translateAlternateColorCodes('&', line))
-                    .collect(Collectors.toList());
+        inventory = setItems(inventory, menu, placeholders);
 
-            String material = Locale.getMessage("menu.found.items." + item_name + ".material");
-            String[] args = material.split(";");
-            material = args[0];
-
-            ItemStack item = new ItemStack(Material.matchMaterial(material));
-            ItemMeta meta = item.getItemMeta();
-            if (args.length == 2) {
-                if (args[0].equalsIgnoreCase("player_head")) {
-                    SkullMeta skullMeta = (SkullMeta) meta;
-                    skullMeta.setOwner(Bukkit.getOfflinePlayer(playerUniqueId).getName());
-                }
-            }
-            meta.setDisplayName(display_name);
-            meta.setLore(loreList);
-
-            PersistentDataContainer container = meta.getPersistentDataContainer();
-            container.set(menu_id_key, PersistentDataType.STRING, item_name);
-            item.setItemMeta(meta);
-
-            int slot = 0;
-            switch (item_name) {
-                case "found":
-                    slot = 21;
-                    break;
-                case "wait_for_employ":
-                    slot = 23;
-                    break;
-            }
-
-            inventory.setItem(slot, item);
-
-        }
-
-        for (int i = 0; i < 9*5; i++) {
-            if (inventory.getItem(i) == null) {
-                ItemStack item = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-                ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName("");
-                item.setItemMeta(meta);
-                inventory.setItem(i, item);
-            }
-        }
+        // for each slot in the inventory
+        inventory = fillEmptySlot(inventory, menu);
 
         this.inventory = inventory;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return inventory;
     }
 
     @Override
@@ -95,5 +59,10 @@ public class GUIFound extends GUIAbstract implements InventoryHolder {
             new GUITextInput(playerUniqueId, "found");
         }
         return true;
+    }
+
+    @Override
+    public boolean check(String name, ClickType clickType) {
+        return false;
     }
 }

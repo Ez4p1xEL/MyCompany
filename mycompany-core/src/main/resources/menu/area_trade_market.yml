@@ -1,0 +1,23 @@
+size: 36
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  rent:
+    material: GOLD_INGOT
+    slot: 12
+
+  sell:
+    material: DIAMOND
+    slot: 14
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 27
+
+
+
+
+

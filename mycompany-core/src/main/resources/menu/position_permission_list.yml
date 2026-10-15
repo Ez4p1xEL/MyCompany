@@ -1,0 +1,48 @@
+size: 45
+
+options:
+  # You need to make sure that the permission-per-page is less than the number of slots available for permission, otherwise it will not work properly.
+  permission-per-page: 10
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  permission_info:
+    material: WRITABLE_BOOK
+    slot: 4
+
+  # Default permission item
+  # If you want to add a custom permission item, you can add it in the "permission" section below.
+  permission:
+    material: PAPER
+    slot: 20
+
+  # Custom permission item
+  # No slot specified, it will be added to the next available slot.
+  # The display name and lore are following the default permission item.
+  # The name of custom permission items must be started with "permission_" and must be in the permission list.
+  permission_all:
+    material: COMMAND_BLOCK
+
+  permission_chestshop_create:
+    material: CHEST
+
+  permission_chestshop_delete:
+    material: CHEST
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 36
+
+  previous_page:
+    material: RED_STAINED_GLASS_PANE
+    slot: 39
+
+  next_page:
+    material: LIME_STAINED_GLASS_PANE
+    slot: 41
+
+
+

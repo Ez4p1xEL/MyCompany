@@ -18,12 +18,14 @@ import p1xel.minecraft.bukkit.tool.bstats.Metrics;
 import p1xel.minecraft.bukkit.tool.spigotmc.UpdateChecker;
 import p1xel.minecraft.bukkit.util.*;
 import p1xel.minecraft.bukkit.util.extension.Placeholders;
+import p1xel.minecraft.bukkit.util.permission.PermissionUtil;
 import p1xel.minecraft.bukkit.util.storage.*;
 import p1xel.minecraft.bukkit.util.storage.backup.BackupCreator;
 import p1xel.minecraft.bukkit.util.storage.cidstorage.CIdData;
 import p1xel.minecraft.bukkit.util.storage.driver.CompanyYamlDriver;
 import p1xel.minecraft.bukkit.util.storage.driver.UserYamlDriver;
 import p1xel.minecraft.bukkit.util.storage.menu.MenuConfig;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -67,6 +69,8 @@ public class MyCompany extends JavaPlugin {
 
         MenuConfig.initialization();
         Locale.createLocaleFile();
+        PermissionUtil.savePermissionLocale();
+        MenuUtil.createFiles();
         CIdData.init();
 
         request = new HireRequestManager();

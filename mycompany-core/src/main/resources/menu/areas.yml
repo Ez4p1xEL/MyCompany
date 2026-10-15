@@ -1,0 +1,39 @@
+size: 36
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  create:
+    material: GOLDEN_HOE
+    slot: 11
+
+  list:
+    material: ITEM_FRAME
+    slot: 20
+
+  delete:
+    material: RED_DYE
+    slot: 13
+
+  market:
+    material: CHEST
+    slot: 22
+
+  rent:
+    material: GOLD_INGOT
+    slot: 15
+
+  sell:
+    material: DIAMOND
+    slot: 24
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 27
+
+
+
+
+

@@ -1,10 +1,14 @@
 package p1xel.minecraft.bukkit.util.storage;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.util.ColorUtil;
 import p1xel.minecraft.bukkit.util.Config;
+import p1xel.minecraft.bukkit.util.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +23,8 @@ public class Locale {
     public static File file;
     public static FileConfiguration yaml;
 
-
+    private static String prefix;
+    private static String version;
 
     public static void createLocaleFile() {
 
@@ -56,6 +61,8 @@ public class Locale {
     public static void upload(File locale) {
         file = locale;
         yaml = YamlConfiguration.loadConfiguration(locale);
+        prefix = yaml.getString("prefix");
+        version = yaml.getString("version");
     }
 
     public static void set(String path, Object value) {
@@ -70,24 +77,41 @@ public class Locale {
 
     public static String getMessage(String path) {
         try {
-            return ChatColor.translateAlternateColorCodes('&', yaml.getString(path).replaceAll("%prefix%", yaml.getString("prefix")).replaceAll("%version%", Config.getVersion()));
+            return ColorUtil.translateHexColorCodes(yaml.getString(path).replaceAll("%prefix%", prefix).replaceAll("%version%", version));
         } catch (NullPointerException event){
-            MyCompany.getInstance().getLogger().log(Level.WARNING, path + " is not found in your lang file!");
-            MyCompany.getInstance().getLogger().log(Level.WARNING, "Your language file is not updated to the latest. Please delete it and let it to be re-generated.");
+            Logger.debug(Level.WARNING, path + " is not found in your lang file!");
+            Logger.debug(Level.WARNING, "Your language file is not updated to the latest. Please delete it and let it to be re-generated.");
             return "Please update the language file.";
         }
     }
 
+    public static List<String> getMessageList(String path) {
+        List<String> list = yaml.getStringList(path);
+        for (int i = 0; i < list.size(); i++) {
+            list.set(i, translate(list.get(i)));
+        }
+        return list;
+    }
+
     public static String getCmdMessage(String path) {
-        return ChatColor.translateAlternateColorCodes('&', yaml.getString(path).replaceAll("%prefix%", yaml.getString("prefix")).replaceAll("%version%", Config.getVersion()));
+        return ColorUtil.translateHexColorCodes(yaml.getString(path).replaceAll("%prefix%", prefix).replaceAll("%version%", version));
     }
 
     public static String translate(String message) {
-        return ChatColor.translateAlternateColorCodes('&', message.replaceAll("%prefix%", yaml.getString("prefix")).replaceAll("%version%", Config.getVersion()));
+        return ColorUtil.translateHexColorCodes(message.replaceAll("%prefix%", prefix).replaceAll("%version%", version));
+    }
+
+    public static List<String> translateList(List<String> messages) {
+        messages.replaceAll(Locale::translate);
+        return messages;
     }
 
     public static String getYesOrNo(boolean bool) {
         return getMessage(Boolean.toString(bool).toLowerCase());
+    }
+
+    public static String deserialize(Component component) {
+        return LegacyComponentSerializer.legacyAmpersand().serialize(component);
     }
 
 

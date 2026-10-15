@@ -1,0 +1,27 @@
+size: 27
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  creation:
+    material: GOLDEN_HOE
+    slot: 11
+
+  permission_chestshop_create:
+    material: CHEST
+    slot: 13
+
+  permission_chestshop_delete:
+    material: CHEST
+    slot: 15
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 18
+
+
+
+
+

@@ -1,0 +1,37 @@
+size: 45
+
+options:
+  # You need to make sure that the position-per-page is less than the number of slots available for position, otherwise it will not work properly.
+  position-per-page: 10
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  position_info:
+    material: WRITABLE_BOOK
+    slot: 4
+
+  position:
+    material: NAME_TAG
+    slot: 20
+
+  add:
+    material: ANVIL
+    slot: 40
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 36
+
+  previous_page:
+    material: RED_STAINED_GLASS_PANE
+    slot: 39
+
+  next_page:
+    material: LIME_STAINED_GLASS_PANE
+    slot: 41
+
+
+

@@ -39,6 +39,7 @@ public class CompanyData extends AbstractCompanyData {
         for (UUID uniqueId : companyList) {
             int cid = getId(uniqueId);
             MyCompany.getCacheManager().getCompanyManager().getCIds().put(cid, uniqueId);
+            updateData(uniqueId);
         }
 
     }
@@ -69,6 +70,7 @@ public class CompanyData extends AbstractCompanyData {
         driver.set(uniqueId, type, key, value);
     }
 
+    @Override
     public void save(UUID uniqueId, String type) {
         driver.save(uniqueId, type);
     }
@@ -113,7 +115,7 @@ public class CompanyData extends AbstractCompanyData {
 
         // Type: focus
         set(uuid, "focus", "focus", "none");
-        set(uuid, "focus", "expertises", Collections.singletonList(Expertise.empty.getString()));
+        setExpertise(uuid, Expertise.empty.getString());
         // END
 
         // Save
@@ -131,6 +133,19 @@ public class CompanyData extends AbstractCompanyData {
         MyCompany.getCacheManager().getUserManager().setPosition(playerUniqueId, "employer");
 
         return uuid;
+
+    }
+
+    @Override
+    public void updateData(UUID uniqueId) {
+
+        driver.createCompanyEntry(uniqueId);
+        if (get(uniqueId, "focus", "focus") == null) {
+            set(uniqueId, "focus", "focus", "none");
+            setExpertise(uniqueId, Expertise.empty.getString());
+        }
+
+        save(uniqueId, "focus");
 
     }
 
@@ -373,6 +388,11 @@ public class CompanyData extends AbstractCompanyData {
         set(uniqueId, "asset", "income.total", currentIncomeTotal + amount);
         setCash(uniqueId, cash+amount);
         save(uniqueId, "asset");
+
+        Company company = MyCompany.getCacheManager().getCompany(uniqueId);
+        company.setDailyIncome(company.getDailyIncome() + amount);
+        company.setTotalIncome(company.getTotalIncome() + amount);
+        company.setCash(company.getCash() + amount);
     }
 
     @Override
@@ -435,9 +455,9 @@ public class CompanyData extends AbstractCompanyData {
     public List<UUID> getShopsUUID(UUID uniqueId) {
         List<UUID> shops = new ArrayList<>();
         Set<String> keys = getKeys(uniqueId, "shop", null);
-            for (String key : keys){
-                shops.add(UUID.fromString(key));
-            }
+        for (String key : keys){
+            shops.add(UUID.fromString(key));
+        }
         return shops;
     }
 
@@ -575,13 +595,33 @@ public class CompanyData extends AbstractCompanyData {
     // expertise_id;value;unlocked boolean
     @Override
     public List<String> getExpertises(UUID uniqueId) {
-        return getStringList(uniqueId, "focus", "expertises");
+        List<String> list = new ArrayList<>();
+        Set<String> keys = getKeys(uniqueId, "focus", "expertises");
+        if (keys != null) {
+            for (String key : keys) {
+                String unlocked = String.valueOf(getBoolean(uniqueId, "focus", "expertises." + key + ".unlocked"));
+                String value = getString(uniqueId, "focus", "expertises." + key + ".value");
+                list.add(key + ";" + value + ";" + unlocked);
+            }
+        }
+        return list;
     }
 
     @Override
     public void setFocus(UUID uniqueId, String focus) {
         set(uniqueId, "focus", "focus", focus);
         set(uniqueId, "focus", "expertises", Collections.emptyList());
+        save(uniqueId, "focus");
+    }
+
+    @Override
+    public void setExpertise(UUID uniqueId, String expertiseString) {
+        String[] split = expertiseString.split(";");
+        String expertiseId = split[0];
+        boolean unlocked = Boolean.parseBoolean(split[1]);
+        String value = split[2];
+        set(uniqueId, "focus", "expertises." + expertiseId+".unlocked", unlocked);
+        set(uniqueId, "focus", "expertises." + expertiseId+".value", value);
         save(uniqueId, "focus");
     }
 

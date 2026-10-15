@@ -249,11 +249,15 @@ shop:
   reach-maximum: '&7[&6%prefix%&7] &cYour company has reached the maximum amount of chest shops!'
 
 menu:
+  global:
+    no-perm:
+      lore:
+        - '&cYou do not have permission to do that!'
+        - ''
   main:
     title: '&aMenu of &b%company%'
     items:
       user_info:
-        material: player_head;%player%
         display_name: '&aCurrently in &b%company%'
         lore:
           - ''
@@ -261,7 +265,6 @@ menu:
           - '&7Your daily income is at least &e$%salary%&7.'
           - ''
       company_info:
-        material: diamond
         display_name: '&aCompany &b%company%'
         lore:
           - ''
@@ -269,7 +272,6 @@ menu:
           - '&7or use /myc info %cid% instead.'
           - ''
       balance:
-        material: gold_ingot
         display_name: '&aBalance'
         lore:
           - ''
@@ -283,107 +285,7 @@ menu:
           - ''
           - '&7/myc balance %cid%'
           - ''
-      employ:
-        material: leather_chestplate
-        display_name: '&dEmploy'
-        lore:
-          - ''
-          - '&7Employ other players to be employee'
-          - '&7of the company.'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_employ%'
-          - ''
-          - '&7Click to employ'
-      fire:
-        material: iron_door
-        display_name: '&dFire'
-        lore:
-          - ''
-          - '&7Fire the employee'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_fire%'
-          - ''
-          - '&7Click to fire'
-      chestshop_create:
-        material: chest
-        display_name: '&dChestshop creation'
-        lore:
-          - ''
-          - '&7To create chestshop for your company,'
-          - '&7You need to place a sign in front of the chest.'
-          - '&7The content of the sign should be:'
-          - '&f%chestshop_identifier%'
-          - '&fPrice'
-          - '&7After that, the sign should be updated automatically.'
-          - '&7Place a hopper, where the destination of it should be the chest.'
-          - '&7Put the product to the hopper and let it moves to the chest.'
-          - '&7Then the item of the chestshop should be specified successfully!'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_chestshop_create%'
-          - ''
-      chestshop_delete:
-        material: trapped_chest
-        display_name: '&dChestshop deleting'
-        lore:
-          - ''
-          - '&7To delete the chestshop,'
-          - '&7you just need to break the chest.'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_chestshop_delete%'
-          - ''
-      set_position:
-        material: experience_bottle
-        display_name: '&dPromote/demote employee'
-        lore:
-          - ''
-          - '&7You may promote the employee,'
-          - '&7if he/she did good thing.'
-          - '&7Otherwise, you may demote him/her.'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_set_position%'
-          - ''
-          - '&7Click to promote/demote'
-      position_setlabel:
-        material: name_tag
-        display_name: '&dSet label of position'
-        lore:
-          - ''
-          - '&7You can set the labelled name'
-          - '&7of the position.'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_position_setlabel%'
-          - ''
-          - '&7Click to set label'
-      position_add:
-        material: item_frame
-        display_name: '&aAdd position'
-        lore:
-          - ''
-          - '&7Add custom position'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_position_add%'
-          - ''
-          - '&7Click to add'
-      position_remove:
-        material: glow_item_frame
-        display_name: '&cRemove position'
-        lore:
-          - ''
-          - '&7Remove existing position'
-          - ''
-          - '&7Permission required: &aYes'
-          - '&7Permitted: %permit_position_remove%'
-          - ''
-          - '&7Click to remove'
       tp:
-        material: compass
         display_name: '&bTeleport to company'
         lore:
           - ''
@@ -393,7 +295,6 @@ menu:
           - ''
           - '&7Click to teleport'
       salary:
-        material: emerald
         display_name: '&aSalary'
         lore:
           - ''
@@ -402,18 +303,17 @@ menu:
           - '&b%salary_time% &7at the day.'
           - '&7Your work is worth &d$%salary%'
           - ''
-      works:
-        material: paper
+      work:
         display_name: '&dWhat should you do?'
         lore:
           - ''
           - '&7In order to earn profit for the company,'
           - '&7you need to participate in the mission.'
+          - '&7Complete the mission to earn rewards.'
           - '&7Earning money from promoting chestshop'
           - '&7could be a good way'
           - ''
       resign:
-        material: barrier
         display_name: '&cResign from the company'
         lore:
           - ''
@@ -422,7 +322,6 @@ menu:
           - ''
           - '&7Click to resign &c(Think before action)'
       order:
-        material: writable_book
         display_name : '&dEmployee orders'
         lore:
           - ''
@@ -433,7 +332,6 @@ menu:
           - ''
           - '&7Click to view'
       area:
-        material: golden_hoe
         display_name: '&aCompany Area'
         lore:
           - ''
@@ -441,6 +339,48 @@ menu:
           - '&7areas to sell or rent.'
           - ''
           - '&7Click to view'
+      personnel:
+        display_name: '&aCompany Personnel'
+        lore:
+          - ''
+          - '&7View the list of employees.'
+          - ''
+          - '&7Click to view'
+      position:
+        display_name: '&aCompany Position'
+        lore:
+          - ''
+          - '&7View the list of positions.'
+          - ''
+          - '&7Click to view'
+      chestshop:
+        display_name: '&aChest Shop'
+        lore:
+          - ''
+          - '&7View the help of chest shop,'
+          - '&7including the ways to'
+          - '&7create and delete the shop.'
+          - ''
+          - '&7Click to view'
+      internal_store:
+        display_name: '&aInternal Store'
+        lore:
+          - ''
+          - '&7Internal store is a place for employees to'
+          - '&7sell their products to the government'
+          - '&7in a better price and get the profit for the company.'
+          - ''
+          - '&7Click to open'
+      focus:
+        display_name: '&aFocus'
+        lore:
+          - ''
+          - '&7Your company has set its focus,'
+          - '&7which illustrates the main business of the company.'
+          - '&7Focus includes Expertise Tree, which is a tree of skills that the company can learn.'
+          - '&7All personnel would have buff boosted by the expertise of the company.'
+          - ''
+          - '&7Click to open'
   employee-list:
     title: '&aEmployee list of &b%company%'
     items:
@@ -479,79 +419,79 @@ menu:
           - ''
           - '&7Click to switch'
           - ''
-  player-list:
+  player_list:
     title: '&aOnline players'
+    actions:
+      employ:
+        left: '&7Click to send employment contract'
+        right: '#remove#'
     items:
       company_info:
-        material: nether_star
         display_name: '&aList of online and unemployed players'
         lore:
           - ''
           - '&7Click the head to select the player'
           - ''
       player:
-        material: player_head;%player%
         display_name: '&e%player%'
         lore:
           - ''
-          - '&7Click to select'
+          - '%left_click%'
+          - '%right_click%'
           - ''
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&aNext page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&aPrevious page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  position-list:
+  position_list:
     title: 'Position List'
+    actions:
+      set_position:
+        left: '&7Click to set the position'
+        right: '#remove#'
     items:
       company_info:
-        material: nether_star
         display_name: '&aList of positions'
         lore:
           - ''
           - '&7Click the head to select the position'
           - ''
       position:
-        material: feather
-        display_name: '&aPosition &b%label%'
+        display_name: '&aPosition &b%position_label%'
         lore:
           - ''
-          - '&7Position id: %position%'
-          - '&7Permissions: &d%permissions%'
+          - '&7Position id: %position_name%'
+          - '&7Permissions: &d%position_permission%'
           - ''
-          - '&7Click to select'
+          - '%left_click%'
+          - '%right_click%'
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&aNext page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&aPrevious page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
@@ -573,7 +513,6 @@ menu:
     title: 'You do not have a company'
     items:
       found:
-        material: chest
         display_name: '&aFound a company'
         lore:
           - ''
@@ -582,7 +521,6 @@ menu:
           - ''
           - '&7Click to found'
       wait_for_employ:
-        material: leather_chestplate
         display_name: '&aWait for a recruitment'
         lore:
           - ''
@@ -594,14 +532,12 @@ menu:
     title: 'Employee orders'
     items:
       orders_info:
-        material: writable_book
         display_name: '&aEmployee orders'
         lore:
           - ''
           - '&7Click the order to select or view the it'
           - ''
       order:
-        material: paper
         display_name: '&a%label%'
         lore:
           - '&8(%order%)'
@@ -615,38 +551,33 @@ menu:
           - ' &f%order_reward%'
           - ''
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&aNext page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&aPrevious page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  area-rent-market:
+  area_rent_market:
     title: 'Company Area Rent Market'
     items:
       area_info:
-        material: writable_book
         display_name: '&aCompany Area'
         lore:
           - ''
           - '&7Click the area and look for details.'
           - ''
       area:
-        material: paper
         display_name: '&a%area%'
         lore:
           - ''
@@ -660,38 +591,33 @@ menu:
           - '&7Right click to teleport'
           - ''
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&aNext page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&aPrevious page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  area-sale-market:
+  area_sale_market:
     title: 'Company Area Sale Market'
     items:
       area_info:
-        material: writable_book
         display_name: '&aCompany Area'
         lore:
           - ''
           - '&7Click the area and look for details.'
           - ''
       area:
-        material: paper
         display_name: '&a%area%'
         lore:
           - ''
@@ -704,31 +630,27 @@ menu:
           - '&7Right click to teleport'
           - ''
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&aNext page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&aPrevious page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  company-area:
+  areas:
     title: 'Company Area'
     items:
       create:
-        material: golden_hoe
         display_name: '&aCreate area'
         lore:
           - ''
@@ -740,7 +662,6 @@ menu:
           - '&7to get area created.'
           - ''
       list:
-        material: item_frame
         display_name: '&aView the list of areas'
         lore:
           - ''
@@ -750,7 +671,6 @@ menu:
           - '&7Click to view'
           - ''
       delete:
-        material: red_dye
         display_name: '&aDelete an area'
         lore:
           - ''
@@ -760,7 +680,6 @@ menu:
           - '&7Click to delete'
           - ''
       rent:
-        material: gold_ingot
         display_name: '&aRent out an area'
         lore:
           - ''
@@ -770,7 +689,6 @@ menu:
           - '&7Click to rent out'
           - ''
       sell:
-        material: diamond
         display_name: '&aSell an area'
         lore:
           - ''
@@ -780,7 +698,6 @@ menu:
           - '&7Click to sell'
           - ''
       market:
-        material: chest
         display_name: '&aArea Trade Market'
         lore:
           - ''
@@ -790,17 +707,15 @@ menu:
           - '&7Click to view'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  area-trade-market:
+  area_trade_market:
     title: 'Area Trade Market'
     items:
       rent:
-        material: paper
         display_name: '&aRent Market'
         lore:
           - ''
@@ -810,7 +725,6 @@ menu:
           - '&7Click to view'
           - ''
       sell:
-        material: gold_ingot
         display_name: '&aSale Market'
         lore:
           - ''
@@ -820,13 +734,12 @@ menu:
           - '&7Click to view'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  area-list:
+  area_list:
     title: 'Company Area List'
     actions:
       list:
@@ -843,14 +756,12 @@ menu:
         right: '#remove#'
     items:
       area_info:
-        material: writable_book
         display_name: '&aCompany Area'
         lore:
           - ''
           - '&7Click the area and look for details.'
           - ''
       area:
-        material: paper
         display_name: '&a%area% &b[OWN]'
         lore:
           - ''
@@ -861,8 +772,7 @@ menu:
           - '&7%left_click%'
           - '&7%right_click%'
           - ''
-      area-rent:
-        material: paper
+      area_rent:
         display_name: '&a%area% &d[RENT]'
         lore:
           - ''
@@ -877,31 +787,27 @@ menu:
           - '&7%right_click%'
           - ''
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&aNext page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&aPrevious page'
         lore:
           - ''
           - '&7Click to switch'
           - ''
       back_to_main:
-        material: feather
         display_name: '&aBack to main menu'
         lore:
           - ''
           - '&7Click to switch'
           - ''
-  internal-store:
+  internal_store:
     title: 'Internal Store'
     items:
       submit:
-        material: emerald
         display_name: '&aSubmit'
         lore:
           - ''
@@ -911,20 +817,306 @@ menu:
           - '&7Additionally, you will receive &e%price%'
           - '&7of the money as the share.'
           - ''
+      bar:
+        display_name: '&7'
+        lore:
+          - ''
+      back_to_main:
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  personnel:
+    title: 'Company Personnel'
+    actions:
+      default:
+        left: '&7Left click to set position'
+        shift_right: '&cShift right click to fire the employee'
+      self:
+        left: '#remove#'
+        shift_right: '#remove#'
+      no_permission:
+        left: '#remove#'
+        shift_right: '#remove#'
+    items:
+      personnel_info:
+        display_name: '&aCompany Personnel'
+        lore:
+          - ''
+          - '&7Amount: &e%amount%/%max%'
+          - '&7You are currently in &e%label% &8(%position%)'
+          - ''
+      personnel:
+        display_name: '&e%personnel_player%'
+        lore:
+          - ''
+          - '&7Position: &e%personnel_label% &8(%personnel_position%)'
+          - '&7Salary: &d$%personnel_salary%'
+          - ''
+          - '%left_click%'
+          - '%shift_right_click%'
+          - ''
+      employ:
+        display_name: '&aEmploy'
+        lore:
+          - ''
+          - '&7Employ the player to your company'
+          - '&7The player will be set to the default position'
+          - ''
+          - '&7Click to employ the player'
+          - ''
+      next_page:
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  position:
+    title: 'Company Position'
+    actions:
+      default:
+        left: '&7Left click to set label'
+        shift_left: '&7Shift left click to set permission'
+        shift_right: '&cShift right click to remove'
+      employer:
+        left: '&7Left click to set label'
+        shift_left: '#remove#'
+        shift_right: '#remove#'
+      employee:
+        left: '&7Left click to set label'
+        shift_left: '&7Shift left click to set permission'
+        shift_right: '#remove#'
+      no_permission:
+        left: '#remove#'
+        shift_left: '#remove#'
+        shift_right: '#remove#'
+    items:
+      position_info:
+        display_name: '&aCompany Position'
+        lore:
+          - ''
+          - '&7Amount: &e%amount%/%max%'
+          - '&7You are currently in &e%label% &8(%position%)'
+          - ''
+      position:
+        display_name: '&aPosition &b%position_label%'
+        lore:
+          - ''
+          - '&7Position id: %position_name%'
+          - '&7Permissions: &d%position_permission%'
+          - ''
+          - '%left_click%'
+          - '%shift_left_click%'
+          - '%shift_right_click%'
+      add:
+        display_name: '&aAdd Position'
+        lore:
+          - ''
+          - '&7Add a new position to your company'
+          - '&7The position will be set to the default label'
+          - ''
+          - '&7Click to add the position'
+          - ''
+      next_page:
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  position_permission_list:
+    title: 'Position Permission List'
+    items:
+      permission_info:
+        display_name: '&aPosition Permission'
+        lore:
+          - ''
+          - '&7This is a list of all position permissions.'
+          - '&7Permission can be set to a position by clicking the permission.'
+          - ''
+      permission:
+        display_name: '&aPermission &d%position_permission_id% &7(%position_permission_status%&7)'
+        lore:
+          - ''
+          - '&7Permission id: %position_permission_id%'
+          - '&7%position_permission_label%'
+          - '&7%position_permission_description%'
+          - ''
+          - '&7Click to switch the permission status'
+          - ''
+      next_page:
+        display_name: '&aNext page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      previous_page:
+        display_name: '&aPrevious page'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+      back_to_main:
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  chestshop:
+    title: 'Chestshop'
+    items:
+      creation:
+        display_name: '&aHow to create a Chestshop?'
+        lore:
+          - ''
+          - '&7To create chestshop for your company,'
+          - '&7You need to put the product in the first slot of a chest.'
+          - '&7After finishing the product specification,'
+          - '&7you need to place a wall sign in front of the chest.'
+          - '&7The content of the sign should be:'
+          - '&f%chestshop_identifier%'
+          - '&fPrice'
+          - '&7Then, the sign should be updated automatically.'
+          - '&7The chestshop will be successfully created.'
+          - ''
+      permission_chestshop_create:
+        display_name: '&aPermission to create chestshops'
+        lore:
+          - ''
+          - '&7Permission: %permission_create_id%'
+          - '&7You are %permission_create_status% &7to create chestshops'
+          - ''
+      permission_chestshop_delete:
+        display_name: '&aPermission to remove chestshops'
+        lore:
+          - ''
+          - '&7Permission: %permission_delete_id%'
+          - '&7You are %permission_delete_status% &7to remove chestshops'
+          - ''
+      back_to_main:
+        display_name: '&aBack to main menu'
+        lore:
+          - ''
+          - '&7Click to switch'
+          - ''
+  confirmation:
+    title: 'Are you sure to %action%?'
+    items:
+      confirm:
+        display_name: '&aConfirm'
+        lore:
+          - ''
+          - '&7%action%'
+          - ''
+          - '&7Click to confirm the action'
+          - ''
+      cancel:
+        display_name: '&cCancel'
+        lore:
+          - ''
+          - '&7Click to cancel the action'
+          - ''
 
 position-permission:
-  ALL: 'All permissions'
-  EMPLOY: 'Employ'
-  FIRE: 'Fire'
-  CHESTSHOP_CREATE: 'Chestshop Creation'
-  CHESTSHOP_DELETE: 'Chestshop Deleting'
-  AREA_CREATE: 'Company Area Creation'
-  AREA_DELETE: 'Company Area Deleting'
-  AREA_SETLOC: 'Location Set of Company Area'
-  AREA_MARKET_RENT: 'Pushing Area to Rent Market'
-  AREA_MARKET_SELL: 'Pushing Area to Sale Market'
-  AREA_RENT: 'Area Rent'
-  AREA_SELL: 'Area Purchase'
+  status:
+    enabled: '&aPERMITTED'
+    disabled: '&cNOT PERMITTED'
+  permission:
+    ALL:
+      label: 'All permissions'
+      description:
+        - 'All permissions of the company'
+        - 'This permission is default for the employer.'
+    EMPLOY:
+      label: 'Employ'
+      description:
+        - 'Employ a player to the company'
+    FIRE:
+      label: 'Fire'
+      description:
+        - 'Fire an employee from the company'
+        - 'This is not recommended to be given to non-employer positions.'
+        - 'As it may cause the company empty.'
+    SET_POSITION:
+      label: 'Set Position'
+      description:
+        - 'Set the position of an employee'
+    POSITION_ADD:
+      label: 'Position Adding'
+      description:
+        - 'Add a new position to the company'
+    POSITION_REMOVE:
+      label: 'Position Removing'
+      description:
+        - 'Remove a position from the company'
+    POSITION_SETLABEL:
+      label: 'Position Label Setting'
+      description:
+        - 'Set the label of a position'
+    POSITION_SETPERMISSION:
+      label: 'Position Permission Setting'
+      description:
+        - 'Set the permission of a position'
+    CHESTSHOP_CREATE:
+      label: 'Chestshop Creation'
+      description:
+        - 'Create a chestshop for the company'
+    CHESTSHOP_DELETE:
+      label: 'Chestshop Removing'
+      description:
+        - 'Remove a chestshop of the company'
+    AREA_CREATE:
+      label: 'Company Area Creation'
+      description:
+        - 'Create a company area'
+    AREA_DELETE:
+      label: 'Company Area Deleting'
+      description:
+        - 'Delete a company area'
+    AREA_SETLOC:
+      label: 'Location Set of Company Area'
+      description:
+        - 'Set the location of a company area'
+    AREA_MARKET_RENT:
+      label: 'Pushing Area to Rent Market'
+      description:
+        - 'Push a company area to the rent market'
+    AREA_MARKET_SELL:
+      label: 'Pushing Area to Sale Market'
+      description:
+        - 'Push a company area to the sale market'
+    AREA_RENT:
+      label: 'Area Rent'
+      description:
+        - 'Rent a company area'
+    AREA_BUY:
+      label: 'Area Purchase'
+      description:
+        - 'Purchase a company area'
 
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'

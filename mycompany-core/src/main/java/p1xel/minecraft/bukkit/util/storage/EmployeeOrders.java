@@ -1,8 +1,11 @@
 package p1xel.minecraft.bukkit.util.storage;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import p1xel.minecraft.bukkit.object.EmployeeOrder;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.UserManager;
@@ -183,6 +186,10 @@ public class EmployeeOrders {
             case "break_block", "place_block", "fish": {
                 description = Locale.getMessage("action-description." + type);
                 target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".item").toUpperCase();
+                Material material = Material.getMaterial(target);
+                if (material != null) {
+                    target = Locale.deserialize(Component.translatable(material.translationKey()));
+                }
                 progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":" + type));
                 target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
                 break;
@@ -191,6 +198,10 @@ public class EmployeeOrders {
             case "mob_kill", "feed": {
                 description = Locale.getMessage("action-description." + type);
                 target = EmployeeOrders.yaml.getString(order + ".quest." + quest + ".mob").toUpperCase();
+                EntityType entType = EntityType.fromName(target);
+                if (entType != null) {
+                    target = Locale.deserialize(Component.translatable(entType.translationKey()));
+                }
                 progress_value = String.valueOf(employeeOrder.getProgressValue(quest + ":" + type));
                 target_value = String.valueOf(EmployeeOrders.getValue(order, quest));
                 break;

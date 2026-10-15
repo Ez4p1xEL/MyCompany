@@ -125,4 +125,10 @@ public abstract class AbstractCompanyData {
     public abstract List<String> getExpertises(UUID uniqueId);
 
     public abstract void setFocus(UUID uniqueId, String focusId);
+
+    public abstract void setExpertise(UUID uniqueId, String expertiseString);
+
+    public abstract void updateData(UUID uniqueId);
+
+    public abstract void save(UUID uniqueId, String type);
 }

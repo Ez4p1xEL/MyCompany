@@ -23,6 +23,8 @@ public class EmployeeOrder {
     private final UUID playerUniqueId;
     private UUID companyUniqueId;
     private final String order;
+    private final String label;
+    private final List<String> description;
     private final List<String> progress;
     private boolean finished = false;
     private final HashMap<String, Integer> values = new HashMap<>(); // "questName:actionName:value"
@@ -33,6 +35,8 @@ public class EmployeeOrder {
     public EmployeeOrder(UUID playerUniqueId, String order, List<String> progress) {
         this.playerUniqueId = playerUniqueId;
         this.order = order;
+        this.label = EmployeeOrders.getLabel(order);
+        this.description = EmployeeOrders.getDescription(order);
         this.progress = progress;
         init();
         UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
@@ -221,5 +225,9 @@ public class EmployeeOrder {
     public String getName() {
         return order;
     }
+
+    public String getLabel() { return label; }
+
+    public List<String> getDescription() { return description; }
 
 }

@@ -38,16 +38,10 @@ public class MenuConfig {
 
         FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);
 
-        GLOBAL_BACK_TO_MAIN = yaml.getString("global.back-to-main");
-        GLOBAL_NEXT_PAGE = yaml.getString("global.next-page");
-        GLOBAL_PREVIOUS_PAGE = yaml.getString("global.previous-page");
-        GLOBAL_EMPTY_SLOT = yaml.getString("global.empty-slot");
+        GLOBAL_NO_PERM = yaml.getString("global.no-perm");
 
     }
 
-    public static String GLOBAL_BACK_TO_MAIN;
-    public static String GLOBAL_NEXT_PAGE;
-    public static String GLOBAL_PREVIOUS_PAGE;
-    public static String GLOBAL_EMPTY_SLOT;
+    public static String GLOBAL_NO_PERM;
 
 }

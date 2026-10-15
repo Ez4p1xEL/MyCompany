@@ -1,41 +1,34 @@
-package p1xel.minecraft.bukkit.manager.gui;
+package p1xel.minecraft.bukkit.manager.gui.area;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.api.PersonalAPI;
 import p1xel.minecraft.bukkit.manager.area.TradableCompanyArea;
+import p1xel.minecraft.bukkit.manager.gui.CompanyMenu;
+import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.util.permission.Permission;
 import p1xel.minecraft.bukkit.util.storage.Locale;
+import p1xel.minecraft.bukkit.util.storage.menu.Menu;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuItem;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class GUIAreaSaleMarket extends GUIAbstract implements InventoryHolder {
-
-    private UUID playerUniqueId;
-    private String action;
-    private int page;
-    private boolean hasCompany;
-    private UUID companyUniqueId;
-    private Inventory inventory;
+public class GUIAreaSaleMarket extends CompanyMenu {
 
     public GUIAreaSaleMarket(UUID playerUniqueId, String action, int page) {
-        this.playerUniqueId = playerUniqueId;
+        super(playerUniqueId);
         this.action = action;
         this.page = page;
-        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
-        if (companyUniqueId != null) {
-            this.companyUniqueId = companyUniqueId;
-            hasCompany = true;
+        this.menu = new Menu(MenuUtil.getMenu("area_sale_market"));
+        if (hasCompany) {
             init();
         }
     }
@@ -43,8 +36,8 @@ public class GUIAreaSaleMarket extends GUIAbstract implements InventoryHolder {
     // Shit Mountain Code
     @Override
     public void init() {
-        String companyName = companyManager.getName(companyUniqueId);
-        Inventory inventory = Bukkit.createInventory(this, 45, Locale.getMessage("menu.area-sale-market.title").replaceAll("%company%", companyName));
+        Inventory inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle().replace("%company%", companyName));
+
         boolean hasPreviousPage = false;
         boolean hasNextPage = false;
         if (page > 1) {
@@ -52,66 +45,81 @@ public class GUIAreaSaleMarket extends GUIAbstract implements InventoryHolder {
         }
 
         List<TradableCompanyArea> areas = new ArrayList<>(areaManager.getMarketManager().getTradeMarketAreas());
+        int area_per_page = menu.getInt("area-per-page", 10);
 
-        if (areas.size() >= page*14) {
+        if (areas.size() > page*area_per_page) {
             hasNextPage = true;
         }
-        areas = areas.subList(14 * (page-1), Math.min((page) * 14, areas.size()));
+        areas = areas.subList(area_per_page * (page-1), Math.min((page) * area_per_page, areas.size()));
 
-        ItemStack area_info = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.area-sale-market.items.area_info.material")), 1);
-        ItemMeta area_info_meta = area_info.getItemMeta();
-        area_info_meta.setDisplayName(Locale.getMessage("menu.area-sale-market.items.area_info.display_name").replaceAll("%company%", companyName));
-        List<String> area_info_lore = Locale.yaml.getStringList("menu.area-sale-market.items.area_info.lore").stream()
-                .map(line -> ChatColor.translateAlternateColorCodes('&', line))
-                .map(line -> line.replaceAll("%company%", companyName))
-                .collect(Collectors.toList());
-        area_info_meta.setLore(area_info_lore);
-        PersistentDataContainer company_info_container = area_info_meta.getPersistentDataContainer();
-        company_info_container.set(menu_id_key, PersistentDataType.STRING, "area_info");
-        area_info.setItemMeta(area_info_meta);
-        inventory.setItem(4, area_info);
-
-        if (hasNextPage) {
-
-            ItemStack item = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.area-sale-market.items.next_page.material")));
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(Locale.getMessage("menu.area-sale-market.items.next_page.display_name"));
-            List<String> lore = Locale.yaml.getStringList("menu.area-sale-market.items.next_page.lore").stream()
-                    .map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
-            meta.setLore(lore);
-            PersistentDataContainer container = meta.getPersistentDataContainer();
-            container.set(menu_id_key, PersistentDataType.STRING, "next_page");
-            item.setItemMeta(meta);
-            inventory.setItem(5, item);
+        // 显示previous_page 和 next_page按钮
+        if (!hasPreviousPage) {
+            menu.getItems().remove("previous_page");
+        }
+        if (!hasNextPage) {
+            menu.getItems().remove("next_page");
         }
 
-        if (hasPreviousPage) {
+        Map<String, String> placeholders = Map.ofEntries(
+                Map.entry("%player%", playerName),
+                Map.entry("%position%", position),
+                Map.entry("%label%", positionLabel)
+        );
 
-            ItemStack item = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.area-sale-market.items.previous_page.material")));
-            ItemMeta meta = item.getItemMeta();
-            meta.setDisplayName(Locale.getMessage("menu.area-sale-market.items.previous_page.display_name"));
-            List<String> lore = Locale.yaml.getStringList("menu.area-sale-market.items.previous_page.lore").stream()
-                    .map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
-            meta.setLore(lore);
-            PersistentDataContainer container = meta.getPersistentDataContainer();
-            container.set(menu_id_key, PersistentDataType.STRING, "previous_page");
-            item.setItemMeta(meta);
-            inventory.setItem(3, item);
+
+        // 复制 area 的 item
+        if (areas.size() < area_per_page) {
+            area_per_page = areas.size();
+        }
+        // 当前 area 的位置, 再获取它与当前行首个slot的位置的距离
+        int current_slot = menu.getItems().get("area").getSlots().getFirst();
+        int line = (current_slot / 9)+1;
+        int distance = current_slot - ((line-1)*9);
+
+        int slot = current_slot;
+
+        MenuItem areaItem = menu.getItems().get("area").clone();
+        menu.getItems().remove("area");
+
+        for (int i = 0; i < area_per_page; i++) {
+
+            // 计算当前行数
+            int current_line = (slot / 9)+1;
+            // 如果当前 slot 超过了当前行的最后一个 available slot, 则跳到下一行
+            if (slot >= (current_line*9)-distance) {
+                slot += distance+distance;
+            }
+
+            // 复制 area
+            MenuItem cloneAreaItem = areaItem.clone();
+            cloneAreaItem.setSlots(Collections.singletonList(slot));
+            cloneAreaItem.setId(areaItem.getId() + "_" + slot);
+
+            // replace placeholders
+            TradableCompanyArea area = areas.get(i);
+            String areaName = area.getName();
+            String price = String.valueOf(area.getSellPrice());
+            UUID areaCompanyUniqueId = area.getCompanyUUID();
+            Company company = cache.getCompany(areaCompanyUniqueId);
+            String areaCompanyName = company.getName();
+
+            Map<String, String> areaPlaceholders = Map.ofEntries(
+                    Map.entry("%company%", areaCompanyName),
+                    Map.entry("%price%", price),
+                    Map.entry("%area%", areaName)
+            );
+
+            cloneAreaItem = replacePlaceholdersInMenuItems(cloneAreaItem, areaPlaceholders);
+            cloneAreaItem.setCustomKey("company:"+areaCompanyUniqueId+";area:"+areaName);
+            menu.getItems().put(cloneAreaItem.getId(), cloneAreaItem);
+            slot++;
+
         }
 
-        ItemStack item = new ItemStack(Material.matchMaterial(Locale.getMessage("menu.area-sale-market.items.back_to_main.material")));
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(Locale.getMessage("menu.area-sale-market.items.back_to_main.display_name"));
-        List<String> lore = Locale.yaml.getStringList("menu.area-sale-market.items.back_to_main.lore").stream()
-                .map(line -> ChatColor.translateAlternateColorCodes('&', line)).collect(Collectors.toList());
-        meta.setLore(lore);
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        container.set(menu_id_key, PersistentDataType.STRING, "back_to_main");
-        item.setItemMeta(meta);
-        inventory.setItem(36, item);
+        inventory = setItems(inventory, this.menu, placeholders);
+        inventory = fillEmptySlot(inventory, this.menu);
 
         this.inventory = inventory;
-        update(areas);
     }
 
     @Override
@@ -125,17 +133,18 @@ public class GUIAreaSaleMarket extends GUIAbstract implements InventoryHolder {
         return true;
     }
 
+    @Override
     public boolean check(String name, ClickType type) {
         Player player = Bukkit.getPlayer(playerUniqueId);
         if (name.equalsIgnoreCase("company_info")) {
             return true;
         }
         if (name.equalsIgnoreCase("next_page")) {
-            player.openInventory(new GUIAreaRentMarket(playerUniqueId, action, page+1).getInventory());
+            player.openInventory(new GUIAreaSaleMarket(playerUniqueId, action, page+1).getInventory());
             return true;
         }
         if (name.equalsIgnoreCase("previous_page")) {
-            player.openInventory(new GUIAreaRentMarket(playerUniqueId, action, Math.min(1,page-1)).getInventory());
+            player.openInventory(new GUIAreaSaleMarket(playerUniqueId, action, Math.min(1,page-1)).getInventory());
             return true;
         }
 
@@ -167,6 +176,7 @@ public class GUIAreaSaleMarket extends GUIAbstract implements InventoryHolder {
         return true;
     }
 
+    @Deprecated
     public void update(List<TradableCompanyArea> areas) {
         int slot = 20;
         for (TradableCompanyArea area : areas) {

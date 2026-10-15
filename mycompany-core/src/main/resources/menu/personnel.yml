@@ -1,0 +1,38 @@
+size: 45
+
+options:
+  # You need to make sure that the personnel-per-page is less than the number of slots available for personnel, otherwise it will not work properly.
+  personnel-per-page: 10
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  personnel_info:
+    material: PLAYER_HEAD;%PLAYER%
+    slot: 4
+
+  personnel:
+    # If you write %PLAYER% in the material, it will automatically replace it with the personnel's head.
+    material: PLAYER_HEAD;%PLAYER%
+    slot: 20
+
+  employ:
+    material: LEATHER_CHESTPLATE
+    slot: 40
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 36
+
+  previous_page:
+    material: RED_STAINED_GLASS_PANE
+    slot: 39
+
+  next_page:
+    material: LIME_STAINED_GLASS_PANE
+    slot: 41
+
+
+

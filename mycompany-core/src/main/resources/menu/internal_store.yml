@@ -1,0 +1,30 @@
+size: 54
+
+items:
+  # default for all empty slots
+  default:
+    material: AIR
+
+  submit:
+    material: EMERALD
+    slot: 49
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 45
+
+  bar:
+    material: BLACK_STAINED_GLASS_PANE
+    slots:
+      - 46
+      - 47
+      - 48
+      - 50
+      - 51
+      - 52
+      - 53
+
+
+
+
+

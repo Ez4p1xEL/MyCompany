@@ -1,43 +1,44 @@
-package p1xel.minecraft.bukkit.manager.gui;
+package p1xel.minecraft.bukkit.manager.gui.store;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.event.CompanyIncomeEvent;
+import p1xel.minecraft.bukkit.manager.gui.CompanyMenu;
+import p1xel.minecraft.bukkit.manager.gui.GUIMain;
 import p1xel.minecraft.bukkit.util.ColorUtil;
 import p1xel.minecraft.bukkit.object.price.InternalPrice;
 import p1xel.minecraft.bukkit.object.price.PriceGroup;
 import p1xel.minecraft.bukkit.util.storage.Locale;
-import p1xel.minecraft.bukkit.util.storage.menu.MenuConfig;
+import p1xel.minecraft.bukkit.util.storage.menu.Menu;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GUIInternalStore extends GUIAbstract implements InventoryHolder {
+public class GUIInternalStore extends CompanyMenu {
 
-    private UUID playerUniqueId;
-    private boolean hasCompany;
-    private UUID companyUniqueId;
-    private String position;
-    private Inventory inventory;
     private double price;
     private double playerShare;
-    private List<Integer> sellableSlots = new ArrayList<>();
+    private final List<Integer> sellableSlots = new ArrayList<>();
+    private final Menu menu;
+
+    private String companyName;
+    private String position;
+    private Map<String, String> placeholders;
 
     public GUIInternalStore(UUID playerUniqueId) {
-        this.playerUniqueId = playerUniqueId;
-        UUID companyUniqueId = userManager.getCompanyUUID(playerUniqueId);
-        if (companyUniqueId != null) {
-            this.companyUniqueId = companyUniqueId;
-            hasCompany = true;
+        super(playerUniqueId);
+        this.menu = MenuUtil.getMenu("internal_store");
+        if (hasCompany) {
             price = 0.0;
             init();
         }
@@ -46,25 +47,28 @@ public class GUIInternalStore extends GUIAbstract implements InventoryHolder {
     @Override
     public void init() {
 
-        this.inventory = Bukkit.createInventory(this, 54, Locale.getMessage("menu.internal-store.title"));
+        this.companyName = company.getName();
+        this.position = user.getPosition();
 
-        setItem(Material.PAPER, "submit", 49);
+        Inventory inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle().replace("%company%", companyName));
 
-        for (int i = 45; i < 54; i++) {
-            if (inventory.getItem(i) == null) {
-                Material empty_slot = Material.matchMaterial(MenuConfig.GLOBAL_EMPTY_SLOT);
-                ItemStack item = new ItemStack(empty_slot != null ? empty_slot : Material.GRAY_STAINED_GLASS_PANE);
-                ItemMeta meta = item.getItemMeta();
-                meta.setDisplayName(" ");
-                PersistentDataContainer container = meta.getPersistentDataContainer();
-                container.set(menu_id_key, PersistentDataType.STRING, "empty_slot");
-                item.setItemMeta(meta);
-                inventory.setItem(i, item);
-            }
-        }
+        this.placeholders = Map.ofEntries(
+                Map.entry("%player%", playerName),
+                Map.entry("%company%", companyName),
+                Map.entry("%position%", position),
+                Map.entry("%money%", String.valueOf(price)),
+                Map.entry("%price%", String.valueOf(playerShare))
+        );
 
+        inventory = setItems(inventory, menu, placeholders);
+
+        // for each slot in the inventory
+        inventory = fillEmptySlot(inventory, menu);
+
+        this.inventory = inventory;
     }
 
+    @Deprecated
     private void setItem(Material material, String menu_id, int slot) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
@@ -86,8 +90,8 @@ public class GUIInternalStore extends GUIAbstract implements InventoryHolder {
                 display_name = Locale.getMessage("menu.internal-store.items." + menu_id + ".display_name");
                 lore = Locale.yaml.getStringList("menu.internal-store.items." + menu_id + ".lore").stream()
                         .map(ColorUtil::translateHexColorCodes)
-                        .map(line -> line.replaceAll("%price%", String.valueOf(price)))
-                        .map(line -> line.replaceAll("%share%", String.valueOf(playerShare)))
+                        .map(line -> line.replaceAll("%money%", String.valueOf(price)))
+                        .map(line -> line.replaceAll("%price%", String.valueOf(playerShare)))
                         .collect(Collectors.toList());
                 break;
             }
@@ -136,7 +140,9 @@ public class GUIInternalStore extends GUIAbstract implements InventoryHolder {
         }
         this.price = totalPrice;
         this.playerShare = playerPrice;
-        setItem(Material.PAPER, "submit", 49);
+
+        // refresh the inventory to update the price display
+        this.inventory = setItems(this.inventory, menu, placeholders);
     }
 
     public void sellItems() {
@@ -183,14 +189,27 @@ public class GUIInternalStore extends GUIAbstract implements InventoryHolder {
         return false;
     }
 
+    @Override
+    public boolean check(String name, ClickType clickType) {
+        return false;
+    }
+
     public boolean check(Player player, String name) {
         switch (name) {
             case "submit": {
                 sellItems();
-                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 1.0f, 1.0f);
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
                 return true;
             }
-            case "empty_slot": {
+            case "bar": {
+                player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1.0f, 1.0f);
+                return true;
+            }
+
+            case "back_to_main": {
+                Inventory newInv = new GUIMain(playerUniqueId).getInventory();
+                player.openInventory(newInv);
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_CLOSE, 1.0f, 1.0f);
                 return true;
             }
         }

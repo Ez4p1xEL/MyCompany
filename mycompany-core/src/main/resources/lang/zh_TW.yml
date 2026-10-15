@@ -53,12 +53,12 @@ wrong-argument: '&7[&6%prefix%&7] &c錯誤的參數'
 something-went-wrong: '&7[&6%prefix%&7] &c出現錯誤,請重新再試!'
 invalid-amount: '&7[&6%prefix%&7] &c錯誤數值'
 
-# Company
+# 公司
 found-success: '&7[&6%prefix%&7] &a你已成功成立公司 &e%company%&a!'
 company-exist: '&7[&6%prefix%&7] &c公司 &e%company% &c已存在!'
 disband-success: '&7[&6%prefix%&7] &a你已解散公司 &e%company%&a!'
 employer-only: '&7[&6%prefix%&7] &c只有雇主才能執行此操作!'
-not-your-company: '&7[&6%prefix%&7] &c這不是你的公司。'
+not-your-company: '&7[&6%prefix%&7] &c這不是你的公司.'
 player-not-exist: '&7[&6%prefix%&7] &c玩家 &e%player% &c不存在!'
 no-company: '&7[&6%prefix%&7] &c你目前未隸屬於任何公司'
 has-company: '&7[&6%prefix%&7] &c你已經在一間公司裡了!'
@@ -67,13 +67,12 @@ target-has-company: '&7[&6%prefix%&7] &e%player% &c已是其他公司的成員!'
 not-your-employee: '&7[&6%prefix%&7] &e%player% &c不是你的員工!'
 already-your-employee: '&7[&6%prefix%&7] &e%player% &C已是你的員工!'
 fire-success: '&7[&6%prefix%&7] &a你已成功解雇員工 &e%player%&a!'
-dismissed: '&7[&6%prefix%&7] &c你被 &e%player%&c 解雇，已不再是 &e%company% &c的員工'
+dismissed: '&7[&6%prefix%&7] &c你被 &e%player%&c 解雇,已不再是 &e%company% &c的員工'
 resign-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a辭職'
 resigned: '&7[&6%prefix%&7] &c你的員工 &e%player% &c已辭職'
 disband-instead: '&7[&6%prefix%&7] &c請使用 /myc disband 指令來解散公司'
-contract-send: '&7[&6%prefix%&7] &a你已向 &e%player% &a發送合約，對方有 &e%second% &a秒可接受'
-contract-received: '&7[&6%prefix%&7] &a你收到來自 &e%player% 於 &e%company% &a的合約，請於 %second%
-  秒內輸入 /myc accept &e%player% &a以接受'
+contract-send: '&7[&6%prefix%&7] &a你已向 &e%player% &a發送合約,對方有 &e%second% &a秒可接受'
+contract-received: '&7[&6%prefix%&7] &a你收到來自 &e%player% 於 &e%company% &a的合約,請於 %second% 秒輸入指令 /myc accept &e%player% &a以接受合約'
 contract-accept-employer: '&7[&6%prefix%&7] &e%player% &a已接受你的合約'
 contract-accept-employee: '&7[&6%prefix%&7] &a你已成為 &e%company% &a的員工'
 contract-expire-employer: '&7[&6%prefix%&7] &c發送給 &e%player% &c的合約已逾時!'
@@ -84,9 +83,9 @@ no-contract: '&7[&6%prefix%&7] &c你尚未收到任何合約!'
 id-invalid: '&7[&6%prefix%&7] &c請輸入正確的公司ID!'
 id-not-exist: '&7[&6%prefix%&7] &c公司ID &e%cid% &c不存在!'
 remove-shop-before-disband: '&7[&6%prefix%&7] &c請先移除所有箱子商店後再解散公司!'
-employer-self: '&7[&6%prefix%&7] &c你已是雇主，還想做什麼？'
-not-in-building: '&7[&6%prefix%&7] &c你應該在你的公司範圍內這麼做！'
-not-your-protected-area: '&7[&6%prefix%&7] &c你應該站在一個被保護的區域中！'
+employer-self: '&7[&6%prefix%&7] &c你已是雇主,還想做什麼?'
+not-in-building: '&7[&6%prefix%&7] &c你應該在你的公司範圍內這麼做!'
+not-your-protected-area: '&7[&6%prefix%&7] &c你應該站在一個被保護的區域中!'
 setloc-success: '&7[&6%prefix%&7] &a傳送點已設定'
 tp-success: '&7[&6%prefix%&7] &a正在傳送'
 cant-do-to-self: '&7[&6%prefix%&7] &c你不能對你自己這麼做!'
@@ -99,16 +98,16 @@ money-give-success: '&7[&6%prefix%&7] &a你已給予 &e%company% &a金額 &e$%mo
 money-take-success: '&7[&6%prefix%&7] &a你已從 &e%company% &a提取金額 &e$%money%'
 
 # Salary
-salary-received: '&7[&b%company%&7] &a你已收到薪資 &e$%money%&a。'
+salary-received: '&7[&b%company%&7] &a你已收到薪資 &e$%money%&a.'
 salary-set: '&7[&b%prefix%&7] &e%position% &a的薪資已設置為 &e$%money%'
 salary-invalid: '&7[&b%prefix%&7] &c錯誤的輸入值'
 salary-cancel-due-to-break: '&7[&b%prefix%&7] &c由於貴公司已破產, 你沒有收到薪資!'
 
-# Position label and Permission
+# 職位標籤和權限
 position-already-existed: '&7[&6%prefix%&7] &c職位 &e%position% &c已存在!'
-position-not-existed: '&7[&6%prefix%&7] &c找不到職位 &e%position%&c。'
-position-add: '&7[&6%prefix%&7] &a新增職位: &e%position%&a，自訂名稱為 &e%label%'
-position-remove: '&7[&6%prefix%&7] &a已移除職位: &e%position%&a。'
+position-not-existed: '&7[&6%prefix%&7] &c找不到職位 &e%position%&c.'
+position-add: '&7[&6%prefix%&7] &a新增職位: &e%position%&a,自訂名稱為 &e%label%'
+position-remove: '&7[&6%prefix%&7] &a已移除職位: &e%position%&a.'
 position-set: '&7[&6%prefix%&7] &a已設定 &e%player% &a的職位為 &e%label%&7(%position%)'
 position-setlabel: '&7[&6%prefix%&7] &a已設定職位 &e%position% &a的自訂名稱為 &e%label%'
 position-permission-add: '&7[&6%prefix%&7] &a已為職位 &e%position% &a新增權限 &e%permission%'
@@ -117,7 +116,7 @@ player-position-conflict: '&7[&6%prefix%&7] &e%player% &c已是 &e%label% &c了!
 position-permission-not-existed: '&7[&6%prefix%&7] &c權限 &e%permission% &c不存在!'
 position-has-no-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &c沒有權限 &e%permission%'
 position-has-permission: '&7[&6%prefix%&7] &e%label%&7(%position%) &c已擁有權限 &e%permission%'
-incorrect-position-id: '&7[&6%prefix%&7] &c職位名稱錯誤，請重新輸入!'
+incorrect-position-id: '&7[&6%prefix%&7] &c職位名稱錯誤,請重新輸入!'
 not-permitted: '&7[&6%prefix%&7] &c缺少公司權限 %permission%'
 position-set-received: '&7[&b%company%&7] &a你的職位已變更為 &e%label%'
 cant-set-to-employer: '&7[&6%prefix%&7] &c你無法變更為雇主職位!'
@@ -132,28 +131,48 @@ position-reach-maximum: '&7[&6%prefix%&7] &c公司的職位數量已達到上限
 order-forcegive-success: '&7[&6%prefix%&7] &a玩家 &e%player% &a獲得了訂單 &e%order%'
 order-not-exist: '&7[&6%prefix%&7] &c訂單 &e%order% &c不存在!'
 quest-completed: '&7[&6%prefix%&7] &a訂單 &e%order% &a中的其中一個任務已完成 &b[%progress%]'
-order-completed: '&7[&6%prefix%&7] &a你已完成訂單 &e%order%&a，獎勵已發送給你！'
+order-completed: '&7[&6%prefix%&7] &a你已完成訂單 &e%order%&a,獎勵已發送給你!'
 
-# Company Area
-not-in-x-range: '&7[&6%prefix%&7] &cX軸的大小應介於 &e%min% &c和 &e%max%&c 之間！'
-not-in-y-range: '&7[&6%prefix%&7] &cY軸的大小應介於 &e%min% &c和 &e%max%&c 之間！'
-not-in-z-range: '&7[&6%prefix%&7] &cZ軸的大小應介於 &e%min% &c和 &e%max%&c 之間！'
-area-created: '&7[&6%prefix%&7] &a領地 &e%name% &a已成功建立！'
-area-name-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c已存在！'
-area-name-not-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c似乎不存在！'
-selection-missing: '&7[&6%prefix%&7] &c你需要先使用選擇工具選定領地區域！'
-tool-item-null: '物品為空，請檢查配置檔。'
-givetool-target-success: '&7[&6%prefix%&7] &a你已獲得選擇工具物品。'
-first-block-selected: '&7[&6%prefix%&7] &a你已選擇第一個方塊，座標為 &e%x%&a,&e%y%&a,&e%z%&a。'
-second-block-selected: '&7[&6%prefix%&7] &a你已選擇第二個方塊，座標為 &e%x%&a,&e%y%&a,&e%z%&a。'
-no-area-in-location: '&7[&6%prefix%&7] &c你目前位置沒有任何領地。'
-area-delete-success: '&7[&6%prefix%&7] &a領地 &e%name% &a已成功刪除！'
-area-setloc-success: '&7[&6%prefix%&7] &a傳送點已成功設定！'
-area-loc-not-set: '&7[&6%prefix%&7] &c領地 &e%name% &c尚未設定傳送點！'
+# 公司领地
+not-in-x-range: '&7[&6%prefix%&7] &cX軸的大小應介於 &e%min% &c和 &e%max%&c 之間!'
+not-in-y-range: '&7[&6%prefix%&7] &cY軸的大小應介於 &e%min% &c和 &e%max%&c 之間!'
+not-in-z-range: '&7[&6%prefix%&7] &cZ軸的大小應介於 &e%min% &c和 &e%max%&c 之間!'
+area-created: '&7[&6%prefix%&7] &a領地 &e%name% &a已成功建立!'
+area-name-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c已存在!'
+area-name-not-existed: '&7[&6%prefix%&7] &c領地 &e%name% &c似乎不存在!'
+selection-missing: '&7[&6%prefix%&7] &c你需要先使用選擇工具選定領地區域!'
+tool-item-null: '物品為空,請檢查配置檔.'
+givetool-target-success: '&7[&6%prefix%&7] &a你已獲得選擇工具物品.'
+first-block-selected: '&7[&6%prefix%&7] &a你已選擇第一個方塊,座標為 &e%x%&a,&e%y%&a,&e%z%&a.'
+second-block-selected: '&7[&6%prefix%&7] &a你已選擇第二個方塊,座標為 &e%x%&a,&e%y%&a,&e%z%&a.'
+no-area-in-location: '&7[&6%prefix%&7] &c你目前位置沒有任何領地.'
+area-delete-success: '&7[&6%prefix%&7] &a領地 &e%name% &a已成功刪除!'
+area-setloc-success: '&7[&6%prefix%&7] &a傳送點已成功設定!'
+area-loc-not-set: '&7[&6%prefix%&7] &c領地 &e%name% &c尚未設定傳送點!'
 area-tp-success: '&7[&6%prefix%&7] &a正在傳送至公司 &b%company%&a 的領地 &e%name%&a...'
-area-list-empty: '&7[&6%prefix%&7] &c你的公司尚未擁有任何領地！'
-area-list-success: '&7[&6%prefix%7] &a領地清單：&e%list%'
+area-list-empty: '&7[&6%prefix%&7] &c你的公司尚未擁有任何領地!'
+area-list-success: '&7[&6%prefix%7] &a領地清單:&e%list%'
+cant-delete-other-area: '&7[&6%prefix%&7] &c你不能刪除不屬於你的領地!'
+area-overlap: '&7[&6%prefix%&7] &c附近已經存在領地!'
+area-enter: '&a你進入了 &b%company% &a的領地 &e%area%.'
+area-left: '&a你離開了 &b%company% &a的領地 &e%area%.'
+area-protected: '&7[&b%company%&7] &c沒有權限存取該領地!'
 
+# 公司領地交易市場
+on-market-already: '&7[&6%prefix%&7] &e%area% &c已經在市場中!'
+rented-already: '&7[&6%prefix%&7] &e%area% &c已經被租借!'
+not-your-area: '&7[&6%prefix%&7] &c這不是你的領地!'
+area-rent-success: '&7[&6%prefix%&7] &a你花費 &e$%money% &a從 &b%company% &a租借領地 &e%area% &e%time% &a天!'
+area-buy-success: '&7[&6%prefix%&7] &a你花費 &e$%money% &a從 &b%company% &a購買領地 &e%area%&a!'
+area-rented: '&7[&6%prefix%&7] &a你的領地 &e%area% &a已出租給 &b%company% &e%time% &a天! 公司獲得 &e$%money%&a!'
+area-bought: '&7[&6%prefix%&7] &a你的領地 &e%area% &a已出售給 &b%company%! 公司獲得 &e$%money%&a!'
+cant-rent-your-own-area: '&7[&6%prefix%&7] &c你不能出租自己的領地'
+cant-buy-your-own-area: '&7[&6%prefix%&7] &c你不能購買自己的領地'
+area-rent-expired-renter: '&7[&6%prefix%&7] &c從 &b%company% &c租借的領地 &e%area% &c已到期!'
+area-rent-expired: '&7[&6%prefix%&7] &c出租的領地 &e%area% &c已到期!'
+market-remove-success: '&7[&6%prefix%&7] &c你已將 &e%area% &c從市場移除!'
+company-not-enough-money: '&7[&6%prefix%&7] &c你的公司資金不足! 當前餘額: &e$%money%&c.'
+area-not-on-market: '&7[&6%prefix%&7] &e%area% &c不在市場中!'
 
 # Broadcast
 broadcast:
@@ -173,7 +192,7 @@ info:
     - '&b%employer_label%&8(雇主)&b: &e%employer%'
     - '%employee%'
     - ''
-    - '&c這裡應該有更多資訊，'
+    - '&c這裡應該有更多資訊,'
     - '&c但因公司隱私設定無法顯示'
     - ''
     - '&7創辦人: &e%founder%'
@@ -193,8 +212,17 @@ info:
     - '&7今日收入: &b%daily%'
     - ''
     - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+  area:
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
+    - ''
+    - '&7公司:&b%company% &8(%cid%)'
+    - '&7領地名稱:&a%area%'
+    - ''
+    - '&7建立者:&e%creator%&7.'
+    - ''
+    - '&e&m================&8&l[ &6&l%company% &8&l]&e&m================'
 
-# Chest shop sign
+# 箱子商店告示牌
 shop:
   sign:
     line1: '&7[&b%company%&7]'
@@ -221,11 +249,15 @@ shop:
   reach-maximum: '&7[&6%prefix%&7] &c公司已達到最大箱子商店數量!'
 
 menu:
+  global:
+    no-perm:
+      lore:
+        - '&c你沒有權限這麼做!'
+        - ''
   main:
     title: '&b%company% &a公司選單'
     items:
       user_info:
-        material: player_head;%player%
         display_name: '&a目前隸屬於 &b%company%'
         lore:
           - ''
@@ -233,7 +265,6 @@ menu:
           - '&7你的每日收入為 &e$%salary%'
           - ''
       company_info:
-        material: diamond
         display_name: '&a公司 &b%company%'
         lore:
           - ''
@@ -241,12 +272,11 @@ menu:
           - '&7或輸入指令 /myc info %cid%'
           - ''
       balance:
-        material: gold_ingot
         display_name: '&a財產'
         lore:
           - ''
           - '&7公司目前擁有 &e$%cash%'
-          - '&7每日收入為 &e$%daily%&7/%total%。'
+          - '&7每日收入為 &e$%daily%&7/%total%.'
           - ''
           - '&7稅項:'
           - ' &7管理費用: &c$%tax_management%'
@@ -255,106 +285,7 @@ menu:
           - ''
           - '&7/myc balance %cid%'
           - ''
-      employ:
-        material: leather_chestplate
-        display_name: '&d聘用'
-        lore:
-          - ''
-          - '&7聘用其他玩家成為員工'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_employ%'
-          - ''
-          - '&7點擊以聘用'
-      fire:
-        material: iron_door
-        display_name: '&d解雇'
-        lore:
-          - ''
-          - '&7炒魷魚'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_fire%'
-          - ''
-          - '&7點擊以解雇'
-      chestshop_create:
-        material: chest
-        display_name: '&d建立箱子商店'
-        lore:
-          - ''
-          - '&7為公司建立箱子商店以賺取收入'
-          - '&7你需要在箱子前放置一塊告示牌'
-          - '&7告示牌內容如下:'
-          - '&f%chestshop_identifier%'
-          - '&f價格'
-          - '&7完成後，告示牌內容將會被自動更新'
-          - '&7接下來，放置一個連接至該箱子的漏斗（漏斗的傳輸目的地必須是該箱子）'
-          - '&7放置一個商品於漏斗中，並使其傳輸至箱子中'
-          - '&7如此一來，箱子商店的商品即可被確認！'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_chestshop_create%'
-          - ''
-      chestshop_delete:
-        material: trapped_chest
-        display_name: '&d刪除箱子商店'
-        lore:
-          - ''
-          - '&7如果你需要刪除箱子商店'
-          - '&7破壞箱子即可'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_chestshop_delete%'
-          - ''
-      set_position:
-        material: experience_bottle
-        display_name: '&a升職/降職'
-        lore:
-          - ''
-          - '&7你可透過此處調整員工的職位'
-          - '&7你可以使他們升職'
-          - '&7也可以降職'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_set_position%'
-          - ''
-          - '&7點擊調整'
-      position_setlabel:
-        material: name_tag
-        display_name: '&a設定職位名稱'
-        lore:
-          - ''
-          - '&7可為職位設定自訂名稱'
-          - '&7例如帥氣逼人的經理'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_position_setlabel%'
-          - ''
-          - '&7點擊設定'
-      position_add:
-        material: item_frame
-        display_name: '&a新增職位'
-        lore:
-          - ''
-          - '&7新增自訂職位'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_position_add%'
-          - ''
-          - '&7點擊新增'
-      position_remove:
-        material: glow_item_frame
-        display_name: '&c移除職位'
-        lore:
-          - ''
-          - '&7移除已存在的職位'
-          - ''
-          - '&7權限需求: &a是'
-          - '&7允許操作: %permit_position_remove%'
-          - ''
-          - '&7點擊移除'
       tp:
-        material: compass
         display_name: '&b傳送至公司'
         lore:
           - ''
@@ -362,8 +293,8 @@ menu:
           - '&7如果有曾設置'
           - ''
           - '&7點擊傳送'
+          - '&7點擊傳送'
       salary:
-        material: emerald
         display_name: '&a工資'
         lore:
           - ''
@@ -371,18 +302,18 @@ menu:
           - '&7向你發送你應得的工資'
           - '&7你的工作值得 &d$%salary%'
           - ''
-      works:
-        material: paper
+          - ''
+      work:
         display_name: '&d你應該做什麼?'
         lore:
           - ''
-          - '&7為了幫助公司賺取利潤'
-          - '&7作為員工，你需要參與這個任務'
-          - '&7從公司的箱子商店中賺取金錢'
-          - '&7應該是不錯的選擇'
+          - '&7為了替公司賺取利潤,'
+          - '&7你需要參與任務.'
+          - '&7完成任務即可獲得獎勵.'
+          - '&7推廣箱子商店來賺錢'
+          - '&7可能是不錯的方法.'
           - ''
       resign:
-        material: barrier
         display_name: '&c辭職'
         lore:
           - ''
@@ -391,8 +322,7 @@ menu:
           - ''
           - '&7點擊辭職 &c(請在點擊前三思)'
       order:
-        material: writable_book
-        display_name: '&d完成員工訂單'
+        display_name : '&d完成員工訂單'
         lore:
           - ''
           - '&7你的公司向你發送了一些'
@@ -400,8 +330,8 @@ menu:
           - '&7這些訂單每天都會刷新'
           - ''
           - '&7點擊查看'
+          - '&7点击查看'
       area:
-        material: golden_hoe
         display_name: '&a公司領地'
         lore:
           - ''
@@ -409,6 +339,48 @@ menu:
           - '&7而且還可以出售或出租'
           - ''
           - '&7點擊查看'
+      personnel:
+        display_name: '&a公司人员'
+        lore:
+          - ''
+          - '&7查看員工列表.'
+          - ''
+          - '&7点击查看'
+      position:
+        display_name: '&a公司职位'
+        lore:
+          - ''
+          - '&7查看職位列表.'
+          - ''
+          - '&7点击查看'
+      chestshop:
+        display_name: '&a箱子商店'
+        lore:
+          - ''
+          - '&7查看箱子商店說明,'
+          - '&7包括如何'
+          - '&7建立和刪除商店.'
+          - ''
+          - '&7点击查看'
+      internal_store:
+        display_name: '&a内部商店'
+        lore:
+          - ''
+          - '&7內部商店是員工'
+          - '&7向政府出售商品並以更好價格'
+          - '&7為公司賺取利潤的地方.'
+          - ''
+          - '&7點擊打開'
+      focus:
+        display_name: '&a專注方向'
+        lore:
+          - ''
+          - '&7你的公司已設定專注方向,'
+          - '&7展示公司的主要業務.'
+          - '&7專注方向包含專精樹,即公司可以學習的技能樹.'
+          - '&7所有成員都會獲得公司專精帶來的增益.'
+          - ''
+          - '&7點擊打開'
   employee-list:
     title: '&b%company% &a員工列表'
     items:
@@ -447,98 +419,92 @@ menu:
           - ''
           - '&7點擊切換'
           - ''
-
-  player-list:
+  player_list:
     title: '&a線上玩家'
+    actions:
+      employ:
+        left: '&7點擊發送僱用合約'
+        right: '#remove#'
     items:
       company_info:
-        material: nether_star
-        display_name: '&a線上且無業玩家'
+        display_name: '&a線上及待業玩家列表'
         lore:
           - ''
           - '&7點擊頭顱選擇玩家'
           - ''
       player:
-        material: player_head;%player%
         display_name: '&e%player%'
         lore:
           - ''
-          - '&7點擊選擇'
+          - '%left_click%'
+          - '%right_click%'
           - ''
       next_page:
-        material: lime_stained_glass_pane
-        display_name: '&a下一頁'
+        display_name: '&a下一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       previous_page:
-        material: red_stained_glass_pane
-        display_name: '&a上一頁'
+        display_name: '&a上一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
-  position_remove:
-    material: ITEM_FRAME
-    display_name: '&c移除職位'
-    lore:
-      - ''
-      - '&7移除已存在的職位'
-      - ''
-      - '&7權限需求: &a是'
-      - '&7允許操作: %permit_position_remove%'
-      - ''
-      - '&7點擊移除'
-  position-list:
-    title: 職位列表
+  position_list:
+    title: '職位列表'
+    actions:
+      set_position:
+        left: '&7點擊設置職位'
+        right: '#remove#'
     items:
       company_info:
-        material: nether_star
         display_name: '&a職位列表'
         lore:
           - ''
           - '&7點擊頭顱選擇職位'
           - ''
       position:
-        material: feather
-        display_name: '&a職位 &b%label%'
+        display_name: '&a職位 &b%position_label%'
         lore:
           - ''
-          - '&7職位Id: %position%'
-          - '&7權限列表: &d%permissions%'
+          - '&7职位 ID: %position_name%'
+          - '&7權限:&d%position_permission%'
           - ''
-          - '&7點擊選擇'
+          - '%left_click%'
+          - '%right_click%'
       next_page:
-        material: lime_stained_glass_pane
-        display_name: '&a下一頁'
+        display_name: '&a下一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       previous_page:
-        material: red_stained_glass_pane
-        display_name: '&a上一頁'
+        display_name: '&a上一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
   text-input:
-    title: 文字輸入
+    title:
+      found: '輸入公司名稱'
+      position_setlabel: '輸入職位的新標籤'
+      set_position: '輸入職位'
+      position_add: '輸入新職位名稱'
+      area-create: '輸入領地名稱'
+      area-rent-set-price: '輸入出租價格'
     items:
       first_item:
         material: paper
@@ -547,7 +513,6 @@ menu:
     title: 你不在任何一間公司中
     items:
       found:
-        material: chest
         display_name: '&a成立一間公司'
         lore:
           - ''
@@ -556,25 +521,23 @@ menu:
           - ''
           - '&7點擊成立'
       wait_for_employ:
-        material: leather_chestplate
         display_name: '&a等待被招募'
         lore:
           - ''
           - '&7如果你不想當老闆'
           - '&7你可以等待其他老闆的邀請'
           - ''
+          - ''
   orders:
     title: 員工訂單
     items:
       orders_info:
-        material: writable_book
         display_name: '&a員工訂單'
         lore:
           - ''
           - '&7點擊下方查看今日訂單資訊'
           - ''
       order:
-        material: paper
         display_name: '&a%label%'
         lore:
           - '&8(%order%)'
@@ -588,322 +551,578 @@ menu:
           - ' &f%order_reward%'
           - ''
       next_page:
-        material: lime_stained_glass_pane
         display_name: '&a下一頁'
         lore:
           - ''
           - '&7點擊切換'
           - ''
       previous_page:
-        material: red_stained_glass_pane
         display_name: '&a上一頁'
         lore:
           - ''
           - '&7點擊切換'
           - ''
       back_to_main:
-        material: feather
         display_name: '&a返回主選單'
         lore:
           - ''
           - '&7點擊切換'
           - ''
-  area-rent-market:
-    title: '公司領地租借市場'
+  area_rent_market:
+    title: '公司领地 出租市场'
     items:
       area_info:
-        material: writable_book
-        display_name: '&a公司領地'
+        display_name: '&a公司领地'
         lore:
           - ''
-          - '&7點擊領地查看資訊'
+          - '&7点击领地查看详情.'
           - ''
       area:
-        material: paper
         display_name: '&a%area%'
         lore:
           - ''
-          - '&7擁有者: &b%company%'
+          - '&7所有者: &b%company%'
           - ''
-          - '&7狀態: &d出租中'
-          - '&7租借時間: &d1 天'
-          - '&7價格: &e%price%'
+          - '&7狀態:&d出租中'
+          - '&7出租時間:&d1 天'
+          - '&7价格: &e%price%'
           - ''
-          - '&7左鍵點擊購買/下架'
-          - '&7右鍵點擊傳送至領地'
+          - '&7左鍵購買/移除'
+          - '&7右鍵傳送'
           - ''
       next_page:
-        material: lime_stained_glass_pane
-        display_name: '&a下一頁'
+        display_name: '&a下一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       previous_page:
-        material: red_stained_glass_pane
-        display_name: '&a上一頁'
+        display_name: '&a上一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
-  area-sale-market:
-    title: '公司領地出售市場'
+  area_sale_market:
+    title: '公司领地 出售市场'
     items:
       area_info:
-        material: writable_book
-        display_name: '&a公司領地'
+        display_name: '&a公司领地'
         lore:
           - ''
-          - '&7點擊領地查看資訊'
+          - '&7点击领地查看详情.'
           - ''
       area:
-        material: paper
         display_name: '&a%area%'
         lore:
           - ''
-          - '&7擁有者: &b%company%'
+          - '&7所有者: &b%company%'
           - ''
-          - '&7狀態: &d出售中'
-          - '&7價格: &e%price%'
+          - '&7狀態:&d出售中'
+          - '&7价格: &e%price%'
           - ''
-          - '&7左鍵點擊購買/下架'
-          - '&7右鍵點擊傳送至領地'
+          - '&7左鍵購買/移除'
+          - '&7右鍵傳送'
           - ''
       next_page:
-        material: lime_stained_glass_pane
-        display_name: '&a下一頁'
+        display_name: '&a下一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       previous_page:
-        material: red_stained_glass_pane
-        display_name: '&a上一頁'
+        display_name: '&a上一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
-  company-area:
-    title: '公司領地'
+  areas:
+    title: '公司领地'
     items:
       create:
-        material: golden_hoe
-        display_name: '&a創建領地'
+        display_name: '&a建立領地'
         lore:
           - ''
-          - '&7使用 &6&l區域選擇工具'
-          - '&7選擇指定區域的兩個角落'
-          - '&7然後執行以下的指令或者點擊此處'
-          - '&7/mycompany area create <名稱>'
-          - '&7即可創建公司領地'
+          - '&7使用&6&l領地選擇工具'
+          - '&7選擇領地的兩個角點'
+          - '&7然後執行以下指令'
+          - '&7/mycompany area create <name>'
+          - '&7即可建立領地.'
           - ''
       list:
-        material: item_frame
-        display_name: '&a查看公司擁有的領地'
+        display_name: '&a查看領地列表'
         lore:
           - ''
-          - '&7查看當前公司所'
-          - '&7擁有的領地(包括租借領地)'
+          - '&7查看公司擁有的所有領地'
           - ''
-          - '&7點擊查看'
+          - '&7点击查看'
           - ''
       delete:
-        material: red_dye
         display_name: '&a刪除領地'
         lore:
           - ''
-          - '&7刪除眾多領地之中'
-          - '&7的其中一個領地'
+          - '&7刪除公司領地中的一個領地'
           - ''
-          - '&7點擊刪除'
+          - '&7点击删除'
           - ''
       rent:
-        material: gold_ingot
         display_name: '&a出租領地'
         lore:
           - ''
-          - '&7將領地上架至'
-          - '&7公司領地租借市場'
+          - '&7出租領地'
+          - '&7領地將顯示在市場中.'
           - ''
           - '&7點擊出租'
           - ''
       sell:
-        material: diamond
         display_name: '&a出售領地'
         lore:
           - ''
-          - '&7將領地出售'
-          - '&7將領地上架至市場'
+          - '&7出售領地'
+          - '&7領地將顯示在市場中.'
           - ''
           - '&7點擊出售'
           - ''
       market:
-        material: chest
-        display_name: '&a公司領地交易市場'
+        display_name: '&a领地交易市场'
         lore:
           - ''
-          - '&7你可以購買或租借領地'
-          - '&7在這個龐大的公司領地交易市場'
+          - '&7你可以在交易市場購買和出租領地'
+          - '&7在交易市場中.'
           - ''
-          - '&7點擊查看'
+          - '&7点击查看'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
-  area-trade-market:
-    title: '公司領地交易市場'
+  area_trade_market:
+    title: '领地交易市场'
     items:
       rent:
-        material: paper
-        display_name: '&a租借市場'
+        display_name: '&a出租市场'
         lore:
           - ''
-          - '&7你可以將領地'
-          - '&7上架至該市場'
+          - '&7你可以出租领地'
+          - '&7在此市場中進行交易'
           - ''
-          - '&7點擊查看'
+          - '&7点击查看'
           - ''
       sell:
-        material: gold_ingot
-        display_name: '&a銷售市場'
+        display_name: '&a出售市场'
         lore:
           - ''
-          - '&7你可以將領地'
-          - '&7上架至該市場'
+          - '&7你可以购买领地'
+          - '&7在此市場中進行交易'
           - ''
-          - '&7點擊查看'
+          - '&7点击查看'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
-  area-list:
-    title: '公司領地列表'
+  area_list:
+    title: '公司领地列表'
     actions:
       list:
-        left: '左鍵點擊傳送'
-        right: '右鍵點擊設置傳送點'
+        left: '左键点击传送'
+        right: '右键点击设置传送点'
       delete:
-        left: '點擊刪除'
+        left: '点击删除'
         right: '#remove#'
       rent:
-        left: '點擊上架至租借市場'
+        left: '点击出租领地'
         right: '#remove#'
       sell:
-        left: '點擊上架至銷售市場'
+        left: '点击出售领地'
         right: '#remove#'
     items:
       area_info:
-        material: writable_book
-        display_name: '&a公司領地'
+        display_name: '&a公司领地'
         lore:
           - ''
-          - '&7點擊領地查看資訊'
+          - '&7点击领地查看详情.'
           - ''
       area:
-        material: paper
-        display_name: '&a%area% &b[公司擁有]'
+        display_name: '&a%area% &b[OWN]'
         lore:
           - ''
           - '&7世界: &f%world%'
-          - '&7首格方塊: &f[%x1%,%y1%,%z1%]'
-          - '&7次格方塊: &f[%x2%,%y2%,%z2%]'
+          - '&7第一个方块: &f[%x1%,%y1%,%z1%]'
+          - '&7第二个方块: &f[%x2%,%y2%,%z2%]'
           - ''
           - '&7%left_click%'
           - '&7%right_click%'
           - ''
-      area-rent:
-        material: paper
-        display_name: '&a%area% &d[公司租借]'
+      area_rent:
+        display_name: '&a%area% &d[RENT]'
         lore:
           - ''
-          - '&7擁有者: &b%company%'
+          - '&7所有者: &b%company%'
           - '&7世界: &f%world%'
-          - '&7首格方塊: &f[%x1%,%y1%,%z1%]'
-          - '&7次格方塊: &f[%x2%,%y2%,%z2%]'
+          - '&7第一个方块: &f[%x1%,%y1%,%z1%]'
+          - '&7第二个方块: &f[%x2%,%y2%,%z2%]'
           - ''
-          - '&7到期時間: &d%end_time%'
+          - '&7Expire Time: &d%end_time%'
           - ''
           - '&7%left_click%'
           - '&7%right_click%'
           - ''
       next_page:
-        material: lime_stained_glass_pane
-        display_name: '&a下一頁'
+        display_name: '&a下一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       previous_page:
-        material: red_stained_glass_pane
-        display_name: '&a上一頁'
+        display_name: '&a上一页'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
       back_to_main:
-        material: feather
-        display_name: '&a返回主選單'
+        display_name: '&a返回主菜单'
         lore:
           - ''
-          - '&7點擊切換'
+          - '&7点击切换'
           - ''
-  internal-store:
-    title: '公司專屬内部商店'
+  internal_store:
+    title: '内部商店'
     items:
       submit:
-        material: emerald
-        display_name: '&a出售商品'
+        display_name: '&a提交'
         lore:
           - ''
-          - '&7出售商品至内部商店'
-          - '&7你的公司會收到 &e%money%'
-          - '&7作爲回收價格'
-          - '&7另外, 你會收到 &e%price%'
-          - '&7作爲個人分成'
+          - '&7將物品提交至內部商店'
+          - '&7公司将收到 &e%money%'
+          - '&7作为物品回收款.'
+          - '&7此外,你将获得 &e%price%'
+          - '&7作为个人分成.'
+          - ''
+      bar:
+        display_name: '&7'
+        lore:
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  personnel:
+    title: '公司人员'
+    actions:
+      default:
+        left: '&7左键点击设置职位'
+        shift_right: '&cShift+右键点击开除员工'
+      self:
+        left: '#remove#'
+        shift_right: '#remove#'
+      no_permission:
+        left: '#remove#'
+        shift_right: '#remove#'
+    items:
+      personnel_info:
+        display_name: '&a公司人员'
+        lore:
+          - ''
+          - '&7数量: &e%amount%/%max%'
+          - '&7你目前的职位是 &e%label% &8(%position%)'
+          - ''
+      personnel:
+        display_name: '&e%personnel_player%'
+        lore:
+          - ''
+          - '&7职位: &e%personnel_label% &8(%personnel_position%)'
+          - '&7工资: &d$%personnel_salary%'
+          - ''
+          - '%left_click%'
+          - '%shift_right_click%'
+          - ''
+      employ:
+        display_name: '&a聘请'
+        lore:
+          - ''
+          - '&7聘請玩家加入你的公司'
+          - '&7该玩家将被设置为默认职位'
+          - ''
+          - '&7点击聘请该玩家'
+          - ''
+      next_page:
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  position:
+    title: '公司职位'
+    actions:
+      default:
+        left: '&7左键点击设置名称'
+        shift_left: '&7Shift+左键点击设置权限'
+        shift_right: '&cShift+右键点击移除'
+      employer:
+        left: '&7左键点击设置名称'
+        shift_left: '#remove#'
+        shift_right: '#remove#'
+      employee:
+        left: '&7左键点击设置名称'
+        shift_left: '&7Shift+左键点击设置权限'
+        shift_right: '#remove#'
+      no_permission:
+        left: '#remove#'
+        shift_left: '#remove#'
+        shift_right: '#remove#'
+    items:
+      position_info:
+        display_name: '&a公司职位'
+        lore:
+          - ''
+          - '&7数量: &e%amount%/%max%'
+          - '&7你目前的职位是 &e%label% &8(%position%)'
+          - ''
+      position:
+        display_name: '&a職位 &b%position_label%'
+        lore:
+          - ''
+          - '&7职位 ID: %position_name%'
+          - '&7權限: &d%position_permission%'
+          - ''
+          - '%left_click%'
+          - '%shift_left_click%'
+          - '%shift_right_click%'
+      add:
+        display_name: '&a新增职位'
+        lore:
+          - ''
+          - '&7为你的公司新增职位'
+          - '&7该职位将使用默认名称'
+          - ''
+          - '&7点击新增职位'
+          - ''
+      next_page:
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  position_permission_list:
+    title: '职位权限列表'
+    items:
+      permission_info:
+        display_name: '&a职位权限'
+        lore:
+          - ''
+          - '&7这是所有职位权限的列表.'
+          - '&7点击权限即可为职位设置权限.'
+          - ''
+      permission:
+        display_name: '&a權限 &d%position_permission_id% &7(%position_permission_status%&7)'
+        lore:
+          - ''
+          - '&7权限 ID: %position_permission_id%'
+          - '&7%position_permission_label%'
+          - '&7%position_permission_description%'
+          - ''
+          - '&7點擊切換權限狀態'
+          - ''
+      next_page:
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  chestshop:
+    title: '箱子商店'
+    items:
+      creation:
+        display_name: '&a如何創建箱子商店?'
+        lore:
+          - ''
+          - '&7要为公司创建箱子商店,'
+          - '&7你需要将商品放入箱子的第一个槽位.'
+          - '&7完成商品设置后,'
+          - '&7你需要在箱子前放置墙上的告示牌.'
+          - '&7告示牌内容应为:'
+          - '&f%chestshop_identifier%'
+          - '&f价格'
+          - '&7之后告示牌会自动更新.'
+          - '&7箱子商店就创建成功了.'
+          - ''
+      permission_chestshop_create:
+        display_name: '&a创建箱子商店的权限'
+        lore:
+          - ''
+          - '&7权限: %permission_create_id%'
+          - '&7你%permission_create_status%&7創建箱子商店'
+          - ''
+      permission_chestshop_delete:
+        display_name: '&a移除箱子商店的权限'
+        lore:
+          - ''
+          - '&7权限: %permission_delete_id%'
+          - '&7你%permission_delete_status%&7移除箱子商店'
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+  confirmation:
+    title: '確定要%action%嗎?'
+    items:
+      confirm:
+        display_name: '&a确认'
+        lore:
+          - ''
+          - '&7%action%'
+          - ''
+          - '&7点击确认操作'
+          - ''
+      cancel:
+        display_name: '&c取消'
+        lore:
+          - ''
+          - '&7点击取消操作'
           - ''
 
-
 position-permission:
-  ALL: 所有權限
-  EMPLOY: 聘用
-  FIRE: 解雇
-  CHESTSHOP_CREATE: 建立箱子商店
-  CHESTSHOP_DELETE: 刪除箱子商店
-  AREA_CREATE: 創建公司領地
-  AREA_DELETE: 刪除公司領地
-  AREA_SETLOC: 設置公司領地的傳送點
-  AREA_MARKET_RENT: 上架領地至租借市場
-  AREA_MARKET_SELL: 上架領地至銷售市場
-  AREA_RENT: 領地租借
-  AREA_SELL: 領地購買
+  status:
+    enabled: '&a允许'
+    disabled: '&c不允許'
+  permission:
+    ALL:
+      label: '所有权限'
+      description:
+        - '公司的所有權限'
+        - '此权限为雇主的默认权限.'
+    EMPLOY:
+      label: '聘请'
+      description:
+        - '僱用玩家加入公司'
+    FIRE:
+      label: '解雇'
+      description:
+        - '從公司解僱員工'
+        - '不建議將此權限授予非雇主職位.'
+        - '否則可能導致公司無人管理.'
+    SET_POSITION:
+      label: '设置职位'
+      description:
+        - '设置员工的职位'
+    POSITION_ADD:
+      label: '新增职位'
+      description:
+        - '为公司新增职位'
+    POSITION_REMOVE:
+      label: '移除职位'
+      description:
+        - '从公司移除职位'
+    POSITION_SETLABEL:
+      label: '设置职位名称'
+      description:
+        - '设置职位名称'
+    POSITION_SETPERMISSION:
+      label: '設置職位權限'
+      description:
+        - '设置职位权限'
+    CHESTSHOP_CREATE:
+      label: '創建箱子商店'
+      description:
+        - '为公司创建箱子商店'
+    CHESTSHOP_DELETE:
+      label: '移除箱子商店'
+      description:
+        - '移除公司的箱子商店'
+    AREA_CREATE:
+      label: '創建公司領地'
+      description:
+        - '创建公司领地'
+    AREA_DELETE:
+      label: '刪除公司領地'
+      description:
+        - '删除公司领地'
+    AREA_SETLOC:
+      label: '設置公司領地傳送點'
+      description:
+        - '设置公司领地的传送点'
+    AREA_MARKET_RENT:
+      label: '上架領地至出租市場'
+      description:
+        - '将公司领地上架至出租市场'
+    AREA_MARKET_SELL:
+      label: '上架領地至出售市場'
+      description:
+        - '将公司领地上架至出售市场'
+    AREA_RENT:
+      label: '出租领地'
+      description:
+        - '出租公司领地'
+    AREA_BUY:
+      label: '购买领地'
+      description:
+        - '购买公司领地'
 
 none: 無
 unemployment: 待業中
 yourself: 你
-'true': 是
-'false': 否
+true: '是'
+false: '否'
+#area-status:
+  #sell: '出售中'
+  #rent: '出租中'
 
 quest-progress: '%action_description% %target% - %progress_value%/%target_value%'
 order-finished: '&a訂單已完成'
@@ -924,4 +1143,3 @@ check-update:
   invalid: '無法檢查更新: '
   latest: 目前已是最新版本
   outdate: 有可用的新版本更新
-

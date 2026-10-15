@@ -1,0 +1,9 @@
+focus-tree:
+  none:
+    empty:
+      condition:
+        money: 0
+  mob:
+    more_drops_level1:
+      condition:
+        money: 0

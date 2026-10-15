@@ -38,7 +38,7 @@ public enum Expertise {
         return focusId;
     }
 
-    public boolean isUnlocked() {
+    public boolean getUnlocked() {
         return unlocked;
     }
 
