@@ -22,6 +22,10 @@ storage:
 # Available language: en (English), zh_CN (Simplified Chinese), zh_TW (Traditional Chinese)
 language: en
 
+# Should the plugin generate default files
+# The plugin will generate files for the first time and set this to false.
+generate-default-config: true
+
 company-settings:
   # Max length of company name
   max-length: 12

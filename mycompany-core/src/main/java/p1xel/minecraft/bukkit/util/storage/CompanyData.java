@@ -7,11 +7,11 @@ import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.area.CompanyArea;
+import p1xel.minecraft.bukkit.object.CompanyLog;
 import p1xel.minecraft.bukkit.object.Shop;
-import p1xel.minecraft.bukkit.object.focus.tree.Expertise;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.ItemSerializer;
-import p1xel.minecraft.bukkit.object.price.PriceGroup;
+import p1xel.minecraft.bukkit.util.focus.FocusUtil;
 import p1xel.minecraft.bukkit.util.storage.cidstorage.CIdData;
 import p1xel.minecraft.bukkit.util.storage.driver.CompanyStorageDriver;
 
@@ -95,7 +95,7 @@ public class CompanyData extends AbstractCompanyData {
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerUniqueId);
         set(uuid, "info", "founder.name", player.getName());
         set(uuid, "info", "members.employer", playerUniqueId.toString());
-        set(uuid, "info", "price-group", PriceGroup.NORMAL.getName());
+        set(uuid, "info", "price-group", "normal");
         // END
 
         // Type: asset
@@ -115,7 +115,7 @@ public class CompanyData extends AbstractCompanyData {
 
         // Type: focus
         set(uuid, "focus", "focus", "none");
-        setExpertise(uuid, Expertise.empty.getString());
+        setExpertise(uuid, FocusUtil.getDefaultExpertiseInstance("none", "empty").getString());
         // END
 
         // Save
@@ -142,7 +142,7 @@ public class CompanyData extends AbstractCompanyData {
         driver.createCompanyEntry(uniqueId);
         if (get(uniqueId, "focus", "focus") == null) {
             set(uniqueId, "focus", "focus", "none");
-            setExpertise(uniqueId, Expertise.empty.getString());
+            setExpertise(uniqueId, FocusUtil.getDefaultExpertiseInstance("none", "empty").getString());
         }
 
         save(uniqueId, "focus");
@@ -600,11 +600,25 @@ public class CompanyData extends AbstractCompanyData {
         if (keys != null) {
             for (String key : keys) {
                 String unlocked = String.valueOf(getBoolean(uniqueId, "focus", "expertises." + key + ".unlocked"));
+                String enabled = String.valueOf(getBoolean(uniqueId, "focus", "expertises." + key + ".enabled"));
                 String value = getString(uniqueId, "focus", "expertises." + key + ".value");
-                list.add(key + ";" + value + ";" + unlocked);
+                list.add(key + ";" + value + ";" + unlocked + ";" + enabled);
             }
         }
         return list;
+    }
+
+    @Override
+    public String getExpertise(UUID uniqueId, String expertiseId) {
+        String string = "";
+        String unlocked = String.valueOf(getBoolean(uniqueId, "focus", "expertises." + expertiseId + ".unlocked"));
+        String value = getString(uniqueId, "focus", "expertises." + expertiseId + ".value");
+        if (value == null) {
+            return string;
+        }
+        String enabled = String.valueOf(getBoolean(uniqueId, "focus", "expertises." + expertiseId + ".enabled"));
+        string = expertiseId + ";" + value + ";" + unlocked + ";" + enabled;
+        return string;
     }
 
     @Override
@@ -620,12 +634,48 @@ public class CompanyData extends AbstractCompanyData {
         String expertiseId = split[0];
         boolean unlocked = Boolean.parseBoolean(split[1]);
         String value = split[2];
+        boolean enabled = Boolean.parseBoolean(split[3]);
+        set(uniqueId, "focus", "expertises." + expertiseId+".enabled", enabled);
         set(uniqueId, "focus", "expertises." + expertiseId+".unlocked", unlocked);
         set(uniqueId, "focus", "expertises." + expertiseId+".value", value);
         save(uniqueId, "focus");
     }
 
+    @Override
+    public void removeFocusAndExpertises(UUID uniqueId) {
+        set(uniqueId, "focus", "focus", "none");
+        set(uniqueId, "focus", "expertises", Collections.emptyList());
+        save(uniqueId, "focus");
+    }
+
     // focus.yml - END
+
+    // logs.yml - BEGIN
+
+    @Override
+    public double getLog(UUID uniqueId, String logType) {
+        // null则默认返回 0.0
+        return getDouble(uniqueId, "logs", logType);
+    }
+
+    @Override
+    public void addLogValue(UUID uniqueId, String logType, double value) {
+        double currentValue = getLog(uniqueId, logType);
+        set(uniqueId, "logs", logType, currentValue + value);
+        save(uniqueId, "logs");
+    }
+
+    @Override
+    public CompanyLog createCompanyLog(UUID uniqueId) {
+
+        CompanyLog companyLog = new CompanyLog(uniqueId);
+        for (String log : getKeys(uniqueId, "logs", null)) {
+            companyLog.addLogValue(log, getLog(uniqueId, log));
+        }
+        return companyLog;
+    }
+
+    // logs.yml - END
 
     // Others - BEGIN
 

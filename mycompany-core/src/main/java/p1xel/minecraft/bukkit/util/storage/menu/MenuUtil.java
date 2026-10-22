@@ -21,7 +21,7 @@ public class MenuUtil {
     private static final String[] menuFiles = {
         "main","internal_store", "orders", "areas", "area_trade_market", "area_rent_market", "area_sale_market",
             "area_list", "found", "personnel", "player_list", "position_list", "position", "position_permission_list",
-            "chestshop", "confirmation"
+            "chestshop", "confirmation", "focus", "focus_list"
     };
 
     public static void createFiles() {

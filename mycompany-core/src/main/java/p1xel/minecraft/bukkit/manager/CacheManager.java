@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.object.focus.FocusManager;
 import p1xel.minecraft.bukkit.object.price.InternalStore;
-import p1xel.minecraft.bukkit.object.price.PriceGroup;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -63,7 +62,7 @@ public class CacheManager {
             }
 
             if (companies.getPriceGroup(uuid) == null) {
-                companies.setPriceGroup(uuid, PriceGroup.NORMAL);
+                companies.setPriceGroup(uuid, "normal");
             }
             companiesCache.put(uuid, company);
         }

@@ -14,9 +14,9 @@ import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.event.CompanyIncomeEvent;
 import p1xel.minecraft.bukkit.manager.gui.CompanyMenu;
 import p1xel.minecraft.bukkit.manager.gui.GUIMain;
+import p1xel.minecraft.bukkit.object.price.PriceGroup;
 import p1xel.minecraft.bukkit.util.ColorUtil;
 import p1xel.minecraft.bukkit.object.price.InternalPrice;
-import p1xel.minecraft.bukkit.object.price.PriceGroup;
 import p1xel.minecraft.bukkit.util.storage.Locale;
 import p1xel.minecraft.bukkit.util.storage.menu.Menu;
 import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
@@ -108,7 +108,7 @@ public class GUIInternalStore extends CompanyMenu {
     public void updatePrice() {
         ItemStack[] contents = inventory.getContents();
         HashMap<Material, InternalPrice> vanillaItemPriceMap = internalStore.getVanillaItemPriceMap();
-        HashMap<PriceGroup, Double> priceGroupMap = internalStore.getMultipliers();
+        HashMap<String, PriceGroup> priceGroupMap = internalStore.getPriceGroupMap();
         double totalPrice = 0.0;
         double playerPrice = 0.0;
         int slot = -1;
@@ -125,10 +125,10 @@ public class GUIInternalStore extends CompanyMenu {
                     int amount = item.getAmount();
                     InternalPrice internalPrice = vanillaItemPriceMap.get(item.getType());
                     PriceGroup priceGroup = internalPrice.getPriceGroup();
-                    if (!companyManager.getPriceGroup(companyUniqueId).equals(priceGroup.getName())) {
-                        priceGroup = PriceGroup.NORMAL;
+                    if (!companyManager.getPriceGroup(companyUniqueId).equals(priceGroup.getId())) {
+                        priceGroup = priceGroupMap.get("normal");
                     }
-                    double productPrice = internalPrice.getPrice() * priceGroupMap.getOrDefault(priceGroup, 1.0) * amount;
+                    double productPrice = internalPrice.getPrice() * priceGroup.getPriceMultiplier() * amount;
                     double playerShare = productPrice * internalStore.getPlayerShare();
                     totalPrice += productPrice - playerShare;
                     playerPrice += playerShare;
@@ -215,5 +215,16 @@ public class GUIInternalStore extends CompanyMenu {
         }
 
         return false;
+    }
+
+    public void updateMenu() {
+        this.placeholders = Map.ofEntries(
+                Map.entry("%player%", playerName),
+                Map.entry("%company%", companyName),
+                Map.entry("%position%", position),
+                Map.entry("%money%", String.valueOf(price)),
+                Map.entry("%price%", String.valueOf(playerShare))
+        );
+        inventory = setItems(inventory, menu, placeholders);
     }
 }

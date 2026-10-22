@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 public class CompanyYamlDriver implements CompanyStorageDriver {
 
-    private final String[] types = new String[]{"info", "settings", "inventory", "shop", "asset", "area", "focus"};
+    private final String[] types = new String[]{"info", "settings", "inventory", "shop", "asset", "area", "focus", "logs"};
     private final JavaPlugin plugin;
 
     private final HashMap<UUID, HashMap<String, File>> files = new HashMap<>();

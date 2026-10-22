@@ -2,8 +2,16 @@ focus-tree:
   none:
     empty:
       condition:
-        money: 0
+        company_money: 0
   mob:
     more_drops_level1:
       condition:
-        money: 0
+        company_money: 15000
+      effect:
+        percentage: 20
+    more_drops_level2:
+      condition:
+        expertise: more_drops_level1
+        company_money: 30000
+      effect:
+        percentage: 20

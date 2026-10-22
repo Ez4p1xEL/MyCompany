@@ -1,0 +1,45 @@
+size: 45
+
+options:
+  # You need to make sure that the focus-per-page is less than the number of slots available for focus, otherwise it will not work properly.
+  focus-per-page: 5
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  focus_info:
+    material: WRITABLE_BOOK
+    slot: 4
+
+  # Default focus item
+  # If you want to add a custom focus item, you can add it in the "focus" section below.
+  focus:
+    material: ENCHANTED_BOOK
+    slot: 20
+
+  # Custom focus item
+  # No slot specified, it will be added to the next available slot.
+  # The display name and lore are following the default focus item.
+  # The name of custom focus items must be started with "focus" and must be in the focus list.
+  focus_none:
+    material: PAPER
+
+  focus_mob:
+    material: ZOMBIE_HEAD
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 36
+
+  previous_page:
+    material: RED_STAINED_GLASS_PANE
+    slot: 39
+
+  next_page:
+    material: LIME_STAINED_GLASS_PANE
+    slot: 41
+
+
+

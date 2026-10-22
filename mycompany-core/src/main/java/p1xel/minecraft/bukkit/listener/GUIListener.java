@@ -16,6 +16,8 @@ import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.gui.*;
 import p1xel.minecraft.bukkit.manager.gui.area.*;
+import p1xel.minecraft.bukkit.manager.gui.focus.GUIFocus;
+import p1xel.minecraft.bukkit.manager.gui.focus.GUIFocusList;
 import p1xel.minecraft.bukkit.manager.gui.order.GUIDailyOrder;
 import p1xel.minecraft.bukkit.manager.gui.player.GUIEmployeeList;
 import p1xel.minecraft.bukkit.manager.gui.player.GUIPersonnel;
@@ -54,6 +56,9 @@ public class GUIListener implements Listener {
         NamespacedKey menu_id_key = new NamespacedKey("mycompany", "menu_id");
 
         ItemStack item = inventory.getItem(event.getSlot());
+        if (item == null || item.getType() == Material.AIR) {
+            return;
+        }
         if (!item.hasItemMeta()) {
             return;
         }
@@ -203,6 +208,22 @@ public class GUIListener implements Listener {
             return;
         }
 
+        if (holder instanceof GUIFocus gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
+            return;
+        }
+
+        if (holder instanceof GUIFocusList gui) {
+            if (!gui.check(menuId, clickType)) {
+
+            }
+            event.setCancelled(true);
+            return;
+        }
+
     }
 
     @EventHandler
@@ -226,6 +247,7 @@ public class GUIListener implements Listener {
             // Run in next tick to ensure the inventory has been updated
             Bukkit.getScheduler().runTaskLater(MyCompany.getInstance(), task -> {
                 gui.updatePrice();
+                gui.updateMenu();
             }, 1L);
             return;
         }
@@ -234,6 +256,7 @@ public class GUIListener implements Listener {
             // 物品从玩家背包移动到目标容器
             Bukkit.getScheduler().runTaskLater(MyCompany.getInstance(), task -> {
                 gui.updatePrice();
+                gui.updateMenu();
             }, 1L);
         }
 
@@ -256,6 +279,7 @@ public class GUIListener implements Listener {
         // Run in next tick to ensure the inventory has been updated
         Bukkit.getScheduler().runTaskLater(MyCompany.getInstance(), task -> {
             gui.updatePrice();
+            gui.updateMenu();
         }, 1L);
 
     }
@@ -272,7 +296,7 @@ public class GUIListener implements Listener {
             return;
         }
 
-        for (int slot = 0; slot <= 44; slot++) {
+        for (int slot = 0; slot <= gui.getInventory().getSize()-1; slot++) {
             ItemStack item = topInventory.getItem(slot);
             if (item != null && item.getType() != Material.AIR) {
                 player.getInventory().addItem(item);

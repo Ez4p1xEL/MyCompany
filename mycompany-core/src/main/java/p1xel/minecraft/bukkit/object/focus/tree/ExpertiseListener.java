@@ -5,21 +5,22 @@ import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.manager.CacheManager;
 import p1xel.minecraft.bukkit.manager.CompanyManager;
 import p1xel.minecraft.bukkit.manager.UserManager;
+import p1xel.minecraft.bukkit.object.effect.EffectType;
 import p1xel.minecraft.bukkit.object.focus.FocusManager;
 
 public class ExpertiseListener implements Listener {
 
     public final String name;
-    public final String[] expertiseIds;
+    public final EffectType effectType;
 
     public final CacheManager cacheManager;
     public final CompanyManager companyManager;
     public final UserManager userManager;
     public final FocusManager focusManager;
 
-    public ExpertiseListener(String name, String... expertiseIds) {
+    public ExpertiseListener(String name, EffectType effectType) {
         this.name = name;
-        this.expertiseIds = expertiseIds;
+        this.effectType = effectType;
         this.cacheManager = MyCompany.getCacheManager();
         this.companyManager = cacheManager.getCompanyManager();
         this.userManager = cacheManager.getUserManager();
@@ -30,8 +31,8 @@ public class ExpertiseListener implements Listener {
         return name;
     }
 
-    public String[] getExpertiseIds() {
-        return expertiseIds;
+    public EffectType getEffectType() {
+        return effectType;
     }
 
 

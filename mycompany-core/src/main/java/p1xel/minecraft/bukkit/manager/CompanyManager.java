@@ -2,9 +2,10 @@ package p1xel.minecraft.bukkit.manager;
 
 import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.MyCompany;
+import p1xel.minecraft.bukkit.object.CompanyLog;
+import p1xel.minecraft.bukkit.object.price.PriceGroup;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.permission.Permission;
-import p1xel.minecraft.bukkit.object.price.PriceGroup;
 import p1xel.minecraft.bukkit.util.storage.AbstractCompanyData;
 
 import javax.annotation.Nullable;
@@ -108,7 +109,7 @@ public class CompanyManager {
         return this.data.getUUIDFromId(cid);
     }
 
-    // This does not include employer
+    // This includes employer, employee and all custom positions.
     public List<String> getPositions(UUID uniqueId) {
         return this.data.getPositions(uniqueId);
     }
@@ -322,9 +323,23 @@ public class CompanyManager {
         return (String) this.data.get(uniqueId, "info", "price-group");
     }
 
-    public void setPriceGroup(UUID uniqueId, PriceGroup priceGroup) {
-        this.data.set(uniqueId, "info", "price-group", priceGroup.getName());
+    public void setPriceGroup(UUID uniqueId, String priceGroupId) {
+        this.data.set(uniqueId, "info", "price-group", priceGroupId);
         this.data.save(uniqueId, "info");
+        getCompany(uniqueId).setPriceGroupId(priceGroupId);
+    }
+
+    public CompanyLog createCompanyLog(UUID uniqueId) {
+        return this.data.createCompanyLog(uniqueId);
+    }
+
+    public double getLog(UUID uniqueId, String logType) {
+        return getCompany(uniqueId).getCompanyLog().getLog(logType);
+    }
+
+    public void addLogValue(UUID uniqueId, String logType, double value) {
+        this.data.addLogValue(uniqueId, logType, value);
+        getCompany(uniqueId).getCompanyLog().addLogValue(logType, value);
     }
 
 }

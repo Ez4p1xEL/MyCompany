@@ -22,7 +22,9 @@ public enum Permission {
     AREA_MARKET_RENT("AREA_MARKET_RENT"),
     AREA_MARKET_SELL("AREA_MARKET_SELL"),
     AREA_RENT("AREA_RENT"),
-    AREA_BUY("AREA_BUY");
+    AREA_BUY("AREA_BUY"),
+    FOCUS_SET("FOCUS_SET"),
+    FOCUS_LEARN_EXPERTISE("FOCUS_LEARN_EXPERTISE");
 
     private String name;
     private final static HashMap<String, Permission> namemap = new HashMap<>();

@@ -18,6 +18,7 @@ import p1xel.minecraft.bukkit.tool.bstats.Metrics;
 import p1xel.minecraft.bukkit.tool.spigotmc.UpdateChecker;
 import p1xel.minecraft.bukkit.util.*;
 import p1xel.minecraft.bukkit.util.extension.Placeholders;
+import p1xel.minecraft.bukkit.util.focus.FocusUtil;
 import p1xel.minecraft.bukkit.util.permission.PermissionUtil;
 import p1xel.minecraft.bukkit.util.storage.*;
 import p1xel.minecraft.bukkit.util.storage.backup.BackupCreator;
@@ -27,6 +28,7 @@ import p1xel.minecraft.bukkit.util.storage.driver.UserYamlDriver;
 import p1xel.minecraft.bukkit.util.storage.menu.MenuConfig;
 import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -47,10 +49,16 @@ public class MyCompany extends JavaPlugin {
     public static TaxCollector getTaxCollector() { return tax;}
     private static ExpertiseListenerRegistry expertiseListenerRegistry;
 
+    private final String[] DEFAULT_FILES = {
+            "focus/none.yml",
+            "focus/mob.yml"
+    };
+
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        generateFilesForFirstTime();
 
         String[] stringVersion = getServer().getBukkitVersion().split("-")[0].split("\\.");
 
@@ -70,6 +78,7 @@ public class MyCompany extends JavaPlugin {
         MenuConfig.initialization();
         Locale.createLocaleFile();
         PermissionUtil.savePermissionLocale();
+        FocusUtil.createFiles();
         MenuUtil.createFiles();
         CIdData.init();
 
@@ -105,6 +114,7 @@ public class MyCompany extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GUIListener(), this);
         getServer().getPluginManager().registerEvents(new OrderListener(), this);
         getServer().getPluginManager().registerEvents(new AreaSelection(), this);
+        getServer().getPluginManager().registerEvents(new LogListener(), this);
 
         if (Config.getBool("company-area.protection.enable")) {
             areaProtector = new AreaProtector();
@@ -177,6 +187,8 @@ public class MyCompany extends JavaPlugin {
         }.runTaskTimer(this, 0L, 20L * 30);
 
         Logger.setEnabled(Config.getBool("debug"));
+        getConfig().set("generate-default-config", false);
+        saveConfig();
 
         // Backup creator
         new BukkitRunnable() {
@@ -211,6 +223,19 @@ public class MyCompany extends JavaPlugin {
                 }
             });
         }
+    }
+
+    public void generateFilesForFirstTime() {
+        if (getConfig().getBoolean("generate-default-config")) {
+            for (String filePath : DEFAULT_FILES) {
+                File file = new File(getDataFolder(), filePath);
+                if (!file.exists()) {
+                    saveResource(filePath, false);
+                }
+            }
+        }
+
+        // saveConfig() after initialization done
     }
 
     private boolean setupEconomy() {

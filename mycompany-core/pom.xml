@@ -11,7 +11,7 @@
     </parent>
 
     <properties>
-        <child.version>0.8.30</child.version>
+        <child.version>0.8.40</child.version>
     </properties>
 
     <artifactId>mycompany-core</artifactId>

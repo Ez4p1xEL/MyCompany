@@ -14,6 +14,8 @@ public class Company {
     private final CompanyManager companyManager;
     private final ShopManager shopManager;
 
+    private final CompanyLog companyLog;
+
     private String name;
     private final int cid;
     private UUID employerUniqueId;
@@ -26,6 +28,7 @@ public class Company {
     private double cash; // TODO: companyManager修改现金时应该更新这个值
     private double totalIncome; // TODO: 同上
     private double dailyIncome; // TODO: 同上
+    private String priceGroupId;
 
     public Company(UUID companyUniqueId) {
         this.companyUniqueId = companyUniqueId;
@@ -35,6 +38,7 @@ public class Company {
         this.name = companyManager.getName(companyUniqueId);
         this.cid = companyManager.getId(companyUniqueId);
         this.employerUniqueId = companyManager.getEmployer(companyUniqueId);
+        this.priceGroupId = companyManager.getPriceGroup(companyUniqueId);
         this.positions = companyManager.getPositions(companyUniqueId);
         for (String position : positions) {
             // Initialize employee list for each position
@@ -57,6 +61,8 @@ public class Company {
         this.cash = companyManager.getCash(companyUniqueId);
         this.totalIncome = companyManager.getTotalIncome(companyUniqueId);
         this.dailyIncome = companyManager.getDailyIncome(companyUniqueId);
+
+        this.companyLog = companyManager.createCompanyLog(companyUniqueId);
 
     }
 
@@ -133,6 +139,14 @@ public class Company {
         return amount;
     }
 
+    public CompanyLog getCompanyLog() {
+        return companyLog;
+    }
+
+    public String getPriceGroupId() {
+        return priceGroupId;
+    }
+
     public void saveShops() {
         for (Shop shop : shopManager.getShops(companyUniqueId)) {
             shops.putIfAbsent(shop.getShopUUID(), shop);
@@ -199,6 +213,10 @@ public class Company {
         permissions.remove(position);
         positionLabels.remove(position);
         positionSalaries.remove(position);
+    }
+
+    public void setPriceGroupId(String priceGroupId) {
+        this.priceGroupId = priceGroupId;
     }
 
 }

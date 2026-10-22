@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import p1xel.minecraft.bukkit.util.storage.menu.MenuItem;
 import p1xel.minecraft.bukkit.util.storage.menu.MenuUtil;
 
 import java.util.Map;
@@ -11,15 +12,13 @@ import java.util.UUID;
 
 public class GUIConfirmation extends CompanyMenu {
 
-    private final String actionDescription;
     private final Runnable onConfirm;
     private final Runnable onCancel;
 
-    public GUIConfirmation(UUID playerUniqueId, String action, String actionDescription, Runnable onConfirm, Runnable onCancel) {
+    public GUIConfirmation(UUID playerUniqueId, String action, Runnable onConfirm, Runnable onCancel) {
         super(playerUniqueId);
         this.menu = MenuUtil.getMenu("confirmation");
         this.action = action;
-        this.actionDescription = actionDescription;
         this.onConfirm = onConfirm;
         this.onCancel = onCancel;
         init();
@@ -28,14 +27,28 @@ public class GUIConfirmation extends CompanyMenu {
     @Override
     public void init() {
 
-        Inventory inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle().replace("%action%", actionDescription));
+        String actionLabel = menu.getActions().get(action).get("label");
+        String actionDescription = menu.getActions().get(action).get("description");
+
+        Inventory inventory = Bukkit.createInventory(this, menu.getSize(), menu.getTitle().replace("%action_label%", actionLabel));
 
         Map<String, String> placeholders = Map.ofEntries(
                 Map.entry("%player%", playerName),
-                Map.entry("%action%", actionDescription)
+                Map.entry("%action_label%", actionLabel)
         );
 
+        Map<String, String> descriptionPlaceholder = Map.ofEntries(
+                Map.entry("%action_description%", actionDescription)
+        );
+
+        MenuItem confirm = menu.getItems().get("confirm");
+        confirm = replacePlaceholdersInMenuItems(confirm, descriptionPlaceholder);
+
+        MenuItem cancel = menu.getItems().get("cancel");
+        cancel = replacePlaceholdersInMenuItems(cancel, descriptionPlaceholder);
+
         inventory = setItems(inventory, menu, placeholders);
+
 
         // for each slot in the inventory
         inventory = fillEmptySlot(inventory, menu);

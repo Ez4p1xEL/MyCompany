@@ -174,6 +174,13 @@ market-remove-success: '&7[&6%prefix%&7] &c你已将 &e%area% &c从市场移除!
 company-not-enough-money: '&7[&6%prefix%&7] &c你的公司资金不足! 当前余额: &e$%money%&c.'
 area-not-on-market: '&7[&6%prefix%&7] &e%area% &c不在市场中!'
 
+# Focus & Expertise Tree
+expertise-condition-not-met: '&7[&6%prefix%&7] &c你没有满足解锁 &b%expertise% &c的条件!'
+focus-not-exist: '&7[&6%prefix%&7] &c专精方向 &e%focus% &c不存在!'
+focus-already-set: '&7[&6%prefix%&7] &c专精方向 &e%focus% &c已经设置过了!'
+focus-condition-not-met: '&7[&6%prefix%&7] &c你没有满足设置 &b%focus% &c的条件!'
+focus-set-success: '&7[&6%prefix%&7] &a专精方向 &e%focus% &a设置成功!'
+
 # Broadcast
 broadcast:
   company-found: '&7[&6职场播报&7] &e%player% &a成立了一间新公司 &e%company%&a!'
@@ -1021,13 +1028,20 @@ menu:
           - '&7点击切换'
           - ''
   confirmation:
-    title: '确定要%action%吗?'
+    title: '确定要%action_label%吗?'
+    actions:
+      resign:
+        label: '辞去公司职位'
+        description: "辞去公司职位并离开公司。\n除非再次被雇佣，否则你无法重新加入公司。"
+      focus_set:
+        label: '设置公司专精方向'
+        description: "将公司专精方向设置为新的方向。\n原专精的专精树将被重置。\n原专精带来的加成将从所有员工身上移除。"
     items:
       confirm:
         display_name: '&a确认'
         lore:
           - ''
-          - '&7%action%'
+          - '&7%action_description%'
           - ''
           - '&7点击确认操作'
           - ''
@@ -1036,6 +1050,115 @@ menu:
         lore:
           - ''
           - '&7点击取消操作'
+          - ''
+
+  focus:
+    title: '公司专精'
+    actions:
+      locked:
+        left: '&7左键点击学习该专精'
+      unlocked:
+        left: '&a你已学会该专精!'
+    items:
+      expertise_info:
+        display_name: '&a专精树'
+        lore:
+          - ''
+          - '&7这是公司的专精树.'
+          - '&7专精树是一棵公司可以学习的技能树.'
+          - '&7所有员工都会获得公司专精带来的加成.'
+          - ''
+      expertise:
+        display_name: '&b%expertise_label% &7(%expertise_unlock_status%&7)'
+        lore:
+          - '&8%expertise_id%'
+          - '%expertise_enable_status%'
+          - ''
+          - '&7描述:'
+          - '&f%expertise_description%'
+          - ''
+          - '&7解锁条件:'
+          - '&f%expertise_unlock_condition%'
+          - ''
+          - '%left_click%'
+          - ''
+      focus:
+        display_name: '&a专精方向'
+        lore:
+          - ''
+          - '&7公司的专精方向为 &b%focus_label%&7.'
+          - '&7专精方向代表公司的主要业务.'
+          - '&7设置专精方向将解锁对应的专精树.'
+          - ''
+          - '&7点击设置公司的专精方向'
+          - '&c切换专精方向会重置公司的专精树.'
+          - '&c原有专精带来的加成将从所有员工身上移除.'
+          - ''
+      next_page:
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+
+  focus_list:
+    title: '设置公司专精方向'
+    actions:
+      locked:
+        left: '&7左键点击设置专精方向'
+      unlocked:
+        left: '&a你已设置该专精方向!'
+    items:
+      focus_info:
+        display_name: '&a公司专精方向'
+        lore:
+          - ''
+          - '&7这是公司的专精方向.'
+          - '&7专精方向代表公司的主要业务.'
+          - '&7设置专精方向将解锁对应的专精树.'
+          - ''
+      focus:
+        display_name: '&b%focus_label% &7(%focus_unlock_status%&7)'
+        lore:
+          - '&8%focus_id%'
+          - ''
+          - '&7描述:'
+          - '&f%focus_description%'
+          - ''
+          - '&7解锁条件:'
+          - '&f%focus_unlock_condition%'
+          - ''
+          - '%left_click%'
+          - ''
+      next_page:
+        display_name: '&a下一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      previous_page:
+        display_name: '&a上一页'
+        lore:
+          - ''
+          - '&7点击切换'
+          - ''
+      back_to_main:
+        display_name: '&a返回主菜单'
+        lore:
+          - ''
+          - '&7点击切换'
           - ''
 
 position-permission:
@@ -1115,11 +1238,118 @@ position-permission:
       description:
         - '购买公司领地'
 
+focus:
+  status:
+    locked: '&c未学会'
+    unlocked: '&a已学会'
+    enabled: '#remove#'
+    disabled: '&c不可用'
+  # 首次使用插件时，以下 Focus 与 Expertise 文本会自动覆盖 focus/ 下的对应文件
+  focus:
+    none:
+      label: '无'
+      description:
+        - '无专精方向'
+      expertise:
+        empty:
+          label: '空'
+          description:
+            - '没有专精'
+    mob:
+      label: '怪物'
+      description:
+        - '专注于击杀怪物'
+        - '四条分支: 僵尸战利品、通用战利品、战斗与公司收益。'
+      expertise:
+        zombie_loot_1:
+          label: '僵尸战利品 I'
+          description:
+            - '&7僵尸掉落: &a30% &7概率额外获得 &a+1 腐肉&7。'
+            - '&7解锁奖励: 每位员工 &a$500&7。'
+        zombie_loot_2:
+          label: '僵尸战利品 II'
+          description:
+            - '&7僵尸掉落: &a20% &7概率额外获得 &a+1 腐肉&7。'
+            - '&7与 僵尸战利品 I 叠加。'
+        zombie_loot_3:
+          label: '僵尸战利品 III'
+          description:
+            - '&7僵尸掉落: &a35% &7概率额外获得 &a+2 腐肉&7。'
+            - '&7解锁时禁用 僵尸战利品 I 和 II。'
+            - '&7需要累计击杀 100 只僵尸。'
+        zombie_master:
+          label: '僵尸大师'
+          description:
+            - '&7僵尸掉落: 每次击杀 &a+2 腐肉&7。'
+            - '&7重新启用 僵尸战利品 I 和 II。'
+            - '&7需要累计击杀 500 只僵尸。'
+        loot_master_1:
+          label: '怪物战利品 I'
+          description:
+            - '&7所有怪物掉落: &a10% &7概率 &a+1&7。'
+        loot_master_2:
+          label: '怪物战利品 II'
+          description:
+            - '&7所有怪物掉落: &a5% &7概率翻倍&7。'
+            - '&7解锁时禁用 怪物战利品 I。'
+        scavenger:
+          label: '拾荒者'
+          description:
+            - '&7所有怪物掉落: &a8% &7概率 &a+1&7。'
+            - '&7需要已解锁 僵尸战利品 II 或 怪物战利品 I。'
+        hunter_edge:
+          label: '猎手锋刃'
+          description:
+            - '&7对怪物伤害: &a10% &7概率造成 &a2 倍 &7伤害。'
+        hunter_fury:
+          label: '猎手之怒'
+          description:
+            - '&7对怪物伤害: &a25% &7概率造成 &a2 倍 &7伤害。'
+        executioner:
+          label: '处决者'
+          description:
+            - '&7对怪物伤害: &a10% &7概率造成 &a3 倍 &7伤害。'
+            - '&7需要累计击杀 300 只骷髅。'
+        berserker:
+          label: '狂战士'
+          description:
+            - '&7对怪物伤害: &a60% &7概率造成 &a2 倍 &7伤害。'
+            - '&7解锁时禁用 猎手锋刃 和 猎手之怒。'
+            - '&7需要累计击杀 800 只僵尸。'
+        bounty_hunter:
+          label: '赏金猎人'
+          description:
+            - '&7公司内部回收怪物掉落时按 &amob-company &7价组结算。'
+            - '&7比普通价组高 &a30%&7。'
+            - '&7切换专精方向后仍然生效。'
+        bounty_master:
+          label: '赏金大师'
+          description:
+            - '&7解锁奖励: 每位员工 &a$2,500&7。'
+            - '&7需要累计击杀 300 只苦力怕。'
+        hunter_legend:
+          label: '传奇猎手'
+          description:
+            - '&7所有怪物掉落: &a25% &7概率 &a+1&7。'
+            - '&7对怪物伤害: &a25% &7概率造成 &a2 倍 &7伤害。'
+            - '&7需要已解锁 僵尸大师、狂战士 和 赏金大师。'
+            - '&7解锁奖励: 每位员工 &a$10,000&7。'
+
+condition:
+  company_money: '&f公司资金: &a$%i1% &7(解锁时扣除: %i2%)'
+  expertise: '&f已解锁专精: &b%i1%'
+  expertises: '&f已解锁专精: &b%i1%&7%i2% &b%i3%'
+  company_log: '&f%i1%: &b%i2%/%i3%'
+
+log:
+  mob_kill_count: '%type% 击杀数'
+
 none: '无'
 unemployment: '无业游民'
 yourself: '你'
 true: '是'
 false: '否'
+or: ' 或'
 #area-status:
   #sell: '出售中'
   #rent: '出租中'

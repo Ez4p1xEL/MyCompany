@@ -1,0 +1,294 @@
+id: mob
+label: Mob
+description:
+  - 'Focus on killing mobs'
+  - 'Four branches: zombie loot, general loot, combat and company profit.'
+condition:
+  company_money: 60000
+
+# Mob focus tree - 14 expertises.
+# All nodes use value_type: boolean.
+#
+# CONDITIONS
+#   company_money: <number>                 Company cash, consumed when unlocking.
+#   expertise: <id>                         One prerequisite must be unlocked.
+#   expertises:                             Several entries are AND;
+#     - '<id>,<id>'                         ids on one line are OR.
+#     - <id>
+#   company_log:                            Company counters (logs.yml).
+#     - 'mob_kill_count,<ENTITY>,<number>'  e.g. 100 zombie kills.
+#
+# EFFECTS
+#   mob_drops_add:
+#     <ENTITY|ALL>:
+#       - '<ITEM|ALL>,<+N|*N>,<chance>'     e.g. 'ROTTEN_FLESH,+1,30'
+#   mob_damage_multiply:
+#     - '<ENTITY|ALL>,<multiplier>,<chance>' e.g. 'ALL,2.0,10'
+#
+# ACTIONS
+#   console_command: [ ... ]                %player% expands to every employee.
+#   disable_expertise: [ ... ]              Disable nodes when this one is learned.
+#   enable_expertise: [ ... ]               Re-enable nodes when this one is learned.
+#   set_price_group: <group>                Internal store price group (prices.yml).
+
+expertise:
+
+  # ---------------------------------------------------------------- zombie loot
+
+  zombie_loot_1:
+    label: 'More Zombie Loot I'
+    description:
+      - '&7Zombie drops: &a30% &7chance of &a+1 rotten flesh&7.'
+      - '&7Unlock bonus: &a$500 &7to every employee.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      console_command:
+        - 'eco give %player% 500'
+    condition:
+      company_money: 15000
+    effect:
+      mob_drops_add:
+        ZOMBIE:
+          - 'ROTTEN_FLESH,+1,30'
+
+  zombie_loot_2:
+    label: 'More Zombie Loot II'
+    description:
+      - '&7Zombie drops: &a20% &7chance of &a+1 rotten flesh&7.'
+      - '&7Stacks with More Zombie Loot I.'
+    value_type: boolean
+    default:
+      value: 'false'
+    condition:
+      expertise: zombie_loot_1
+      company_money: 30000
+    effect:
+      mob_drops_add:
+        ZOMBIE:
+          - 'ROTTEN_FLESH,+1,20'
+
+  zombie_loot_3:
+    label: 'More Zombie Loot III'
+    description:
+      - '&7Zombie drops: &a35% &7chance of &a+2 rotten flesh&7.'
+      - '&7Disables More Zombie Loot I and II.'
+      - '&7Requires 100 zombie kills.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      disable_expertise: [zombie_loot_1, zombie_loot_2]
+    condition:
+      expertise: zombie_loot_2
+      company_log:
+        - 'mob_kill_count,ZOMBIE,100'
+      company_money: 35000
+    effect:
+      mob_drops_add:
+        ZOMBIE:
+          - 'ROTTEN_FLESH,+2,35'
+
+  zombie_master:
+    label: 'Zombie Master'
+    description:
+      - '&7Zombie drops: &a+2 rotten flesh &7on every kill.'
+      - '&7Re-enables More Zombie Loot I and II.'
+      - '&7Requires 500 zombie kills.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      enable_expertise: [zombie_loot_1, zombie_loot_2]
+    condition:
+      expertise: zombie_loot_3
+      company_log:
+        - 'mob_kill_count,ZOMBIE,500'
+      company_money: 60000
+    effect:
+      mob_drops_add:
+        ZOMBIE:
+          - 'ROTTEN_FLESH,+2,100'
+
+  # ---------------------------------------------------------------- general loot
+
+  loot_master_1:
+    label: 'More Mob Loot Tier I'
+    description:
+      - '&7Every mob drop: &a10% &7chance of &a+1&7.'
+    value_type: boolean
+    default:
+      value: 'false'
+    condition:
+      company_money: 50000
+    effect:
+      mob_drops_add:
+        ALL:
+          - 'ALL,+1,10'
+
+  loot_master_2:
+    label: 'More Mob Loot Tier II'
+    description:
+      - '&7Every mob drop: &a5% &7chance to &adouble &7the amount.'
+      - '&7Disables More Mob Loot Tier I.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      disable_expertise: [loot_master_1]
+    condition:
+      expertise: loot_master_1
+      company_money: 70000
+    effect:
+      mob_drops_add:
+        ALL:
+          - 'ALL,*2,5'
+
+  scavenger:
+    label: 'Scavenger'
+    description:
+      - '&7Every mob drop: &a8% &7chance of &a+1&7.'
+      - '&7Requires either More Zombie Loot II or More Mob Loot Tier I.'
+    value_type: boolean
+    default:
+      value: 'false'
+    condition:
+      expertises:
+        - 'zombie_loot_2,loot_master_1'
+      company_money: 45000
+    effect:
+      mob_drops_add:
+        ALL:
+          - 'ALL,+1,8'
+
+  # --------------------------------------------------------------------- combat
+
+  hunter_edge:
+    label: "Hunter's Edge"
+    description:
+      - '&7Damage to mobs: &a10% &7chance of &a2x &7damage.'
+    value_type: boolean
+    default:
+      value: 'false'
+    condition:
+      company_money: 20000
+    effect:
+      mob_damage_multiply:
+        ALL:
+          - '2.0,10'
+
+  hunter_fury:
+    label: "Hunter's Fury"
+    description:
+      - '&7Damage to mobs: &a25% &7chance of &a2x &7damage.'
+    value_type: boolean
+    default:
+      value: 'false'
+    condition:
+      expertise: hunter_edge
+      company_money: 40000
+    effect:
+      mob_damage_multiply:
+        ALL:
+          - '2.0,25'
+
+  executioner:
+    label: 'Executioner'
+    description:
+      - '&7Damage to mobs: &a10% &7chance of &a3x &7damage.'
+      - '&7Requires 300 skeleton kills.'
+    value_type: boolean
+    default:
+      value: 'false'
+    condition:
+      expertise: hunter_fury
+      company_log:
+        - 'mob_kill_count,SKELETON,300'
+      company_money: 55000
+    effect:
+      mob_damage_multiply:
+        ALL:
+          - '3.0,10'
+
+  berserker:
+    label: 'Berserker'
+    description:
+      - '&7Damage to mobs: &a60% &7chance of &a2x &7damage.'
+      - "&7Disables Hunter's Edge and Hunter's Fury."
+      - '&7Requires 800 zombie kills.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      disable_expertise: [hunter_edge, hunter_fury]
+    condition:
+      expertise: executioner
+      company_log:
+        - 'mob_kill_count,ZOMBIE,800'
+      company_money: 90000
+    effect:
+      mob_damage_multiply:
+        ALL:
+          - '2.0,60'
+
+  # ---------------------------------------------------------------- company profit
+
+  bounty_hunter:
+    label: 'Bounty Hunter'
+    description:
+      - '&7Internal store buys mob drops at the &amob-company &7rate.'
+      - '&7That is &a+30% &7compared to the normal rate.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      set_price_group: mob-company
+    condition:
+      company_money: 80000
+
+  bounty_master:
+    label: 'Bounty Master'
+    description:
+      - '&7Unlock bonus: &a$2,500 &7to every employee.'
+      - '&7Requires 300 creeper kills.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      console_command:
+        - 'eco give %player% 2500'
+    condition:
+      expertise: bounty_hunter
+      company_log:
+        - 'mob_kill_count,CREEPER,300'
+      company_money: 100000
+
+  # -------------------------------------------------------------------- capstone
+
+  hunter_legend:
+    label: 'Hunter Legend'
+    description:
+      - '&7Every mob drop: &a25% &7chance of &a+1&7.'
+      - '&7Damage to mobs: &a25% &7chance of &a2x &7damage.'
+      - '&7Requires Zombie Master, Berserker and Bounty Master.'
+      - '&7Unlock bonus: &a$10,000 &7to every employee.'
+    value_type: boolean
+    default:
+      value: 'false'
+    action:
+      console_command:
+        - 'eco give %player% 10000'
+    condition:
+      expertises:
+        - zombie_master
+        - berserker
+        - bounty_master
+      company_money: 150000
+    effect:
+      mob_drops_add:
+        ALL:
+          - 'ALL,+1,25'
+      mob_damage_multiply:
+        ALL:
+          - '2.0,25'

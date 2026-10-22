@@ -1,0 +1,85 @@
+size: 45
+
+options:
+  # You need to make sure that the expertise-per-page is less than the number of slots available for expertise, otherwise it will not work properly.
+  expertise-per-page: 10
+
+items:
+  # default for all empty slots
+  default:
+    material: BLACK_STAINED_GLASS_PANE
+
+  expertise_info:
+    material: WRITABLE_BOOK
+    slot: 4
+
+  # Default expertise item
+  # If you want to add a custom expertise item, you can add it in the "expertise" section below.
+  expertise:
+    material: BOOK
+    slot: 20
+
+  # Custom expertise item
+  # No slot specified, it will be added to the next available slot.
+  # The display name and lore are following the default expertise item.
+  # The name of custom expertise items must be started with "expertise" and must be in the expertise list.
+  expertise_zombie_loot_1:
+    material: ROTTEN_FLESH
+
+  expertise_zombie_loot_2:
+    material: ZOMBIE_SPAWN_EGG
+
+  expertise_zombie_loot_3:
+    material: ZOMBIE_HEAD
+
+  expertise_zombie_master:
+    material: TOTEM_OF_UNDYING
+
+  expertise_loot_master_1:
+    material: CHEST
+
+  expertise_loot_master_2:
+    material: ENDER_CHEST
+
+  expertise_scavenger:
+    material: HOPPER
+
+  expertise_hunter_edge:
+    material: IRON_SWORD
+
+  expertise_hunter_fury:
+    material: DIAMOND_SWORD
+
+  expertise_executioner:
+    material: NETHERITE_AXE
+
+  expertise_berserker:
+    material: NETHERITE_SWORD
+
+  expertise_bounty_hunter:
+    material: GOLD_INGOT
+
+  expertise_bounty_master:
+    material: GOLD_BLOCK
+
+  expertise_hunter_legend:
+    material: NETHER_STAR
+
+  focus:
+    material: ENCHANTED_BOOK
+    slot: 40
+
+  back_to_main:
+    material: NETHER_STAR
+    slot: 36
+
+  previous_page:
+    material: RED_STAINED_GLASS_PANE
+    slot: 39
+
+  next_page:
+    material: LIME_STAINED_GLASS_PANE
+    slot: 41
+
+
+

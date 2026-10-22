@@ -8,14 +8,18 @@ import p1xel.minecraft.bukkit.manager.*;
 import p1xel.minecraft.bukkit.manager.area.AreaSelectionMode;
 import p1xel.minecraft.bukkit.manager.area.AreaTradeMarket;
 import p1xel.minecraft.bukkit.manager.area.CompanyArea;
+import p1xel.minecraft.bukkit.object.Company;
+import p1xel.minecraft.bukkit.object.condition.Condition;
 import p1xel.minecraft.bukkit.object.focus.CompanyFocus;
 import p1xel.minecraft.bukkit.object.focus.Focus;
 import p1xel.minecraft.bukkit.object.focus.FocusManager;
 import p1xel.minecraft.bukkit.object.focus.tree.Expertise;
+import p1xel.minecraft.bukkit.object.focus.tree.ExpertiseInstance;
 import p1xel.minecraft.bukkit.object.focus.tree.config.ExpertiseCondition;
 import p1xel.minecraft.bukkit.object.focus.tree.config.ExpertiseConfig;
 import p1xel.minecraft.bukkit.util.Config;
 import p1xel.minecraft.bukkit.util.Logger;
+import p1xel.minecraft.bukkit.util.focus.FocusUtil;
 import p1xel.minecraft.bukkit.util.permission.Permission;
 import p1xel.minecraft.bukkit.util.storage.EmployeeOrders;
 import p1xel.minecraft.bukkit.util.storage.Locale;
@@ -564,37 +568,58 @@ public class PersonalAPI {
 
     public boolean unlockExpertise(String expertiseId) {
 
-        String position = userManager.getPosition(playerUniqueId);
-        if (!position.equalsIgnoreCase("employer")) {
-            player.sendMessage(Locale.getMessage("setlabel-employer-only"));
-            return true;
-        }
-
         CompanyFocus companyFocus = focusManager.getCompanyFocus(companyUniqueId);
         Focus focus = companyFocus.getFocus();
-        Expertise expertise = focus.getExpertise(expertiseId);
+        ExpertiseInstance expertise = focus.getExpertiseInstance(expertiseId);
         if (expertise == null) {
             player.sendMessage(Locale.getMessage("expertise-not-exist").replaceAll("%expertise%", expertiseId));
-            return true;
+            return false;
         }
 
         if (expertise.getUnlocked()) {
             player.sendMessage(Locale.getMessage("expertise-already-unlocked").replaceAll("%expertise%", expertiseId));
-            return true;
+            return false;
         }
 
         ExpertiseConfig config = focusManager.getExpertiseConfig(expertiseId);
         ExpertiseCondition condition = config.getCondition();
-        double money = condition.getMoney();
-        if (companyManager.getCash(companyUniqueId) < money) {
-            player.sendMessage(Locale.getMessage("company-not-enough-money").replaceAll("%money%", String.valueOf(money)));
-            return true;
+        boolean isMet = condition.checkConditionAndConsume(userManager.getUser(playerUniqueId), companyManager.getCompany(companyUniqueId));;
+        if (!isMet) {
+            player.sendMessage(Locale.getMessage("expertise-condition-not-met").replace("%expertise%", FocusUtil.EXPERTISE_LABELS.getOrDefault(expertiseId, expertiseId)));
+            return false;
         }
 
-        companyManager.takeMoney(companyUniqueId, money);
         focusManager.unlockExpertise(companyUniqueId, expertise, true);
         return true;
 
+    }
+
+    public boolean setFocus(String focusId) {
+        if (!FocusUtil.ENABLED_FOCUS_LIST.contains(focusId)) {
+            player.sendMessage(Locale.getMessage("focus-not-exist").replace("%focus%", focusId));
+            return false;
+        }
+
+        Company company = companyManager.getCompany(companyUniqueId);
+        CompanyFocus companyFocus = focusManager.getCompanyFocus(companyUniqueId);
+        if (companyFocus.getFocus().getId().equals(focusId)) {
+            player.sendMessage(Locale.getMessage("focus-already-set").replace("%focus%", focusId));
+            return false;
+        }
+
+        List< Condition> conditions = FocusUtil.FOCUS_CONDITION_MAP.get(focusId);
+        if (conditions != null) {
+            for (Condition condition : conditions) {
+                if (!condition.isConditionMet(userManager.getUser(playerUniqueId), company)) {
+                    player.sendMessage(Locale.getMessage("focus-condition-not-met").replace("%focus%", focusId));
+                    return false;
+                }
+            }
+        }
+
+        focusManager.setFocus(companyUniqueId, focusManager.generateFocus(focusId));
+        player.sendMessage(Locale.getMessage("focus-set-success").replace("%focus%", focusId));
+        return true;
     }
 
 }

@@ -1,0 +1,16 @@
+id: none
+label: None
+description:
+  - 'No specific focus'
+
+expertise:
+  empty:
+    label: 'Empty Expertise'
+    description:
+      - 'This expertise is empty and has no effect.'
+    value-type: boolean
+    default:
+      value: 'false'
+    action: {}
+    condition: {}
+    effect: {}

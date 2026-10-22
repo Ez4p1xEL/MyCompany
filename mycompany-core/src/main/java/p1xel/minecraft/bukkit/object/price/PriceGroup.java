@@ -1,30 +1,21 @@
 package p1xel.minecraft.bukkit.object.price;
 
-import java.util.HashMap;
+public class PriceGroup {
 
-public enum PriceGroup {
+    private final String id;
+    private final double priceMultiplier;
 
-    NORMAL("normal"),
-    ORE_COMPANY("ore-company");
-
-    private final String name;
-    private final HashMap<String, PriceGroup> namemap = new HashMap<>();
-    PriceGroup(String name) {
-        this.name = name;
+    public PriceGroup(String id, double priceMultiplier) {
+        this.id = id;
+        this.priceMultiplier = priceMultiplier;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    static {
-        for (PriceGroup group : values()) {
-            group.namemap.put(group.getName().toLowerCase(), group);
-        }
-    }
-
-    public static PriceGroup matchPriceGroup(String name) {
-        return NORMAL.namemap.getOrDefault(name.toLowerCase(), NORMAL);
+    public double getPriceMultiplier() {
+        return priceMultiplier;
     }
 
 }

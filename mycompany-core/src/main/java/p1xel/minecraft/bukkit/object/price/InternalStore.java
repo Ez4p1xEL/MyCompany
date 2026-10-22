@@ -16,7 +16,7 @@ public class InternalStore {
 
     private File file;
     private FileConfiguration yaml;
-    private final HashMap<PriceGroup, Double> multipliers = new HashMap<>();
+    private final HashMap<String, PriceGroup> priceGroupMap = new HashMap<>();
     private final HashMap<String, InternalPrice> priceMap = new HashMap<>();
     private final HashMap<Material, InternalPrice> vanillaItemPriceMap = new HashMap<>();
     private double playerShare = 0.0;
@@ -43,9 +43,15 @@ public class InternalStore {
     }
 
     public void saveMultipliers() {
-        for (PriceGroup group : PriceGroup.values()) {
-            double multiplier = yaml.getDouble("multipliers.company."+ group.getName());
-            multipliers.put(group, multiplier);
+        for (String priceGroupName : yaml.getConfigurationSection("multipliers.company").getKeys(false)) {
+            double multiplier = yaml.getDouble("multipliers.company." + priceGroupName, 1.0);
+            PriceGroup priceGroup = new PriceGroup(priceGroupName, multiplier);
+            priceGroupMap.put(priceGroupName, priceGroup);
+        }
+
+        // normal 必须存在
+        if (!priceGroupMap.containsKey("normal")) {
+            priceGroupMap.put("normal", new PriceGroup("normal", 1.2));
         }
     }
 
@@ -66,8 +72,8 @@ public class InternalStore {
                     continue;
                 }
 
-                String groupName = vanillaSection.getString(id + ".group", PriceGroup.NORMAL.getName()).toLowerCase();
-                PriceGroup priceGroup = PriceGroup.matchPriceGroup(groupName);
+                String groupName = vanillaSection.getString(id + ".group", "normal").toLowerCase();
+                PriceGroup priceGroup = priceGroupMap.get(groupName);
 
                 // 由于是VanillaItem原版物品，所以直接新建ItemStack即可
                 ItemStack itemStack = ItemStack.of(material);
@@ -83,8 +89,8 @@ public class InternalStore {
         return priceMap;
     }
 
-    public HashMap<PriceGroup, Double> getMultipliers() {
-        return multipliers;
+    public HashMap<String, PriceGroup> getPriceGroupMap() {
+        return priceGroupMap;
     }
 
     public HashMap<Material, InternalPrice> getVanillaItemPriceMap() {

@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.manager.area.CompanyArea;
+import p1xel.minecraft.bukkit.object.CompanyLog;
 import p1xel.minecraft.bukkit.object.Shop;
 
 import javax.annotation.Nullable;
@@ -124,11 +125,21 @@ public abstract class AbstractCompanyData {
 
     public abstract List<String> getExpertises(UUID uniqueId);
 
+    public abstract String getExpertise(UUID uniqueId, String expertiseId);
+
     public abstract void setFocus(UUID uniqueId, String focusId);
 
     public abstract void setExpertise(UUID uniqueId, String expertiseString);
 
+    public abstract void removeFocusAndExpertises(UUID uniqueId);
+
     public abstract void updateData(UUID uniqueId);
 
     public abstract void save(UUID uniqueId, String type);
+
+    public abstract double getLog(UUID uniqueId, String logType);
+
+    public abstract void addLogValue(UUID uniqueId, String logType, double value);
+
+    public abstract CompanyLog createCompanyLog(UUID uniqueId);
 }

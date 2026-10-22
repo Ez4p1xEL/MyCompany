@@ -39,6 +39,8 @@ public class CompanyMenu extends GUIAbstract implements InventoryHolder {
     protected Menu menu;
     protected String action;
     protected int page;
+    protected boolean hasNextPage;
+    protected boolean hasPreviousPage;
 
     protected String position;
     protected String positionLabel;

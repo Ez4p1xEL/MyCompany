@@ -7,6 +7,7 @@ import org.bukkit.inventory.Inventory;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.api.PersonalAPI;
 import p1xel.minecraft.bukkit.manager.gui.area.GUICompanyArea;
+import p1xel.minecraft.bukkit.manager.gui.focus.GUIFocus;
 import p1xel.minecraft.bukkit.manager.gui.order.GUIDailyOrder;
 import p1xel.minecraft.bukkit.manager.gui.player.GUIPersonnel;
 import p1xel.minecraft.bukkit.manager.gui.position.GUIPosition;
@@ -99,7 +100,7 @@ public class GUIMain extends CompanyMenu {
                     player.playSound(player, Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
                     return true;
                 }
-                GUIConfirmation gui = new GUIConfirmation(playerUniqueId, "resign", "resign from your companmy",
+                GUIConfirmation gui = new GUIConfirmation(playerUniqueId, "resign",
                         () -> {
                     new PersonalAPI(playerUniqueId).resignFromCompany();
                     player.closeInventory();
@@ -159,7 +160,9 @@ public class GUIMain extends CompanyMenu {
             }
 
             case "focus": {
-                // TODO: Open focus GUI
+                CompanyMenu gui = new GUIFocus(playerUniqueId, 1, false);
+                gui.setPreviousMenu(this);
+                gui.open();
                 player.playSound(player, Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
                 return true;
             }

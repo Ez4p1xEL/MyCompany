@@ -8,7 +8,7 @@ import p1xel.minecraft.bukkit.object.Company;
 
 public class CompanyFocus {
 
-    private final Focus focus;
+    private Focus focus;
     private final Company company;
 
     public CompanyFocus(Focus focus, Company company) {
@@ -22,6 +22,10 @@ public class CompanyFocus {
 
     public Company getCompany() {
         return company;
+    }
+
+    public void setFocus(Focus newFocus) {
+        this.focus = newFocus;
     }
 
 }

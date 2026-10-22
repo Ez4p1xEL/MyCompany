@@ -5,8 +5,11 @@ multipliers:
   # 公司内部回收价应比公共回收商店更高
   # The internal company recycling price should be higher than the public recycling store
   company:
-    normal: 1.2
+    normal: 1.2 # Default multiplier for company internal recycling, do not change the name!!!
     ore-company: 1.3
+    # 1.2 * 1.3 = 1.56，让 Bounty Hunter 节点描述的 “+30% compared to normal” 成立
+    # 1.2 * 1.3 = 1.56, so the "+30% compared to the normal rate" line stays accurate
+    mob-company: 1.56
 
 # 在公司内部回收时，玩家的分成比例
 # When recycling within the company, the player's share ratio
@@ -16,12 +19,142 @@ player-share: 0.1
 # The following are standard prices, you should fill in the prices for your server's public recycling store
 prices:
   vanilla:
-    ore1:
+
+    # ------------------------------------------------------------------ ores
+    # 矿物参考价，保持原样 / ore reference, unchanged
+
+    ore_iron:
       material: iron_ingot
-      price: 10
-      group: ore-company
-    ore2:
-      material: diamond
-      price: 100
+      price: 10.0
       group: ore-company
 
+    ore_diamond:
+      material: diamond
+      price: 100.0
+      group: ore-company
+
+    # --------------------------------------------------------- common mob drops
+    # 僵尸战利品分支会把这些数量堆得很高，所以单价刻意压低
+    # The zombie loot branch multiplies these amounts, so keep the unit price low
+
+    mob_rotten_flesh:
+      material: rotten_flesh
+      price: 2.0
+      group: mob-company
+
+    mob_bone:
+      material: bone
+      price: 2.0
+      group: mob-company
+
+    mob_string:
+      material: string
+      price: 2.0
+      group: mob-company
+
+    mob_feather:
+      material: feather
+      price: 1.0
+      group: mob-company
+
+    mob_leather:
+      material: leather
+      price: 2.0
+      group: mob-company
+
+    mob_ink_sac:
+      material: ink_sac
+      price: 1.5
+      group: mob-company
+
+    # ------------------------------------------------------- uncommon mob drops
+    # 对应 More Mob Loot Tier II / Scavenger 的通用加成
+    # Targets of the generic More Mob Loot / Scavenger bonuses
+
+    mob_spider_eye:
+      material: spider_eye
+      price: 5.0
+      group: mob-company
+
+    mob_gunpowder:
+      material: gunpowder
+      price: 3.0
+      group: mob-company
+
+    mob_slime_ball:
+      material: slime_ball
+      price: 2.0
+      group: mob-company
+
+    mob_rabbit_hide:
+      material: rabbit_hide
+      price: 1.5
+      group: mob-company
+
+    mob_glow_ink_sac:
+      material: glow_ink_sac
+      price: 4.0
+      group: mob-company
+
+    mob_prismarine_shard:
+      material: prismarine_shard
+      price: 3.0
+      group: mob-company
+
+    # ----------------------------------------------------------- rare mob drops
+    # 掉落数量翻倍会放大这些物品，单价控制在 20 上下
+    # Doubling effects amplify these, so keep them around 20
+
+    mob_ender_pearl:
+      material: ender_pearl
+      price: 20.0
+      group: mob-company
+
+    mob_blaze_rod:
+      material: blaze_rod
+      price: 25.0
+      group: mob-company
+
+    mob_magma_cream:
+      material: magma_cream
+      price: 15.0
+      group: mob-company
+
+    mob_rabbit_foot:
+      material: rabbit_foot
+      price: 8.0
+      group: mob-company
+
+    mob_prismarine_crystals:
+      material: prismarine_crystals
+      price: 6.0
+      group: mob-company
+
+    # ------------------------------------------------------ very rare mob drops
+    # 只建议在精英/Boss 类目标上产出，避免刷怪塔无限印钞
+    # Intended for elite/boss targets; do not let a farm print these
+
+    mob_ghast_tear:
+      material: ghast_tear
+      price: 40.0
+      group: mob-company
+
+    mob_phantom_membrane:
+      material: phantom_membrane
+      price: 30.0
+      group: mob-company
+
+    mob_echo_shard:
+      material: echo_shard
+      price: 40.0
+      group: mob-company
+
+    mob_wither_skeleton_skull:
+      material: wither_skeleton_skull
+      price: 100.0
+      group: mob-company
+
+    mob_shulker_shell:
+      material: shulker_shell
+      price: 120.0
+      group: mob-company
