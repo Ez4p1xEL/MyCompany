@@ -1238,6 +1238,14 @@ position-permission:
       label: 'Area Purchase'
       description:
         - 'Purchase a company area'
+    FOCUS_SET:
+      label: 'Focus Setting'
+      description:
+        - 'Set the focus of the company'
+    FOCUS_LEARN_EXPERTISE:
+      label: 'Focus Expertise Learning'
+      description:
+        - 'Learn an expertise of the focus'
 
 focus:
   status:

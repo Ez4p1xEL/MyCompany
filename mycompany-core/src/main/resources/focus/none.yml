@@ -8,7 +8,7 @@ expertise:
     label: 'Empty Expertise'
     description:
       - 'This expertise is empty and has no effect.'
-    value-type: boolean
+    value_type: boolean
     default:
       value: 'false'
     action: {}

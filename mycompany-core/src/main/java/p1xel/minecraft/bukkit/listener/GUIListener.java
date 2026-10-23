@@ -11,6 +11,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import p1xel.minecraft.bukkit.MyCompany;
@@ -296,9 +297,16 @@ public class GUIListener implements Listener {
             return;
         }
 
-        for (int slot = 0; slot <= gui.getInventory().getSize()-1; slot++) {
+        for (int slot = 0; slot < gui.getInventory().getSize(); slot++) {
             ItemStack item = topInventory.getItem(slot);
-            if (item != null && item.getType() != Material.AIR) {
+            if (item != null) {
+                if (item.hasItemMeta()) {
+                    ItemMeta meta = item.getItemMeta();
+                    if (meta.getPersistentDataContainer().has(gui.getMenuIdKey(), PersistentDataType.STRING)) {
+                        // 该物品是 GUIInternalStore 的物品，无视
+                        continue;
+                    }
+                }
                 player.getInventory().addItem(item);
             }
         }

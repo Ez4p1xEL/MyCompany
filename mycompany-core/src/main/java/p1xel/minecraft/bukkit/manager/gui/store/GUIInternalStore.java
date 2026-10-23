@@ -106,6 +106,7 @@ public class GUIInternalStore extends CompanyMenu {
     }
 
     public void updatePrice() {
+        sellableSlots.clear();
         ItemStack[] contents = inventory.getContents();
         HashMap<Material, InternalPrice> vanillaItemPriceMap = internalStore.getVanillaItemPriceMap();
         HashMap<String, PriceGroup> priceGroupMap = internalStore.getPriceGroupMap();

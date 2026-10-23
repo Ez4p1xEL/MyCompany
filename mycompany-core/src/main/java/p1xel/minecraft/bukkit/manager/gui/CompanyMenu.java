@@ -2,6 +2,7 @@ package p1xel.minecraft.bukkit.manager.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -262,5 +263,9 @@ public class CompanyMenu extends GUIAbstract implements InventoryHolder {
         if (this.previousMenu != null) {
             this.previousMenu.open();
         }
+    }
+
+    public NamespacedKey getMenuIdKey() {
+        return menu_id_key;
     }
 }

@@ -23,7 +23,9 @@ public class Menu {
         this.id = menu.getId();
         this.title = menu.getTitle();
         this.size = menu.getSize();
-        this.items = new HashMap<>(menu.getItems());
+        for (var entry : menu.getItems().entrySet()) {
+            this.items.put(entry.getKey(), entry.getValue().clone());
+        }
         this.optionsInt = new HashMap<>(menu.getOptionsInt());
         this.options = new HashMap<>(menu.getOptions());
         this.optionsBool = new HashMap<>(menu.getOptionsBool());
