@@ -12,11 +12,11 @@
 ## 关于 MyCompany
 
 ## 简介
-MyCompany是一款基于Bukkit API的插件，并为你的Minecraft服务器提供了一套公司管理系统。
-玩家可以成立公司, 成为一位雇主, 聘请其他玩家作为他们的员工。
-每位玩家都需要为其所效力的公司赚取每日收入，获取收入的方式比如有 **每日员工任务**, **箱子商店** and **公司领地交易**.
-每个公司都需要支付员工薪金及缴税，从而创造一个较真实的经济游戏。
-
+MyCompany 是一个面向 Minecraft 服务器的公司与雇佣系统，运行在 Paper 上。  
+玩家可以成立公司、雇佣其他玩家、创建自定义职位并为其配置真实权限，一起经营业务：公司名下的箱子商店、带报酬的员工订单、公司领地、仅员工可用的内部商店与专长树。  
+每天，公司都要发放薪金并缴纳税款，让资金在雇主、员工与他们经营的公司之间持续流动。  
+所有操作都能在 `/myc` 这一个 GUI 里完成。  
+  
 MyCompany需要你宝贵的意见及BUG反馈来成长，从而达至提供沉浸式经济游戏的目标。
 
 ## 版本支持
@@ -24,11 +24,15 @@ MyCompany需要你宝贵的意见及BUG反馈来成长，从而达至提供沉�
 
 ## 文档帮助
 - 插件使用: [PixelCraft 使用文档](https://docs.p1mc.top/zh/)
+- 在线YML编辑器: [MyCompanyEditor](https://ez4p1xel.github.io/MyCompanyEditor/)
 
 ## 插件下载
 ### 直接下载
 - [Modrinth](https://modrinth.com/plugin/mycompany)
 - [SpigotMC](https://www.spigotmc.org/resources/mycompany.127007/)
+- [MineBBS](https://www.minebbs.com/resources/mycompany.14263/)
+- [Hangar](https://hangar.papermc.io/p1xEL/MyCompany)
+- [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/mycompany)
 
 ## 让我们做得更好
 你可以通过 [ISSUES](https://github.com/Ez4p1xEL/MyCompany/issues) 来回报BUG及提供意见使插件变得更好。
