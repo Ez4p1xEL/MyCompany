@@ -29,6 +29,9 @@ items:
   focus_mob:
     material: ZOMBIE_HEAD
 
+  focus_ore:
+    material: DIAMOND_ORE
+
   back_to_main:
     material: NETHER_STAR
     slot: 36

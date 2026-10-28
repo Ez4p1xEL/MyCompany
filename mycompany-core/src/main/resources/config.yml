@@ -1,4 +1,4 @@
-configuration: 1
+configuration: 2
 
 # Debug mode
 debug: false
@@ -180,3 +180,23 @@ company-area:
 backup-creator:
   # How many minutes should the plugin to start creating backup after starting the server.
   timer-on-start: 300
+
+reference:
+  # This is a reference for the plugin to know what item can be smelted into what item.
+  # Keys are the DROP material, not the block material: OreSmeltListener looks
+  # the dropped ItemStack's type up here, and ore blocks drop RAW_IRON /
+  # RAW_GOLD / RAW_COPPER (deepslate variants drop the same items).
+  # 键必须是掉落物本身：铁矿掉的是粗铁，不是铁矿石方块。
+  ore-to-smelted:
+    RAW_IRON: IRON_INGOT
+    RAW_GOLD: GOLD_INGOT
+    RAW_COPPER: COPPER_INGOT
+  item-type:
+    pickaxe:
+      - 'WOODEN_PICKAXE'
+      - 'STONE_PICKAXE'
+      - 'IRON_PICKAXE'
+      - 'COPPER_PICKAXE'
+      - 'GOLDEN_PICKAXE'
+      - 'DIAMOND_PICKAXE'
+      - 'NETHERITE_PICKAXE'

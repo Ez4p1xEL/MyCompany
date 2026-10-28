@@ -51,7 +51,8 @@ public class MyCompany extends JavaPlugin {
 
     private final String[] DEFAULT_FILES = {
             "focus/none.yml",
-            "focus/mob.yml"
+            "focus/mob.yml",
+            "focus/ore.yml"
     };
 
     @Override

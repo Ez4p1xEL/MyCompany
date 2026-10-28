@@ -6,9 +6,9 @@ multipliers:
   # The internal company recycling price should be higher than the public recycling store
   company:
     normal: 1.2 # Default multiplier for company internal recycling, do not change the name!!!
-    ore-company: 1.3
-    # 1.2 * 1.3 = 1.56，让 Bounty Hunter 节点描述的 “+30% compared to normal” 成立
-    # 1.2 * 1.3 = 1.56, so the "+30% compared to the normal rate" line stays accurate
+    # 1.2 * 1.3 = 1.56：Ore Trader / Bounty Hunter 里写的 "+30% compared to normal" 靠这个数成立
+    # 1.2 * 1.3 = 1.56 — that is what the "+30% compared to the normal rate" line means
+    ore-company: 1.56
     mob-company: 1.56
 
 # 在公司内部回收时，玩家的分成比例
@@ -21,16 +21,135 @@ prices:
   vanilla:
 
     # ------------------------------------------------------------------ ores
-    # 矿物参考价，保持原样 / ore reference, unchanged
+    # 矿业专精 (ore) 的全部产出；group: ore-company 表示内部商店按 1.56 倍回收
+    # Every product of the ore focus; group: ore-company means the internal
+    # store pays 1.56x the reference price below.
+    # 原矿和锭都要定价：Field Smelter / Master Smelter 会把原矿换成锭
+    # Price both raw ore and ingots, because three nodes convert one into the other.
+
+    # -- 煤炭与常见矿 / coal and common ore
+    # 产量高、单价低，钱靠量 / high volume, low unit price
+
+    ore_coal:
+      material: coal
+      price: 3.0
+      group: ore-company
+
+    ore_raw_copper:
+      material: raw_copper
+      price: 2.0
+      group: ore-company
+
+    ore_copper_ingot:
+      material: copper_ingot
+      price: 3.0
+      group: ore-company
+
+    ore_raw_iron:
+      material: raw_iron
+      price: 8.0
+      group: ore-company
 
     ore_iron:
       material: iron_ingot
       price: 10.0
       group: ore-company
 
+    ore_raw_gold:
+      material: raw_gold
+      price: 12.0
+      group: ore-company
+
+    ore_gold:
+      material: gold_ingot
+      price: 15.0
+      group: ore-company
+
+    # -- 宝石与稀有矿 / gems and rare ore
+    # 一块矿石掉多个，所以单价压住 / one ore drops several items, keep the unit price low
+
+    ore_redstone:
+      material: redstone
+      price: 1.5
+      group: ore-company
+
+    ore_lapis:
+      material: lapis_lazuli
+      price: 4.0
+      group: ore-company
+
+    ore_quartz:
+      material: quartz
+      price: 3.0
+      group: ore-company
+
+    ore_amethyst:
+      material: amethyst_shard
+      price: 6.0
+      group: ore-company
+
     ore_diamond:
       material: diamond
       price: 100.0
+      group: ore-company
+
+    ore_emerald:
+      material: emerald
+      price: 120.0
+      group: ore-company
+
+    ore_netherite_scrap:
+      material: netherite_scrap
+      price: 400.0
+      group: ore-company
+
+    # -- 伴生石 / mining byproducts
+    # 给矿工一个倒垃圾的出口，价格接近 0，不构成印钞
+    # A dump chute for miners; near-zero so it cannot be farmed for profit
+
+    ore_cobblestone:
+      material: cobblestone
+      price: 0.2
+      group: ore-company
+
+    ore_stone:
+      material: stone
+      price: 0.2
+      group: ore-company
+
+    ore_cobbled_deepslate:
+      material: cobbled_deepslate
+      price: 0.3
+      group: ore-company
+
+    ore_deepslate:
+      material: deepslate
+      price: 0.3
+      group: ore-company
+
+    ore_granite:
+      material: granite
+      price: 0.3
+      group: ore-company
+
+    ore_diorite:
+      material: diorite
+      price: 0.3
+      group: ore-company
+
+    ore_andesite:
+      material: andesite
+      price: 0.3
+      group: ore-company
+
+    ore_tuff:
+      material: tuff
+      price: 0.3
+      group: ore-company
+
+    ore_calcite:
+      material: calcite
+      price: 0.5
       group: ore-company
 
     # --------------------------------------------------------- common mob drops

@@ -31,8 +31,6 @@ public class FocusManager {
     private final AbstractCompanyData data;
     private final HashMap<UUID, CompanyFocus> companyFocusMap = new HashMap<>();
     private final HashMap<String, ExpertiseConfig> expertiseConfigMap = new HashMap<>();
-    private File file;
-    private FileConfiguration yaml;
 
     public FocusManager(AbstractCompanyData data) {
         this.data = data;
@@ -88,19 +86,21 @@ public class FocusManager {
                 continue;
             }
 
+            if (focusName.equals("ore")) {
+                NoneFocus noneFocus = new NoneFocus("ore", companyExpertiseList);
+                CompanyFocus companyFocus = new CompanyFocus(noneFocus, company);
+                companyFocusMap.put(uniqueId, companyFocus);
+                continue;
+            }
+
+            CompanyFocus companyFocus = new CompanyFocus(new Focus(focusName, companyExpertiseList), company);
+            companyFocusMap.put(uniqueId, companyFocus);
+
 
         }
     }
 
     public void initFile() {
-        File file = new File(MyCompany.getInstance().getDataFolder(), "focus.yml");
-        if (!file.exists()) {
-            MyCompany.getInstance().saveResource("focus.yml", false);
-        }
-
-        FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-        this.yaml = yaml;
-        this.file = file;
         saveExpertiseConfigs();
     }
 
@@ -177,13 +177,19 @@ public class FocusManager {
             companyExpertiseInstanceList.add(new ExpertiseInstance(defaultExpertiseInstance));
         }
 
-        if (focusId.equals("mob")) {
-            return new Mob(focusId, companyExpertiseInstanceList);
-        } else if (focusId.equals("none")) {
-            return new NoneFocus(focusId, companyExpertiseInstanceList);
-        } else {
-            Logger.warn("Focus with id '" + focusId + "' not found.");
-            return null;
+        switch (focusId) {
+            case "mob":
+                return new Mob(focusId, companyExpertiseInstanceList);
+            case "none":
+                return new NoneFocus(focusId, companyExpertiseInstanceList);
+            case "ore":
+                return new Ore(focusId, companyExpertiseInstanceList);
+            default:
+                if (FocusUtil.ENABLED_FOCUS_LIST.contains(focusId)) {
+                    return new Focus(focusId, companyExpertiseInstanceList);
+                }
+                Logger.warn("Focus with id '" + focusId + "' not found.");
+                return null;
         }
     }
 

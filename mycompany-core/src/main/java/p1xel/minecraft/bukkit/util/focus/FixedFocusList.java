@@ -7,7 +7,8 @@ public class FixedFocusList {
     public FixedFocusList() {
         this.focusList = new String[] {
                 "none",
-                "mob"
+                "mob",
+                "ore"
         };
     }
 

@@ -6,10 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import p1xel.minecraft.bukkit.MyCompany;
 import p1xel.minecraft.bukkit.object.action.*;
 import p1xel.minecraft.bukkit.object.condition.*;
-import p1xel.minecraft.bukkit.object.effect.Effect;
-import p1xel.minecraft.bukkit.object.effect.EffectType;
-import p1xel.minecraft.bukkit.object.effect.MobDamageEffect;
-import p1xel.minecraft.bukkit.object.effect.MobDropEffect;
+import p1xel.minecraft.bukkit.object.effect.*;
 import p1xel.minecraft.bukkit.object.focus.tree.DefaultExpertiseInstance;
 import p1xel.minecraft.bukkit.object.focus.tree.ExpertiseValue;
 import p1xel.minecraft.bukkit.object.focus.tree.config.ExpertiseAction;
@@ -272,6 +269,53 @@ public class FocusUtil {
                         break;
                     }
 
+                    case BLOCK_DROPS_ADD: {
+                        for (String blockId : yaml.getConfigurationSection(effect_path + "." + effectId).getKeys(false)) {
+                            List<String> stringList = yaml.getStringList(effect_path + "." + effectId + "." + blockId);
+                            for (String args : stringList) {
+                                BlockDropEffect blockDropEffect = new BlockDropEffect(blockId, args);
+                                effects.add(blockDropEffect);
+                            }
+                        }
+                        effectMap.put(effectType, effects);
+                        break;
+                    }
+
+                    case ORE_SMELT: {
+                        for (String oreId : yaml.getConfigurationSection(effect_path + "." + effectId).getKeys(false)) {
+                            List<String> stringList = yaml.getStringList(effect_path + "." + effectId + "." + oreId);
+                            for (String args : stringList) {
+                                OreSmeltEffect oreSmeltEffect = new OreSmeltEffect(oreId, args);
+                                effects.add(oreSmeltEffect);
+                            }
+                        }
+                        effectMap.put(effectType, effects);
+                        break;
+                    }
+
+                    case MINING_HASTE: {
+                        for (String blockId : yaml.getConfigurationSection(effect_path + "." + effectId).getKeys(false)) {
+                            List<String> stringList = yaml.getStringList(effect_path + "." + effectId + "." + blockId);
+                            for (String args : stringList) {
+                                MiningHasteEffect miningHasteEffect = new MiningHasteEffect(blockId, args);
+                                effects.add(miningHasteEffect);
+                            }
+                        }
+                        effectMap.put(effectType, effects);
+                        break;
+                    }
+
+                    case ITEM_DURABILITY_SAVE: {
+                        for (String itemId : yaml.getConfigurationSection(effect_path + "." + effectId).getKeys(false)) {
+                            List<String> stringList = yaml.getStringList(effect_path + "." + effectId + "." + itemId);
+                            for (String args : stringList) {
+                                ItemDurabilityConsumptionReductionEffect itemDurabilityEffect = new ItemDurabilityConsumptionReductionEffect(itemId, args);
+                                effects.add(itemDurabilityEffect);
+                            }
+                        }
+                        effectMap.put(effectType, effects);
+                        break;
+                    }
                 }
             }
         }

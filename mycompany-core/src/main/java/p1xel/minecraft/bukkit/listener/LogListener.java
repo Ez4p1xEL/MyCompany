@@ -1,9 +1,11 @@
 package p1xel.minecraft.bukkit.listener;
 
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import p1xel.minecraft.bukkit.object.Company;
 import p1xel.minecraft.bukkit.object.ManagerSupport;
@@ -47,6 +49,15 @@ public class LogListener extends ManagerSupport implements Listener {
 
         checkAndAdd(player, "mob_kill_count_" + event.getEntityType().toString(), 1.0);
 
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        String materialName = block.getType().toString();
+
+        checkAndAdd(player, "block_break_count_" + materialName, 1.0);
     }
 
 }

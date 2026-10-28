@@ -1335,6 +1335,94 @@ focus:
             - '&7需要已解鎖 殭屍大師、狂戰士 和 賞金大師。'
             - '&7解鎖獎勵: 每位員工 &a$10,000&7。'
 
+    ore:
+      label: '礦石'
+      description:
+        - '專注於開採礦石'
+        - '分四條支線: 礦石產量、野外熔煉、開採節奏 和 公司收益。'
+      expertise:
+        coal_seam_1:
+          label: '富煤礦脈 I'
+          description:
+            - '&7煤礦石掉落: &a30% &7機率 &a+1 煤炭&7。'
+            - '&7解鎖獎勵: 每位員工 &a$500&7。'
+        coal_seam_2:
+          label: '富煤礦脈 II'
+          description:
+            - '&7煤礦石掉落: &a20% &7機率 &a+1 煤炭&7。'
+            - '&7與 富煤礦脈 I 疊加。'
+        copper_vein:
+          label: '銅礦脈'
+          description:
+            - '&7銅礦石掉落: &a30% &7機率 &a+1 粗銅&7。'
+            - '&7包含深板岩變種。'
+        iron_vein:
+          label: '鐵礦脈'
+          description:
+            - '&7鐵礦石掉落: &a25% &7機率 &a+1 粗鐵&7。'
+            - '&7包含深板岩變種。'
+        ore_luck:
+          label: '礦工之眼'
+          description:
+            - '&7所有常見礦石掉落: &a10% &7機率 &a+1&7。'
+            - '&7範圍為 煤炭、銅、鐵 和 金 礦石。'
+            - '&7需要已解鎖 碎石 500 個。'
+        field_smelt_1:
+          label: '野外熔煉 I'
+          description:
+            - '&7鐵、金、銅 礦石: &a15% &7機率掉落 &a錠 &7而非粗礦。'
+            - '&7省下燃料和往返的工夫。'
+        field_smelt_2:
+          label: '野外熔煉 II'
+          description:
+            - '&7鐵、金、銅 礦石: &a25% &7機率掉落 &a錠&7。'
+            - '&7與 野外熔煉 I 疊加。'
+        noble_smelt:
+          label: '貴金屬熔煉'
+          description:
+            - '&7金礦石: &a45% &7機率掉落 &a金錠&7。'
+            - '&7金每格價值最高，因此給的倍率最好。'
+        smelt_master:
+          label: '熔煉大師'
+          description:
+            - '&7所有粗礦掉落: &a60% &7機率掉落 &a錠&7。'
+            - '&7需要已解鎖 碎石 1500 個。'
+        miner_rhythm_1:
+          label: '開採節奏 I'
+          description:
+            - '&7任意方塊被破壞時: &a25% &7機率獲得 &a急迫 I&7，持續 &a5 秒&7。'
+        miner_rhythm_2:
+          label: '開採節奏 II'
+          description:
+            - '&7任意方塊被破壞時: &a25% &7機率獲得 &a急迫 II&7，持續 &a10 秒&7。'
+            - '&7與 開採節奏 I 共存：急迫 II 等級更高，I 的觸發會被吸收。'
+        tool_guard_1:
+          label: '工具保護 I'
+          description:
+            - '&7鎬子: &a20% &7機率 &a不消耗耐久&7。'
+        tool_guard_2:
+          label: '工具保護 II'
+          description:
+            - '&7鎬子: &a30% &7機率 &a不消耗耐久&7。'
+            - '&7與 工具保護 I 疊加。'
+        ore_trader:
+          label: '礦石商人'
+          description:
+            - '&7內部商店以 &a礦石公司 &7價格收購礦產品。'
+            - '&7比普通價格 &a+30%&7。'
+        ore_magnate:
+          label: '礦石巨子'
+          description:
+            - '&7解鎖獎勵: 每位員工 &a$2,500&7。'
+            - '&7需要已解鎖 煤礦石 300 個。'
+        mining_legend:
+          label: '挖礦傳奇'
+          description:
+            - '&7常見礦石掉落: &a20% &7機率 &a+1&7。'
+            - '&7粗礦掉落: &a30% &7機率掉落 &a錠&7。'
+            - '&7需要已解鎖 熔煉大師、開採節奏 II、工具保護 II 和 礦石巨子。'
+            - '&7解鎖獎勵: 每位員工 &a$10,000&7。'
+
 condition:
   company_money: '&f公司資金: &a$%i1% &7(解鎖時扣除: %i2%)'
   expertise: '&f已解鎖專精: &b%i1%'
@@ -1343,6 +1431,7 @@ condition:
 
 log:
   mob_kill_count: '%type% 擊殺數'
+  block_break_count: '%type% 挖掘數'
 
 none: 無
 unemployment: 待業中

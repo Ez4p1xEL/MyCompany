@@ -39,6 +39,10 @@ public class ExpertiseListenerRegistry {
 
         bind(new MobDropListener("mob_drop_listener", EffectType.MOB_DROPS_ADD));
         bind(new MobDamageListener("mob_damage_listener", EffectType.MOB_DAMAGE_MULTIPLY));
+        bind(new BlockDropListener("block_drop_listener", EffectType.BLOCK_DROPS_ADD));
+        bind(new OreSmeltListener("ore_smelt_listener", EffectType.ORE_SMELT));
+        bind(new MiningHasteListener("mining_haste_listener", EffectType.MINING_HASTE));
+        bind(new ItemDurabilityListener("item_durability_listener", EffectType.ITEM_DURABILITY_SAVE));
 
     }
 

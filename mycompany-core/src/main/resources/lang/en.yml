@@ -1347,6 +1347,94 @@ focus:
             - '&7Requires Zombie Master, Berserker and Bounty Master.'
             - '&7Unlock bonus: &a$10,000 &7to every employee.'
 
+    ore:
+      label: 'Ore'
+      description:
+        - 'Focus on mining ore'
+        - 'Four branches: ore yield, field smelting, mining rhythm and company profit.'
+      expertise:
+        coal_seam_1:
+          label: 'Rich Coal Seams I'
+          description:
+            - '&7Coal ore drops: &a30% &7chance of &a+1 coal&7.'
+            - '&7Unlock bonus: &a$500 &7to every employee.'
+        coal_seam_2:
+          label: 'Rich Coal Seams II'
+          description:
+            - '&7Coal ore drops: &a20% &7chance of &a+1 coal&7.'
+            - '&7Stacks with Rich Coal Seams I.'
+        copper_vein:
+          label: 'Copper Vein'
+          description:
+            - '&7Copper ore drops: &a30% &7chance of &a+1 raw copper&7.'
+            - '&7Deepslate variants included.'
+        iron_vein:
+          label: 'Iron Vein'
+          description:
+            - '&7Iron ore drops: &a25% &7chance of &a+1 raw iron&7.'
+            - '&7Deepslate variants included.'
+        ore_luck:
+          label: 'Miner''s Eye'
+          description:
+            - '&7Every drop of a common ore: &a10% &7chance of &a+1&7.'
+            - '&7Covers coal, copper, iron and gold ore.'
+            - '&7Requires 500 stone blocks broken.'
+        field_smelt_1:
+          label: 'Field Smelter I'
+          description:
+            - '&7Iron, gold and copper ore: &a15% &7chance to drop the &aingot &7instead of raw ore.'
+            - '&7Saves the fuel and the trip home.'
+        field_smelt_2:
+          label: 'Field Smelter II'
+          description:
+            - '&7Iron, gold and copper ore: &a25% &7chance to drop the &aingot&7.'
+            - '&7Stacks with Field Smelter I.'
+        noble_smelt:
+          label: 'Noble Smelting'
+          description:
+            - '&7Gold ore: &a45% &7chance to drop the &agold ingot&7.'
+            - '&7Gold is worth the most per block, so the odds are the best.'
+        smelt_master:
+          label: 'Master Smelter'
+          description:
+            - '&7Every raw ore drop: &a60% &7chance to drop the &aingot&7.'
+            - '&7Requires 1500 stone blocks broken.'
+        miner_rhythm_1:
+          label: 'Miner''s Rhythm I'
+          description:
+            - '&7On any block break: &a25% &7chance of &aHaste I &7for &a5s&7.'
+        miner_rhythm_2:
+          label: 'Miner''s Rhythm II'
+          description:
+            - '&7On any block break: &a25% &7chance of &aHaste II &7for &a10s&7.'
+            - '&7Works with Miners Rhythm I - Haste II outranks it, lower procs are absorbed.'
+        tool_guard_1:
+          label: 'Tool Guard I'
+          description:
+            - '&7Pickaxes: &a20% &7chance to take &ano durability damage&7.'
+        tool_guard_2:
+          label: 'Tool Guard II'
+          description:
+            - '&7Pickaxes: &a30% &7chance to take &ano durability damage&7.'
+            - '&7Stacks with Tool Guard I.'
+        ore_trader:
+          label: 'Ore Trader'
+          description:
+            - '&7Internal store buys ore products at the &aore-company &7rate.'
+            - '&7That is &a+30% &7compared to the normal rate.'
+        ore_magnate:
+          label: 'Ore Magnate'
+          description:
+            - '&7Unlock bonus: &a$2,500 &7to every employee.'
+            - '&7Requires 300 coal ore breaks.'
+        mining_legend:
+          label: 'Mining Legend'
+          description:
+            - '&7Common ore drops: &a20% &7chance of &a+1&7.'
+            - '&7Raw ore drops: &a30% &7chance to drop the &aingot&7.'
+            - '&7Requires Master Smelter, Miners Rhythm II, Tool Guard II and Ore Magnate.'
+            - '&7Unlock bonus: &a$10,000 &7to every employee.'
+
 condition:
   company_money: '&fCompany Money: &a$%i1% &7(Consumed: %i2%)'
   expertise: '&fExpertise Learnt: &b%i1%' #%i2% is the expertise id
@@ -1355,6 +1443,7 @@ condition:
 
 log:
   mob_kill_count: '%type% Kills'
+  block_break_count: '%type% Broken'
 
 none: 'NONE'
 unemployment: 'UNEMPLOYMENT'

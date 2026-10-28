@@ -1,26 +1,20 @@
 package p1xel.minecraft.bukkit.object.focus.tree.listener;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import p1xel.minecraft.bukkit.object.effect.Effect;
 import p1xel.minecraft.bukkit.object.effect.EffectType;
 import p1xel.minecraft.bukkit.object.effect.MobDamageEffect;
-import p1xel.minecraft.bukkit.object.effect.MobDropEffect;
 import p1xel.minecraft.bukkit.object.focus.CompanyFocus;
 import p1xel.minecraft.bukkit.object.focus.tree.ExpertiseInstance;
 import p1xel.minecraft.bukkit.object.focus.tree.ExpertiseListener;
 import p1xel.minecraft.bukkit.object.focus.tree.config.ExpertiseConfig;
-import p1xel.minecraft.bukkit.object.math.Expression;
 import p1xel.minecraft.bukkit.util.Logger;
 import p1xel.minecraft.bukkit.util.ProbabilityUtil;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
